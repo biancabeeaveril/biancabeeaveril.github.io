@@ -11,7 +11,10 @@ Portal multi-halaman berisi alat kerja tim + **Kelola Alteco** — aplikasi mana
 ├── index.html              ← Homepage (banner Aliria Tech Community + fitur Masuk)
 ├── tentang.html           ← Isi homepage lama: misi, program, keratin sama, carousel
 ├── assets/                 ← Aset gambar homepage
-│   └── hero-mentoring.jpg  ← Foto mentoring Universitas Dinamika
+│   ├── hero-mentoring.jpg  ← Foto mentoring Universitas Dinamika
+│   ├── logo-universitas-dinamika.png  ← Logo Universitas Dinamika (transparan)
+│   ├── logo-aliria-tech.png            ← Logo Aliria Tech Community (transparan)
+│   └── emblem-aliria.png               ← Emblem Aliria (navbar & modal login)
 ├── proyekan/index.html     ← Referensi command & AI tools
 ├── pengajar/index.html     ← Sektor industri + modul ERP
 ├── pemasaran/index.html    ← Siklus penawaran
