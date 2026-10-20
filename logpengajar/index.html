@@ -21,9 +21,7 @@ button{font-family:inherit}
 .nav-back:hover{color:var(--accent);border-color:var(--accent)}
 .nav-title{font-size:.82rem;font-weight:700}
 .nav-spacer{flex:1}
-.nav-meta{font-size:.68rem;color:var(--muted);display:flex;align-items:center;gap:8px}
-.badge-role{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:4px;background:var(--accent);color:#fff}
-.badge-role.viewer{background:var(--muted);color:#fff}
+.nav-meta{font-size:.68rem;color:var(--muted);display:flex;align-items:center;gap:6px}
 .dot-sync{width:7px;height:7px;border-radius:50%;background:var(--muted);display:inline-block}
 .dot-sync.on{background:var(--green)}
 .icon-btn{width:30px;height:30px;border-radius:6px;border:1px solid var(--bd);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;line-height:1;transition:background .2s,color .2s}
@@ -37,17 +35,19 @@ button{font-family:inherit}
 .header h1{font-size:1.3rem;font-weight:800;letter-spacing:-.02em}
 .header p{font-size:.8rem;color:var(--muted);margin-top:4px;line-height:1.6}
 
-/* ── FILTER ── */
+/* ── LABEL: UNIVERSITAS / SEMESTER ── */
 .filter-block{margin-bottom:14px}
 .filter-label{font-size:.64rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;display:flex;align-items:center;gap:8px}
 .filter-label::before{content:'';width:3px;height:11px;border-radius:2px;background:var(--accent)}
 .chips{display:flex;flex-wrap:wrap;gap:7px}
-.chip{display:inline-flex;align-items:stretch;border:1px solid var(--bd);border-radius:7px;background:var(--card);overflow:hidden;transition:border-color .15s,background .15s}
+.chip{display:inline-flex;align-items:stretch;border:1px solid var(--bd);border-radius:7px;background:var(--card);overflow:hidden;transition:border-color .15s}
 .chip:hover{border-color:var(--accent)}
 .chip.active{border-color:var(--accent);background:var(--accent);color:#fff}
 .chip-btn{background:none;border:none;color:inherit;cursor:pointer;font-size:.76rem;font-weight:600;padding:6px 12px;text-align:left}
+.chip-del{background:none;border:none;border-left:1px solid var(--bd);color:var(--muted);cursor:pointer;font-size:.7rem;padding:0 9px;transition:color .15s,background .15s}
+.chip-del:hover{color:var(--red);background:var(--card2)}
 .chip.add{border-style:dashed;color:var(--muted)}
-.chip.add .chip-btn{color:var(--muted);font-weight:600}
+.chip.add .chip-btn{color:var(--muted)}
 .chip.add:hover .chip-btn{color:var(--accent)}
 
 /* ── SECTION ── */
@@ -59,18 +59,17 @@ button{font-family:inherit}
 .btn-primary:hover{background:var(--accent2);border-color:var(--accent2);color:#fff}
 .btn-sm{font-size:.68rem;padding:4px 9px}
 
-/* ── GRID CARD ── */
+/* ── KARTU MATA KULIAH ── */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:11px}
 .card{background:var(--card);border:1px solid var(--bd);border-radius:9px;padding:14px 16px;cursor:pointer;transition:border-color .15s,transform .15s,background .25s;position:relative}
 .card:hover{border-color:var(--accent);transform:translateY(-2px)}
-.card-top{display:flex;align-items:center;gap:8px;margin-bottom:7px}
-.code{font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:3px;background:var(--accent2);color:var(--accent2);border:1px solid var(--bd)}
-[data-theme="light"] .code{color:var(--accent)}
-.card h3{font-size:.86rem;font-weight:700;line-height:1.35;margin-bottom:4px}
+.card h3{font-size:.86rem;font-weight:700;line-height:1.35;margin-bottom:3px}
 .card .sub{font-size:.7rem;color:var(--muted)}
-.card-foot{display:flex;gap:8px;margin-top:11px;padding-top:9px;border-top:1px solid var(--bd);font-size:.66rem;color:var(--muted);flex-wrap:wrap}
-.card-foot b{color:var(--text);font-weight:700}
-.pill{padding:1px 7px;border-radius:20px;background:var(--card2);border:1px solid var(--bd)}
+.card-foot{margin-top:11px;padding-top:9px;border-top:1px solid var(--bd);font-size:.66rem;color:var(--muted);display:flex;align-items:center;gap:8px}
+.pill{padding:1px 8px;border-radius:20px;background:var(--card2);border:1px solid var(--bd)}
+.pill b{color:var(--text);font-weight:700}
+.bar{flex:1;height:5px;border-radius:3px;background:var(--card2);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent)}
 .card-edit{position:absolute;top:10px;right:10px;display:flex;gap:4px;opacity:0;transition:opacity .15s}
 .card:hover .card-edit{opacity:1}
 .mini{border:1px solid var(--bd);background:var(--card2);color:var(--muted);border-radius:5px;width:24px;height:24px;cursor:pointer;font-size:.68rem;line-height:1;transition:color .15s,border-color .15s}
@@ -78,25 +77,23 @@ button{font-family:inherit}
 .mini.danger:hover{color:var(--red);border-color:var(--red)}
 .empty{grid-column:1/-1;width:100%;text-align:center;padding:26px 16px;color:var(--muted);font-size:.78rem;border:1px dashed var(--bd);border-radius:9px}
 
-/* ── DETAIL ── */
+/* ── DETAIL MATA KULIAH ── */
 .detail-head{margin-bottom:16px}
 .back-link{font-size:.72rem;font-weight:600;color:var(--muted);cursor:pointer;background:none;border:none;padding:0;margin-bottom:10px;transition:color .15s}
 .back-link:hover{color:var(--accent)}
-.detail-head h2{font-size:1.15rem;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.detail-head h2{font-size:1.15rem;font-weight:800;letter-spacing:-.02em}
 .detail-meta{font-size:.74rem;color:var(--muted);margin-top:5px}
 .detail-meta span{margin-right:12px;display:inline-flex;align-items:center;gap:4px}
 
-/* ── MEETING ── */
+/* ── PERTEMUAN ── */
 .meeting{background:var(--card);border:1px solid var(--bd);border-radius:9px;padding:14px 16px;margin-bottom:11px;transition:border-color .25s}
-.meeting:hover{border-color:var(--bd)}
 .m-head{display:flex;align-items:center;gap:9px;margin-bottom:6px;flex-wrap:wrap}
 .m-no{font-size:.7rem;font-weight:700;color:var(--accent)}
 .m-date{font-size:.68rem;color:var(--muted)}
 .m-actions{margin-left:auto;display:flex;gap:5px}
 .m-title{font-size:.85rem;font-weight:600;margin-bottom:9px}
-.m-notes{font-size:.73rem;color:var(--muted);margin-top:9px;padding:9px 11px;background:var(--card2);border-radius:6px;border-left:2px solid var(--bd);white-space:pre-wrap}
 
-/* ── TOPIC ── */
+/* ── TOPIK ── */
 .topics{list-style:none;padding:0;margin:0}
 .topic{display:flex;align-items:center;gap:9px;padding:6px 0;border-bottom:1px dashed var(--bd)}
 .topic:last-child{border-bottom:none}
@@ -105,8 +102,6 @@ button{font-family:inherit}
 .topic.done .txt{color:var(--muted);text-decoration:line-through}
 .topic .mini{opacity:0}
 .topic:hover .mini{opacity:1}
-.topic .mini.edit:hover{color:var(--accent)}
-.topic .mini.del:hover{color:var(--red)}
 .add-topic{display:flex;gap:7px;margin-top:10px}
 .add-topic input{flex:1;background:var(--bg);border:1px solid var(--bd);color:var(--text);font-size:.76rem;padding:7px 10px;border-radius:6px;outline:none;transition:border-color .15s}
 .add-topic input:focus{border-color:var(--accent)}
@@ -118,10 +113,9 @@ button{font-family:inherit}
 .modal-title{font-size:.9rem;font-weight:700;margin-bottom:14px}
 .frow{display:block;margin-bottom:12px}
 .flabel{display:block;font-size:.68rem;font-weight:600;color:var(--muted);margin-bottom:5px}
-.frow input,.frow textarea,.frow select{width:100%;background:var(--bg);border:1px solid var(--bd);color:var(--text);font-size:.8rem;padding:9px 11px;border-radius:6px;outline:none;font-family:inherit;transition:border-color .15s}
-.frow input:focus,.frow textarea:focus{border-color:var(--accent)}
-.frow textarea{resize:vertical}
-.ferr{font-size:.7rem;color:var(--red);margin-bottom:8px;min-height:0}
+.frow input{width:100%;background:var(--bg);border:1px solid var(--bd);color:var(--text);font-size:.8rem;padding:9px 11px;border-radius:6px;outline:none;font-family:inherit;transition:border-color .15s}
+.frow input:focus{border-color:var(--accent)}
+.ferr{font-size:.7rem;color:var(--red);margin-bottom:8px}
 .modal-bar{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
 
 /* ── GATE ── */
@@ -134,13 +128,17 @@ button{font-family:inherit}
 .gate-err{font-size:.7rem;color:var(--red);margin-bottom:10px;min-height:14px}
 .gate-hint{font-size:.65rem;color:var(--muted);margin-top:12px;line-height:1.6}
 
+/* ── HP: tombol aksi selalu terlihat ── */
+@media(hover:none){
+  .card-edit,.topic .mini{opacity:1}
+}
+
 @media(max-width:640px){
   .nav{padding:8px 12px;gap:7px}
   .nav-title{font-size:.74rem}
   .page{padding:14px 12px 40px}
   .grid{grid-template-columns:1fr}
   .detail-head h2{font-size:1rem}
-  .nav-meta .role-txt{display:none}
 }
 </style>
 </head>
@@ -150,11 +148,7 @@ button{font-family:inherit}
   <a href="../index.html" class="nav-back">← Rak</a>
   <span class="nav-title">Log Pengajaran</span>
   <span class="nav-spacer"></span>
-  <span class="nav-meta">
-    <span class="dot-sync" id="syncDot"></span>
-    <span id="syncTxt" style="display:none">Tersimpan</span>
-    <span class="badge-role" id="roleBadge" style="display:none"></span>
-  </span>
+  <span class="nav-meta"><span class="dot-sync" id="syncDot"></span><span id="syncTxt" style="display:none">Tersimpan</span></span>
   <button class="icon-btn" id="logoutBtn" style="display:none" title="Keluar">⎋</button>
   <button class="theme-btn" id="themeBtn">🌙</button>
 </nav>
@@ -162,7 +156,7 @@ button{font-family:inherit}
 <div class="page">
   <div class="header">
     <h1>Log Pengajaran</h1>
-    <p>Riwayat mengajar tim: pilih universitas → semester → mata kuliah. Klik matkul untuk lihat topik yang dibahas di tiap pertemuan rutin.</p>
+    <p>Pilih universitas dan semester, lalu klik mata kuliah untuk melihat topik yang dibahas di tiap pertemuan.</p>
   </div>
 
   <!-- LABEL 1: UNIVERSITAS -->
@@ -181,7 +175,7 @@ button{font-family:inherit}
   <div id="courseSection">
     <div class="section-head">
       <h2 id="courseHead">Mata Kuliah</h2>
-      <button class="btn btn-primary" id="addCourseBtn" style="display:none">+ Tambah Mata Kuliah</button>
+      <button class="btn btn-primary" id="addCourseBtn">+ Tambah Mata Kuliah</button>
     </div>
     <div class="grid" id="courseGrid"></div>
   </div>
@@ -195,7 +189,7 @@ button{font-family:inherit}
     </div>
     <div class="section-head" style="border-top:none;padding-top:0">
       <h2 id="dMeetHead">Riwayat Pertemuan</h2>
-      <button class="btn btn-primary" id="addMeetingBtn" style="display:none">+ Tambah Pertemuan</button>
+      <button class="btn btn-primary" id="addMeetingBtn">+ Tambah Pertemuan</button>
     </div>
     <div id="meetingList"></div>
   </div>
@@ -208,7 +202,7 @@ button{font-family:inherit}
 <div class="gate" id="gate">
   <div class="gate-card">
     <h2>Log Pengajaran</h2>
-    <p>Masukkan kode akses</p>
+    <p>Masukkan kode akses tim pengajar</p>
     <input type="password" id="gateInput" placeholder="••••••" autocomplete="off"/>
     <div class="gate-err" id="gateErr"></div>
     <button class="btn btn-primary" id="gateBtn" style="width:100%">Masuk</button>
@@ -220,9 +214,7 @@ button{font-family:inherit}
 /* ══════════════════════════════════════
    CONFIG — ganti nilai di sini
    ══════════════════════════════════════ */
-const PASS_VIEW  = 'GANTI_KODE_VIEWER';
-const PASS_ADMIN = 'GANTI_KODE_ADMIN';
-
+const PASS_TEAM  = 'GANTI_KODE_TIM';     // kode akses tim pengajar
 const LS_KEY     = 'rakperpus_ajar_v1';
 const GIST_ID    = 'GIST_ID_DISINI';
 const GIST_FILE  = 'ajar-data.json';
@@ -235,7 +227,6 @@ const isSet = v => !!v && !/^(GIST_ID|WORKER_URL|GANTI_)/.test(v);
    ══════════════════════════════════════ */
 const emptyDb = () => ({univs:[],sems:[],courses:[],meetings:[],topics:[]});
 let db = emptyDb();
-let role = null;            /* 'viewer' | 'admin' */
 let selUniv = null;
 let selSem  = null;
 let openCourse = null;      /* courseId */
@@ -244,7 +235,6 @@ const uid = () => Math.random().toString(36).slice(2,10) + Date.now().toString(3
 const esc = s => String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const touch = it => { it.updatedAt = Date.now(); return it; };
 
-/* ── selectors ── */
 const liveUnivs   = () => db.univs.filter(u=>!u.deleted).sort((a,b)=>(a.ord||0)-(b.ord||0));
 const liveSems    = uid2 => db.sems.filter(s=>!s.deleted&&s.univId===uid2).sort((a,b)=>(a.ord||0)-(b.ord||0));
 const liveCourses = sid => db.courses.filter(c=>!c.deleted&&c.semId===sid).sort((a,b)=>(a.ord||0)-(b.ord||0));
@@ -255,7 +245,6 @@ const getSem  = id => db.sems.find(s=>s.id===id);
 const getCourse = id => db.courses.find(c=>c.id===id);
 const getMeet = id => db.meetings.find(m=>m.id===id);
 const getTopic = id => db.topics.find(t=>t.id===id);
-const isAdmin = () => role==='admin';
 
 /* ══════════════════════════════════════
    PERSISTENCE
@@ -341,13 +330,9 @@ function addUniv(name){
   selUniv = u.id; selSem = null; openCourse = null;
   save(); render();
 }
-function editUniv(id, name){
-  const u = getUniv(id); if(!u) return;
-  u.name = name; touch(u); save(); render();
-}
 function delUniv(id){
   const u = getUniv(id); if(!u) return;
-  if(!confirm(`Hapus "${u.name}" beserta seluruh semester, mata kuliah, dan pertemuannya?`)) return;
+  if(!confirm(`Hapus "${u.name}"? Semua semester, mata kuliah, dan riwayat pertemuannya ikut terhapus.`)) return;
   const semIds  = db.sems.filter(s=>s.univId===id).map(s=>s.id);
   const crsIds  = db.courses.filter(c=>semIds.includes(c.semId)).map(c=>c.id);
   const meetIds = db.meetings.filter(m=>crsIds.includes(m.courseId)).map(m=>m.id);
@@ -366,13 +351,9 @@ function addSem(univId, name){
   selSem = s.id; openCourse = null;
   save(); render();
 }
-function editSem(id, name){
-  const s = getSem(id); if(!s) return;
-  s.name = name; touch(s); save(); render();
-}
 function delSem(id){
   const s = getSem(id); if(!s) return;
-  if(!confirm(`Hapus semester "${s.name}" beserta mata kuliah dan pertemuannya?`)) return;
+  if(!confirm(`Hapus semester "${s.name}"? Mata kuliah dan riwayat pertemuannya ikut terhapus.`)) return;
   const crsIds  = db.courses.filter(c=>c.semId===id).map(c=>c.id);
   const meetIds = db.meetings.filter(m=>crsIds.includes(m.courseId)).map(m=>m.id);
   markDeleted(db.topics.filter(t=>meetIds.includes(t.meetingId)));
@@ -396,7 +377,7 @@ function editCourse(id, name, code, lecturer){
 }
 function delCourse(id){
   const c = getCourse(id); if(!c) return;
-  if(!confirm(`Hapus mata kuliah "${c.name}" beserta riwayat pertemuannya?`)) return;
+  if(!confirm(`Hapus mata kuliah "${c.name}"? Riwayat pertemuannya ikut terhapus.`)) return;
   const meetIds = db.meetings.filter(m=>m.courseId===id).map(m=>m.id);
   markDeleted(db.topics.filter(t=>meetIds.includes(t.meetingId)));
   markDeleted(db.meetings.filter(m=>meetIds.includes(m.id)));
@@ -404,15 +385,15 @@ function delCourse(id){
   if(openCourse===id) openCourse = null;
   save(); render();
 }
-function addMeeting(courseId, no, date, title, notes){
+function addMeeting(courseId, no, date, title){
   const ord = Math.max(-1, ...liveMeets(courseId).map(m=>m.no||0)) + 1;
-  const m = touch({id:uid(), courseId, no: no||ord, date: date||'', title: title||'', notes: notes||''});
+  const m = touch({id:uid(), courseId, no: no||ord, date: date||'', title: title||''});
   db.meetings.push(m);
   save(); render();
 }
-function editMeeting(id, no, date, title, notes){
+function editMeeting(id, no, date, title){
   const m = getMeet(id); if(!m) return;
-  m.no = no||m.no; m.date = date||''; m.title = title||''; m.notes = notes||'';
+  m.no = no||m.no; m.date = date||''; m.title = title||'';
   touch(m); save(); render();
 }
 function delMeeting(id){
@@ -441,7 +422,7 @@ function delTopic(id){
 }
 
 /* ══════════════════════════════════════
-   UI HELPERS
+   MODAL FORM (satu komponen untuk semua form)
    ══════════════════════════════════════ */
 function openForm(title, fields, onSave){
   const wrap = document.getElementById('modalWrap');
@@ -456,9 +437,8 @@ function openForm(title, fields, onSave){
     const row = document.createElement('label'); row.className = 'frow';
     const lb = document.createElement('span'); lb.className = 'flabel'; lb.textContent = f.label;
     row.appendChild(lb);
-    let input;
-    if(f.type === 'textarea'){ input = document.createElement('textarea'); input.rows = 3; }
-    else { input = document.createElement('input'); input.type = f.type || 'text'; }
+    const input = document.createElement('input');
+    input.type = f.type || 'text';
     input.name = f.key;
     input.value = f.value ?? '';
     if(f.placeholder) input.placeholder = f.placeholder;
@@ -488,7 +468,7 @@ function openForm(title, fields, onSave){
   card.appendChild(form);
   wrap.style.display = 'flex';
   wrap.onclick = e => { if(e.target === wrap) closeForm(); };
-  setTimeout(()=>{ const i = card.querySelector('input,textarea'); i && i.focus(); }, 60);
+  setTimeout(()=>{ const i = card.querySelector('input'); i && i.focus(); }, 60);
 }
 function closeForm(){ document.getElementById('modalWrap').style.display = 'none'; }
 
@@ -496,12 +476,6 @@ function miniBtn(txt, cls, fn){
   const b = document.createElement('button');
   b.className = 'mini ' + (cls||''); b.textContent = txt; b.onclick = e => { e.stopPropagation(); fn(); };
   return b;
-}
-function chipBox(label){
-  const d = document.createElement('div'); d.className = 'chip';
-  const b = document.createElement('button'); b.className = 'chip-btn'; b.textContent = label;
-  d.appendChild(b);
-  return {el:d, btn:b};
 }
 
 /* ══════════════════════════════════════
@@ -520,25 +494,29 @@ function renderUnivs(){
   const list = liveUnivs();
   if(!list.length){
     const e = document.createElement('div');
-    e.className = 'empty'; e.textContent = isAdmin() ? 'Belum ada universitas. Tambahkan lewat tombol "+ Tambah".' : 'Belum ada data universitas.';
+    e.className = 'empty'; e.textContent = 'Belum ada universitas. Klik "+ Tambah" untuk mulai.';
     box.appendChild(e);
   }
   list.forEach(u=>{
-    const c = chipBox(u.name);
-    c.el.classList.toggle('active', selUniv === u.id);
-    c.btn.onclick = ()=>{ selUniv = u.id; selSem = null; openCourse = null; render(); };
-    if(isAdmin()){
-      c.el.appendChild(miniBtn('✎','', ()=> openForm('Ubah Universitas', [{key:'name',label:'Nama Universitas',value:u.name,required:true}], v=>editUniv(u.id,v.name))));
-      c.el.appendChild(miniBtn('🗑','danger', ()=>delUniv(u.id)));
-    }
-    box.appendChild(c.el);
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (selUniv === u.id ? ' active' : '');
+    const btn = document.createElement('button');
+    btn.className = 'chip-btn'; btn.textContent = u.name;
+    btn.onclick = ()=>{ selUniv = u.id; selSem = null; openCourse = null; render(); };
+    chip.appendChild(btn);
+    const del = document.createElement('button');
+    del.className = 'chip-del'; del.textContent = '🗑'; del.title = 'Hapus universitas';
+    del.onclick = ()=>delUniv(u.id);
+    chip.appendChild(del);
+    box.appendChild(chip);
   });
-  if(isAdmin()){
-    const add = chipBox('+ Tambah');
-    add.el.classList.add('add');
-    add.btn.onclick = ()=> openForm('Tambah Universitas', [{key:'name',label:'Nama Universitas',placeholder:'Contoh: Universitas Astrindo',required:true}], v=>addUniv(v.name));
-    box.appendChild(add.el);
-  }
+  const add = document.createElement('div');
+  add.className = 'chip add';
+  const addBtn = document.createElement('button');
+  addBtn.className = 'chip-btn'; addBtn.textContent = '+ Tambah';
+  addBtn.onclick = ()=> openForm('Tambah Universitas', [{key:'name',label:'Nama Universitas',placeholder:'Contoh: Universitas Astrindo',required:true}], v=>addUniv(v.name));
+  add.appendChild(addBtn);
+  box.appendChild(add);
 }
 
 function renderSems(){
@@ -551,25 +529,29 @@ function renderSems(){
   const list = liveSems(selUniv);
   if(!list.length){
     const e = document.createElement('div');
-    e.className = 'empty'; e.textContent = isAdmin() ? 'Belum ada semester. Tambahkan lewat tombol "+ Tambah".' : 'Belum ada semester.';
+    e.className = 'empty'; e.textContent = 'Belum ada semester. Klik "+ Tambah" untuk membuat.';
     box.appendChild(e);
   }
   list.forEach(s=>{
-    const c = chipBox(s.name);
-    c.el.classList.toggle('active', selSem === s.id);
-    c.btn.onclick = ()=>{ selSem = s.id; openCourse = null; render(); };
-    if(isAdmin()){
-      c.el.appendChild(miniBtn('✎','', ()=> openForm('Ubah Semester', [{key:'name',label:'Nama Semester',value:s.name,required:true}], v=>editSem(s.id,v.name))));
-      c.el.appendChild(miniBtn('🗑','danger', ()=>delSem(s.id)));
-    }
-    box.appendChild(c.el);
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (selSem === s.id ? ' active' : '');
+    const btn = document.createElement('button');
+    btn.className = 'chip-btn'; btn.textContent = s.name;
+    btn.onclick = ()=>{ selSem = s.id; openCourse = null; render(); };
+    chip.appendChild(btn);
+    const del = document.createElement('button');
+    del.className = 'chip-del'; del.textContent = '🗑'; del.title = 'Hapus semester';
+    del.onclick = ()=>delSem(s.id);
+    chip.appendChild(del);
+    box.appendChild(chip);
   });
-  if(isAdmin()){
-    const add = chipBox('+ Tambah');
-    add.el.classList.add('add');
-    add.btn.onclick = ()=> openForm('Tambah Semester', [{key:'name',label:'Nama Semester',placeholder:'Contoh: Ganjil 2026/2027',required:true}], v=>addSem(selUniv,v.name));
-    box.appendChild(add.el);
-  }
+  const add = document.createElement('div');
+  add.className = 'chip add';
+  const addBtn = document.createElement('button');
+  addBtn.className = 'chip-btn'; addBtn.textContent = '+ Tambah';
+  addBtn.onclick = ()=> openForm('Tambah Semester', [{key:'name',label:'Nama Semester',placeholder:'Contoh: Ganjil 2026/2027',required:true}], v=>addSem(selUniv,v.name));
+  add.appendChild(addBtn);
+  box.appendChild(add);
 }
 
 function renderCourses(){
@@ -578,59 +560,45 @@ function renderCourses(){
   document.getElementById('meetingList').innerHTML = '';
   const grid = document.getElementById('courseGrid');
   const head = document.getElementById('courseHead');
-  const addBtn = document.getElementById('addCourseBtn');
   grid.innerHTML = '';
 
-  if(!selUniv){
+  if(!selUniv || !selSem){
     head.textContent = 'Mata Kuliah';
-    addBtn.style.display = 'none';
-    grid.innerHTML = '<div class="empty">Pilih universitas di atas.</div>';
-    return;
-  }
-  if(!selSem){
-    head.textContent = 'Mata Kuliah';
-    addBtn.style.display = 'none';
-    grid.innerHTML = '<div class="empty">Pilih semester di atas.</div>';
+    grid.innerHTML = `<div class="empty">${selUniv ? 'Pilih semester di atas.' : 'Pilih universitas di atas.'}</div>`;
     return;
   }
   const u = getUniv(selUniv), s = getSem(selSem);
   head.textContent = `Mata Kuliah — ${u.name} · ${s.name}`;
-  addBtn.style.display = isAdmin() ? '' : 'none';
 
   const list = liveCourses(selSem);
   if(!list.length){
-    grid.innerHTML = `<div class="empty">${isAdmin()?'Belum ada mata kuliah. Klik "+ Tambah Mata Kuliah".':'Belum ada mata kuliah di semester ini.'}</div>`;
+    grid.innerHTML = '<div class="empty">Belum ada mata kuliah. Klik "+ Tambah Mata Kuliah".</div>';
     return;
   }
   list.forEach(c=>{
     const meets = liveMeets(c.id);
-    const tids = meets.flatMap(m=>liveTopics(m.id).map(t=>t.id));
-    const done = tids.filter(id=>getTopic(id)?.done).length;
-    const last = meets.map(m=>m.date).filter(Boolean).sort().pop() || '—';
+    const topics = meets.flatMap(m=>liveTopics(m.id));
+    const done = topics.filter(t=>t.done).length;
+    const pct = topics.length ? Math.round(done/topics.length*100) : 0;
 
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
-      <div class="card-top">
-        ${c.code ? `<span class="code">${esc(c.code)}</span>` : ''}
-        <span class="pill">${meets.length} pertemuan</span>
-      </div>
       <h3>${esc(c.name)}</h3>
-      ${c.lecturer ? `<div class="sub">Pengajar: ${esc(c.lecturer)}</div>` : ''}
+      <div class="sub">${[c.code, c.lecturer].filter(Boolean).map(esc).join(' · ') || '—'}</div>
       <div class="card-foot">
-        <span class="pill">Topik <b>${done}/${tids.length}</b> dibahas</span>
-        <span class="pill">Terakhir <b>${esc(last)}</b></span>
+        <span class="pill">${meets.length} pertemuan</span>
+        <span class="pill">Topik <b>${done}/${topics.length}</b></span>
+        <span class="bar"><i style="width:${pct}%"></i></span>
       </div>`;
-    if(isAdmin()){
-      const ed = document.createElement('div'); ed.className = 'card-edit';
-      ed.appendChild(miniBtn('✎','', ()=> openForm('Ubah Mata Kuliah', [
-        {key:'name',label:'Nama Mata Kuliah',value:c.name,required:true},
-        {key:'code',label:'Kode',value:c.code,placeholder:'Contoh: IF201'},
-        {key:'lecturer',label:'Pengajar',value:c.lecturer,placeholder:'Nama pengajar'},
-      ], v=>editCourse(c.id,v.name,v.code,v.lecturer))));
-      ed.appendChild(miniBtn('🗑','danger', ()=>delCourse(c.id)));
-      card.appendChild(ed);
-    }
+    const ed = document.createElement('div'); ed.className = 'card-edit';
+    ed.appendChild(miniBtn('✎','', ()=> openForm('Ubah Mata Kuliah', [
+      {key:'name',label:'Nama Mata Kuliah',value:c.name,required:true},
+      {key:'code',label:'Kode',value:c.code,placeholder:'Contoh: IF201'},
+      {key:'lecturer',label:'Pengajar',value:c.lecturer,placeholder:'Nama pengajar'},
+    ], v=>editCourse(c.id,v.name,v.code,v.lecturer))));
+    ed.appendChild(miniBtn('🗑','danger', ()=>delCourse(c.id)));
+    card.appendChild(ed);
     card.onclick = ()=>{ openCourse = c.id; render(); window.scrollTo({top:0,behavior:'smooth'}); };
     grid.appendChild(card);
   });
@@ -642,12 +610,10 @@ function renderDetail(courseId){
 
   const c = getCourse(courseId);
   const s = getSem(c.semId), u = s ? getUniv(s.univId) : null;
-  document.getElementById('dTitle').innerHTML = `${esc(c.name)} ${c.code?`<span class="code">${esc(c.code)}</span>`:''}`;
+  document.getElementById('dTitle').textContent = c.name;
   document.getElementById('dMeta').innerHTML =
-    `<span>🏛 ${esc(u?u.name:'—')}</span><span>📅 ${esc(s?s.name:'—')}</span>${c.lecturer?`<span>👤 ${esc(c.lecturer)}</span>`:''}`;
-
-  const addBtn = document.getElementById('addMeetingBtn');
-  addBtn.style.display = isAdmin() ? '' : 'none';
+    `<span>🏛 ${esc(u?u.name:'—')}</span><span>📅 ${esc(s?s.name:'—')}</span>` +
+    `${c.code?`<span>🔖 ${esc(c.code)}</span>`:''}${c.lecturer?`<span>👤 ${esc(c.lecturer)}</span>`:''}`;
 
   const list = document.getElementById('meetingList');
   list.innerHTML = '';
@@ -655,7 +621,7 @@ function renderDetail(courseId){
   document.getElementById('dMeetHead').textContent = `Riwayat Pertemuan (${meets.length})`;
 
   if(!meets.length){
-    list.innerHTML = `<div class="empty">${isAdmin()?'Belum ada pertemuan. Klik "+ Tambah Pertemuan".':'Belum ada riwayat pertemuan.'}</div>`;
+    list.innerHTML = '<div class="empty">Belum ada pertemuan. Klik "+ Tambah Pertemuan".</div>';
     return;
   }
   meets.forEach(m=>list.appendChild(renderMeeting(m)));
@@ -669,17 +635,14 @@ function renderMeeting(m){
   const head = document.createElement('div');
   head.className = 'm-head';
   head.innerHTML = `<span class="m-no">PERTEMUAN ${esc(m.no)}</span><span class="m-date">${esc(m.date||'tanpa tanggal')}</span>`;
-  if(isAdmin()){
-    const act = document.createElement('div'); act.className = 'm-actions';
-    act.appendChild(miniBtn('✎','', ()=> openForm('Ubah Pertemuan', [
-      {key:'no',label:'Nomor Pertemuan',type:'number',value:m.no},
-      {key:'date',label:'Tanggal',type:'date',value:m.date},
-      {key:'title',label:'Judul Pertemuan',value:m.title,placeholder:'Contoh: Pengenalan Basis Data'},
-      {key:'notes',label:'Catatan',type:'textarea',value:m.notes},
-    ], v=>editMeeting(m.id, Number(v.no), v.date, v.title, v.notes))));
-    act.appendChild(miniBtn('🗑','danger', ()=>delMeeting(m.id)));
-    head.appendChild(act);
-  }
+  const act = document.createElement('div'); act.className = 'm-actions';
+  act.appendChild(miniBtn('✎','', ()=> openForm('Ubah Pertemuan', [
+    {key:'no',label:'Nomor Pertemuan',type:'number',value:m.no},
+    {key:'date',label:'Tanggal',type:'date',value:m.date},
+    {key:'title',label:'Judul Pertemuan',value:m.title,placeholder:'Contoh: Pengenalan Basis Data'},
+  ], v=>editMeeting(m.id, Number(v.no), v.date, v.title))));
+  act.appendChild(miniBtn('🗑','danger', ()=>delMeeting(m.id)));
+  head.appendChild(act);
   el.appendChild(head);
 
   if(m.title){
@@ -696,60 +659,44 @@ function renderMeeting(m){
     cb.onchange = ()=>{ toggleTopic(t.id, cb.checked); li.classList.toggle('done', cb.checked); };
     const sp = document.createElement('span'); sp.className = 'txt'; sp.textContent = t.text;
     li.append(cb, sp);
-    if(isAdmin()){
-      li.appendChild(miniBtn('✎','edit', ()=> openForm('Ubah Topik', [{key:'text',label:'Isi Topik',value:t.text,required:true}], v=>editTopic(t.id,v.text))));
-      li.appendChild(miniBtn('🗑','del', ()=>delTopic(t.id)));
-    }
+    li.appendChild(miniBtn('✎','', ()=> openForm('Ubah Topik', [{key:'text',label:'Isi Topik',value:t.text,required:true}], v=>editTopic(t.id,v.text))));
+    li.appendChild(miniBtn('🗑','danger', ()=>delTopic(t.id)));
     ul.appendChild(li);
   });
   el.appendChild(ul);
 
-  if(isAdmin()){
-    const form = document.createElement('div'); form.className = 'add-topic';
-    const inp = document.createElement('input');
-    inp.type = 'text'; inp.placeholder = 'Tambah topik yang dibahas…';
-    const btn = document.createElement('button'); btn.className = 'btn btn-sm btn-primary'; btn.textContent = '+ Topik';
-    const submit = ()=>{
-      const v = inp.value.trim();
-      if(!v) return;
-      addTopic(m.id, v);
-      inp.value = '';
-      render();
-      const box = document.querySelector(`.meeting[data-mid="${m.id}"] .add-topic input`);
-      box && box.focus();
-    };
-    btn.onclick = submit;
-    inp.onkeydown = e=>{ if(e.key==='Enter'){ e.preventDefault(); submit(); } };
-    form.append(inp, btn);
-    el.appendChild(form);
-  }
-
-  if(m.notes){
-    const n = document.createElement('div'); n.className = 'm-notes'; n.textContent = m.notes;
-    el.appendChild(n);
-  }
+  const form = document.createElement('div'); form.className = 'add-topic';
+  const inp = document.createElement('input');
+  inp.type = 'text'; inp.placeholder = 'Tambah topik yang dibahas…';
+  const btn = document.createElement('button'); btn.className = 'btn btn-sm btn-primary'; btn.textContent = '+ Topik';
+  const submit = ()=>{
+    const v = inp.value.trim();
+    if(!v) return;
+    addTopic(m.id, v);
+    inp.value = '';
+    render();
+    const box = document.querySelector(`.meeting[data-mid="${m.id}"] .add-topic input`);
+    box && box.focus();
+  };
+  btn.onclick = submit;
+  inp.onkeydown = e=>{ if(e.key==='Enter'){ e.preventDefault(); submit(); } };
+  form.append(inp, btn);
+  el.appendChild(form);
   return el;
 }
 
 /* ══════════════════════════════════════
    GATE
    ══════════════════════════════════════ */
-function setRole(r){
-  role = r;
-  sessionStorage.setItem('ajar_role', r);
-  const badge = document.getElementById('roleBadge');
-  badge.textContent = r === 'admin' ? 'Pengajar' : 'Viewer';
-  badge.className = 'badge-role' + (r === 'admin' ? '' : ' viewer');
-  badge.style.display = '';
-  document.getElementById('logoutBtn').style.display = '';
-  document.getElementById('gate').style.display = 'none';
-  render();
-}
-function doLogin(code){
-  const err = document.getElementById('gateErr');
-  if(code === PASS_ADMIN){ setRole('admin'); return true; }
-  if(code === PASS_VIEW){ setRole('viewer'); return true; }
-  err.textContent = 'Kode tidak dikenali.';
+function login(code){
+  if(code === PASS_TEAM){
+    sessionStorage.setItem('ajar_in', '1');
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('logoutBtn').style.display = '';
+    render();
+    return true;
+  }
+  document.getElementById('gateErr').textContent = 'Kode tidak dikenali.';
   return false;
 }
 
@@ -776,26 +723,26 @@ function doLogin(code){
   const gate = document.getElementById('gate');
   const inp  = document.getElementById('gateInput');
   const btn  = document.getElementById('gateBtn');
-  const err  = document.getElementById('gateErr');
 
-  if(PASS_ADMIN === 'GANTI_KODE_ADMIN' || PASS_VIEW === 'GANTI_KODE_VIEWER'){
-    document.getElementById('gateHint').innerHTML = '⚠️ Kode akses belum diganti. Edit <b>PASS_VIEW</b> &amp; <b>PASS_ADMIN</b> di <code>logpengajar/index.html</code>.';
+  if(PASS_TEAM === 'GANTI_KODE_TIM'){
+    document.getElementById('gateHint').innerHTML = '⚠️ Kode akses belum diganti. Edit <b>PASS_TEAM</b> di <code>logpengajar/index.html</code>.';
   }
 
-  const submit = ()=>{ if(!doLogin(inp.value.trim())) inp.select(); };
+  const submit = ()=>{ if(!login(inp.value.trim())) inp.select(); };
   btn.onclick = submit;
   inp.onkeydown = e=>{ if(e.key === 'Enter') submit(); };
 
-  const saved = sessionStorage.getItem('ajar_role');
-  if(saved === 'admin' || saved === 'viewer'){
-    setRole(saved);
+  if(sessionStorage.getItem('ajar_in') === '1'){
+    gate.style.display = 'none';
+    document.getElementById('logoutBtn').style.display = '';
+    render();
   } else {
     gate.style.display = 'flex';
     setTimeout(()=>inp.focus(), 100);
   }
 
   document.getElementById('logoutBtn').onclick = ()=>{
-    sessionStorage.removeItem('ajar_role');
+    sessionStorage.removeItem('ajar_in');
     location.reload();
   };
   document.getElementById('backBtn').onclick = ()=>{ openCourse = null; render(); };
@@ -813,8 +760,7 @@ function doLogin(code){
       {key:'no',label:'Nomor Pertemuan',type:'number',value:next},
       {key:'date',label:'Tanggal',type:'date',value:new Date().toISOString().slice(0,10)},
       {key:'title',label:'Judul Pertemuan',placeholder:'Contoh: Pengenalan Basis Data'},
-      {key:'notes',label:'Catatan',type:'textarea',placeholder:'Catatan singkat pertemuan'},
-    ], v=>addMeeting(openCourse, Number(v.no), v.date, v.title, v.notes));
+    ], v=>addMeeting(openCourse, Number(v.no), v.date, v.title));
   };
 })();
 </script>
