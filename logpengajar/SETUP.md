@@ -50,10 +50,14 @@ PAT hanya dipakai Worker untuk tulis ke Gist. **Tidak pernah** ditaruh di kode b
 2. **Workers & Pages → Create application → Create Worker**
 3. Nama: `log-pengajar-writer` → **Deploy**
 4. **Edit code** → hapus isi default → paste isi `logpengajar/worker.js`
-5. Ganti `ALLOWED_ORIGIN` di baris atas dengan domain Pages-mu, contoh:
+5. Cek daftar origin di bagian atas file:
    ```js
-   const ALLOWED_ORIGIN = 'https://biancabeeaveril.github.io';
+   const ALLOWED_ORIGINS = [
+     'https://biancabeeaveril.github.io', // repo fork (username.github.io)
+     'https://dionisiusnp.github.io',     // repo asal
+   ];
    ```
+   Tambahkan domain lain bila app dibuka dari domain berbeda (misal custom domain).
 6. **Deploy**
 7. **Settings → Variables and Secrets → Add** (2 secret, klik **Encrypt** lalu **Save**):
 
@@ -157,6 +161,6 @@ Hapus di browser tidak membuang item, tapi menandai `deleted: true` + update `up
 |--------|-------------------|
 | "Kode tidak dikenali" | `PASS_VIEW`/`PASS_ADMIN` belum diganti di `index.html` |
 | Data tidak muncul | Cek `GIST_ID` & `WORKER_URL` sudah diisi; cek secret Worker (`GIST_ID`, `GIST_PAT`) |
-| Tab "CORS" di console | Domain di `ALLOWED_ORIGIN` ≠ domain halaman yang dibuka |
+| Tab "CORS" di console | Domain halaman tidak ada di `ALLOWED_ORIGINS` (`worker.js`) |
 | Perubahan tidak tersimpan | Buka DevTools → Network → lihat request POST ke Worker (statusnya 403/500 berarti secret Worker salah) |
 | Gist terisi 0 byte | Worker menulis file `ajar-data.json` — pastikan tidak ada file dengan nama berbeda di Gist itu |

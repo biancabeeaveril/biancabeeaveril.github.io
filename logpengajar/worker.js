@@ -11,14 +11,22 @@
  *   GIST_PAT = GitHub PAT (scope: gist)
  */
 
-const ALLOWED_ORIGIN = 'https://biancabeeaveril.github.io'; // ← ganti dengan domain Pages-mu
+const ALLOWED_ORIGINS = [
+  'https://biancabeeaveril.github.io', // repo fork (username.github.io)
+  'https://dionisiusnp.github.io',     // repo asal
+]; // ← tambah domain lain bila perlu
 const GIST_FILE = 'ajar-data.json';
 
-const CORS = {
-  'Access-Control-Allow-Origin': ALLOWED_ORIGIN,
-  'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
-  'Access-Control-Allow-Headers': 'Content-Type',
-};
+function corsHeaders(request) {
+  const origin = request.headers.get('Origin');
+  const allow = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+  return {
+    'Access-Control-Allow-Origin': allow,
+    'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Vary': 'Origin',
+  };
+}
 
 const EMPTY = { univs: [], sems: [], courses: [], meetings: [], topics: [] };
 
@@ -43,18 +51,19 @@ function mergeDb(g = {}, b = {}) {
   };
 }
 
-function json(data, status = 200) {
+function json(data, status = 200, cors = {}) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: { ...CORS, 'Content-Type': 'application/json; charset=utf-8' },
+    headers: { ...cors, 'Content-Type': 'application/json; charset=utf-8' },
   });
 }
 
 export default {
   async fetch(request, env) {
-    if (request.method === 'OPTIONS') return new Response(null, { headers: CORS });
+    const cors = corsHeaders(request);
+    if (request.method === 'OPTIONS') return new Response(null, { headers: cors });
     if (request.method !== 'GET' && request.method !== 'POST') {
-      return new Response('Method not allowed', { status: 405, headers: CORS });
+      return new Response('Method not allowed', { status: 405, headers: cors });
     }
 
     const ghHdr = {
@@ -68,7 +77,7 @@ export default {
       /* ── READ ── */
       const getResp = await fetch(`https://api.github.com/gists/${env.GIST_ID}`, { headers: ghHdr });
       if (!getResp.ok) {
-        return json({ error: 'gists fetch ' + getResp.status }, getResp.status);
+        return json({ error: 'gists fetch ' + getResp.status }, getResp.status, cors);
       }
       const gistData = await getResp.json();
       const content = gistData.files?.[GIST_FILE]?.content;
@@ -78,7 +87,7 @@ export default {
       }
 
       if (request.method === 'GET') {
-        return json(gistDb);
+        return json(gistDb, 200, cors);
       }
 
       /* ── WRITE (read-merge-write) ── */
@@ -94,11 +103,11 @@ export default {
       });
       const result = await patchResp.json();
       if (!patchResp.ok) {
-        return json({ error: result.message || 'gist patch failed' }, patchResp.status);
+        return json({ error: result.message || 'gist patch failed' }, patchResp.status, cors);
       }
-      return json({ ok: true });
+      return json({ ok: true }, 200, cors);
     } catch (e) {
-      return json({ error: e.message }, 500);
+      return json({ error: e.message }, 500, cors);
     }
   },
 };
