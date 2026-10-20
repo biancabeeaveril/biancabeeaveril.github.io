@@ -14,10 +14,29 @@ Portal multi-halaman berisi alat kerja tim + **Kelola Alteco** — aplikasi mana
 ├── pemasaran/index.html    ← Siklus penawaran
 ├── mitra/index.html        ← Logo & info mitra
 ├── todolist/index.html     ← Kelola Alteco (app utama)
+├── logpengajar/            ← Log Pengajaran (riwayat mengajar tim)
+│   ├── index.html          ← Aplikasi (single-file)
+│   ├── worker.js           ← Cloudflare Worker (write proxy)
+│   └── SETUP.md            ← Panduan setup Gist + Worker
 ├── OneSignalSDKWorker.js   ← Service worker push notif
 └── .github/workflows/
     └── daily-notif.yml     ← Cron harian kirim push notif
 ```
+
+---
+
+## Log Pengajaran (Tim Pengajar)
+
+App terpisah untuk mencatat riwayat mengajar: **universitas → semester → mata kuliah (card) → topik per pertemuan rutin**.
+
+| Komponen | Isi |
+|----------|-----|
+| Frontend | `logpengajar/index.html` (single-file, tanpa build, tanpa dependency) |
+| Data | GitHub Gist — file `ajar-data.json` |
+| Write proxy | Cloudflare Worker — `logpengajar/worker.js` |
+| Deploy | GitHub Pages |
+
+Cara setup (Gist, PAT, Worker, kode akses): **[`logpengajar/SETUP.md`](logpengajar/SETUP.md)**
 
 ---
 

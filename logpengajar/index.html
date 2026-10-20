@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Log Pengajaran — Tim Pengajar</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0b0b12;--surface:#12121c;--card:#181825;--card2:#1e1e2e;--bd:#23233a;--text:#e2e2f0;--muted:#9494b8;--accent:#6c6ff5;--accent2:#a78bfa;--green:#34d399;--red:#f87171;--font:'Inter',system-ui,sans-serif}
+[data-theme="light"]{--bg:#f4f4f9;--surface:#eaeaef;--card:#e2e2ef;--card2:#d8d8ea;--bd:#c5c5d4;--text:#15152a;--muted:#6a6a88;--accent:#5356d1;--accent2:#8b5cf6;--green:#059669;--red:#dc2626}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.55;min-height:100vh;display:flex;flex-direction:column;transition:background .25s,color .25s}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit}
+
+/* ── NAV ── */
+.nav{display:flex;align-items:center;gap:10px;padding:10px 24px;flex-shrink:0;background:var(--surface);border-bottom:1px solid var(--bd);position:sticky;top:0;z-index:50;transition:background .25s,border-color .25s}
+.nav-back{font-size:.72rem;font-weight:600;color:var(--muted);padding:4px 12px;border:1px solid var(--bd);border-radius:5px;transition:color .15s,border-color .15s}
+.nav-back:hover{color:var(--accent);border-color:var(--accent)}
+.nav-title{font-size:.82rem;font-weight:700}
+.nav-spacer{flex:1}
+.nav-meta{font-size:.68rem;color:var(--muted);display:flex;align-items:center;gap:8px}
+.badge-role{font-size:.62rem;font-weight:700;padding:2px 8px;border-radius:4px;background:var(--accent);color:#fff}
+.badge-role.viewer{background:var(--muted);color:#fff}
+.dot-sync{width:7px;height:7px;border-radius:50%;background:var(--muted);display:inline-block}
+.dot-sync.on{background:var(--green)}
+.icon-btn{width:30px;height:30px;border-radius:6px;border:1px solid var(--bd);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:13px;line-height:1;transition:background .2s,color .2s}
+.icon-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}
+.theme-btn{width:30px;height:30px;border-radius:6px;border:1px solid var(--bd);background:var(--card);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:14px;line-height:1;transition:background .2s}
+.theme-btn:hover{background:var(--accent);border-color:var(--accent)}
+
+/* ── PAGE ── */
+.page{flex:1;padding:22px 24px 60px;max-width:1000px;margin:0 auto;width:100%}
+.header{margin-bottom:18px}
+.header h1{font-size:1.3rem;font-weight:800;letter-spacing:-.02em}
+.header p{font-size:.8rem;color:var(--muted);margin-top:4px;line-height:1.6}
+
+/* ── FILTER ── */
+.filter-block{margin-bottom:14px}
+.filter-label{font-size:.64rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:7px;display:flex;align-items:center;gap:8px}
+.filter-label::before{content:'';width:3px;height:11px;border-radius:2px;background:var(--accent)}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{display:inline-flex;align-items:stretch;border:1px solid var(--bd);border-radius:7px;background:var(--card);overflow:hidden;transition:border-color .15s,background .15s}
+.chip:hover{border-color:var(--accent)}
+.chip.active{border-color:var(--accent);background:var(--accent);color:#fff}
+.chip-btn{background:none;border:none;color:inherit;cursor:pointer;font-size:.76rem;font-weight:600;padding:6px 12px;text-align:left}
+.chip.add{border-style:dashed;color:var(--muted)}
+.chip.add .chip-btn{color:var(--muted);font-weight:600}
+.chip.add:hover .chip-btn{color:var(--accent)}
+
+/* ── SECTION ── */
+.section-head{display:flex;align-items:center;gap:12px;margin:22px 0 12px;padding-top:16px;border-top:1px solid var(--bd)}
+.section-head h2{font-size:.95rem;font-weight:700;flex:1}
+.btn{background:var(--card);border:1px solid var(--bd);color:var(--text);font-size:.74rem;font-weight:600;padding:7px 13px;border-radius:6px;cursor:pointer;transition:background .15s,border-color .15s,color .15s}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn-primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn-primary:hover{background:var(--accent2);border-color:var(--accent2);color:#fff}
+.btn-sm{font-size:.68rem;padding:4px 9px}
+
+/* ── GRID CARD ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:11px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:9px;padding:14px 16px;cursor:pointer;transition:border-color .15s,transform .15s,background .25s;position:relative}
+.card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.card-top{display:flex;align-items:center;gap:8px;margin-bottom:7px}
+.code{font-size:.62rem;font-weight:700;padding:2px 7px;border-radius:3px;background:var(--accent2);color:var(--accent2);border:1px solid var(--bd)}
+[data-theme="light"] .code{color:var(--accent)}
+.card h3{font-size:.86rem;font-weight:700;line-height:1.35;margin-bottom:4px}
+.card .sub{font-size:.7rem;color:var(--muted)}
+.card-foot{display:flex;gap:8px;margin-top:11px;padding-top:9px;border-top:1px solid var(--bd);font-size:.66rem;color:var(--muted);flex-wrap:wrap}
+.card-foot b{color:var(--text);font-weight:700}
+.pill{padding:1px 7px;border-radius:20px;background:var(--card2);border:1px solid var(--bd)}
+.card-edit{position:absolute;top:10px;right:10px;display:flex;gap:4px;opacity:0;transition:opacity .15s}
+.card:hover .card-edit{opacity:1}
+.mini{border:1px solid var(--bd);background:var(--card2);color:var(--muted);border-radius:5px;width:24px;height:24px;cursor:pointer;font-size:.68rem;line-height:1;transition:color .15s,border-color .15s}
+.mini:hover{color:var(--accent);border-color:var(--accent)}
+.mini.danger:hover{color:var(--red);border-color:var(--red)}
+.empty{grid-column:1/-1;width:100%;text-align:center;padding:26px 16px;color:var(--muted);font-size:.78rem;border:1px dashed var(--bd);border-radius:9px}
+
+/* ── DETAIL ── */
+.detail-head{margin-bottom:16px}
+.back-link{font-size:.72rem;font-weight:600;color:var(--muted);cursor:pointer;background:none;border:none;padding:0;margin-bottom:10px;transition:color .15s}
+.back-link:hover{color:var(--accent)}
+.detail-head h2{font-size:1.15rem;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.detail-meta{font-size:.74rem;color:var(--muted);margin-top:5px}
+.detail-meta span{margin-right:12px;display:inline-flex;align-items:center;gap:4px}
+
+/* ── MEETING ── */
+.meeting{background:var(--card);border:1px solid var(--bd);border-radius:9px;padding:14px 16px;margin-bottom:11px;transition:border-color .25s}
+.meeting:hover{border-color:var(--bd)}
+.m-head{display:flex;align-items:center;gap:9px;margin-bottom:6px;flex-wrap:wrap}
+.m-no{font-size:.7rem;font-weight:700;color:var(--accent)}
+.m-date{font-size:.68rem;color:var(--muted)}
+.m-actions{margin-left:auto;display:flex;gap:5px}
+.m-title{font-size:.85rem;font-weight:600;margin-bottom:9px}
+.m-notes{font-size:.73rem;color:var(--muted);margin-top:9px;padding:9px 11px;background:var(--card2);border-radius:6px;border-left:2px solid var(--bd);white-space:pre-wrap}
+
+/* ── TOPIC ── */
+.topics{list-style:none;padding:0;margin:0}
+.topic{display:flex;align-items:center;gap:9px;padding:6px 0;border-bottom:1px dashed var(--bd)}
+.topic:last-child{border-bottom:none}
+.topic input[type=checkbox]{width:15px;height:15px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+.topic .txt{font-size:.78rem;flex:1;word-break:break-word}
+.topic.done .txt{color:var(--muted);text-decoration:line-through}
+.topic .mini{opacity:0}
+.topic:hover .mini{opacity:1}
+.topic .mini.edit:hover{color:var(--accent)}
+.topic .mini.del:hover{color:var(--red)}
+.add-topic{display:flex;gap:7px;margin-top:10px}
+.add-topic input{flex:1;background:var(--bg);border:1px solid var(--bd);color:var(--text);font-size:.76rem;padding:7px 10px;border-radius:6px;outline:none;transition:border-color .15s}
+.add-topic input:focus{border-color:var(--accent)}
+
+/* ── MODAL ── */
+.modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:200;padding:20px}
+.modal{background:var(--card);border:1px solid var(--bd);border-radius:12px;width:100%;max-width:400px;padding:20px;box-shadow:0 20px 50px rgba(0,0,0,.4);animation:pop .16s ease-out}
+@keyframes pop{from{transform:scale(.96);opacity:0}to{transform:scale(1);opacity:1}}
+.modal-title{font-size:.9rem;font-weight:700;margin-bottom:14px}
+.frow{display:block;margin-bottom:12px}
+.flabel{display:block;font-size:.68rem;font-weight:600;color:var(--muted);margin-bottom:5px}
+.frow input,.frow textarea,.frow select{width:100%;background:var(--bg);border:1px solid var(--bd);color:var(--text);font-size:.8rem;padding:9px 11px;border-radius:6px;outline:none;font-family:inherit;transition:border-color .15s}
+.frow input:focus,.frow textarea:focus{border-color:var(--accent)}
+.frow textarea{resize:vertical}
+.ferr{font-size:.7rem;color:var(--red);margin-bottom:8px;min-height:0}
+.modal-bar{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
+
+/* ── GATE ── */
+.gate{position:fixed;inset:0;background:var(--bg);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
+.gate-card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:28px;width:100%;max-width:340px;text-align:center}
+.gate-card h2{font-size:1.05rem;font-weight:800;margin-bottom:4px}
+.gate-card p{font-size:.75rem;color:var(--muted);margin-bottom:16px}
+.gate-card input{width:100%;background:var(--bg);border:1px solid var(--bd);color:var(--text);font-size:.85rem;text-align:center;letter-spacing:.08em;padding:11px;border-radius:7px;outline:none;margin-bottom:10px;transition:border-color .15s}
+.gate-card input:focus{border-color:var(--accent)}
+.gate-err{font-size:.7rem;color:var(--red);margin-bottom:10px;min-height:14px}
+.gate-hint{font-size:.65rem;color:var(--muted);margin-top:12px;line-height:1.6}
+
+@media(max-width:640px){
+  .nav{padding:8px 12px;gap:7px}
+  .nav-title{font-size:.74rem}
+  .page{padding:14px 12px 40px}
+  .grid{grid-template-columns:1fr}
+  .detail-head h2{font-size:1rem}
+  .nav-meta .role-txt{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../index.html" class="nav-back">← Rak</a>
+  <span class="nav-title">Log Pengajaran</span>
+  <span class="nav-spacer"></span>
+  <span class="nav-meta">
+    <span class="dot-sync" id="syncDot"></span>
+    <span id="syncTxt" style="display:none">Tersimpan</span>
+    <span class="badge-role" id="roleBadge" style="display:none"></span>
+  </span>
+  <button class="icon-btn" id="logoutBtn" style="display:none" title="Keluar">⎋</button>
+  <button class="theme-btn" id="themeBtn">🌙</button>
+</nav>
+
+<div class="page">
+  <div class="header">
+    <h1>Log Pengajaran</h1>
+    <p>Riwayat mengajar tim: pilih universitas → semester → mata kuliah. Klik matkul untuk lihat topik yang dibahas di tiap pertemuan rutin.</p>
+  </div>
+
+  <!-- LABEL 1: UNIVERSITAS -->
+  <div class="filter-block">
+    <div class="filter-label">Universitas</div>
+    <div class="chips" id="univChips"></div>
+  </div>
+
+  <!-- LABEL 2: SEMESTER -->
+  <div class="filter-block">
+    <div class="filter-label">Semester</div>
+    <div class="chips" id="semChips"></div>
+  </div>
+
+  <!-- MATA KULIAH -->
+  <div id="courseSection">
+    <div class="section-head">
+      <h2 id="courseHead">Mata Kuliah</h2>
+      <button class="btn btn-primary" id="addCourseBtn" style="display:none">+ Tambah Mata Kuliah</button>
+    </div>
+    <div class="grid" id="courseGrid"></div>
+  </div>
+
+  <!-- DETAIL MATA KULIAH -->
+  <div id="detailSection" style="display:none">
+    <div class="detail-head">
+      <button class="back-link" id="backBtn">← Kembali ke daftar mata kuliah</button>
+      <h2 id="dTitle"></h2>
+      <div class="detail-meta" id="dMeta"></div>
+    </div>
+    <div class="section-head" style="border-top:none;padding-top:0">
+      <h2 id="dMeetHead">Riwayat Pertemuan</h2>
+      <button class="btn btn-primary" id="addMeetingBtn" style="display:none">+ Tambah Pertemuan</button>
+    </div>
+    <div id="meetingList"></div>
+  </div>
+</div>
+
+<!-- MODAL FORM -->
+<div class="modal-wrap" id="modalWrap"><div class="modal" id="modalCard"></div></div>
+
+<!-- GATE -->
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <h2>Log Pengajaran</h2>
+    <p>Masukkan kode akses</p>
+    <input type="password" id="gateInput" placeholder="••••••" autocomplete="off"/>
+    <div class="gate-err" id="gateErr"></div>
+    <button class="btn btn-primary" id="gateBtn" style="width:100%">Masuk</button>
+    <div class="gate-hint" id="gateHint">Kode diberikan oleh koordinator tim pengajar.</div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════
+   CONFIG — ganti nilai di sini
+   ══════════════════════════════════════ */
+const PASS_VIEW  = 'GANTI_KODE_VIEWER';
+const PASS_ADMIN = 'GANTI_KODE_ADMIN';
+
+const LS_KEY     = 'rakperpus_ajar_v1';
+const GIST_ID    = 'GIST_ID_DISINI';
+const GIST_FILE  = 'ajar-data.json';
+const WORKER_URL = 'WORKER_URL_DISINI';
+
+const isSet = v => !!v && !/^(GIST_ID|WORKER_URL|GANTI_)/.test(v);
+
+/* ══════════════════════════════════════
+   STATE
+   ══════════════════════════════════════ */
+const emptyDb = () => ({univs:[],sems:[],courses:[],meetings:[],topics:[]});
+let db = emptyDb();
+let role = null;            /* 'viewer' | 'admin' */
+let selUniv = null;
+let selSem  = null;
+let openCourse = null;      /* courseId */
+
+const uid = () => Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4);
+const esc = s => String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const touch = it => { it.updatedAt = Date.now(); return it; };
+
+/* ── selectors ── */
+const liveUnivs   = () => db.univs.filter(u=>!u.deleted).sort((a,b)=>(a.ord||0)-(b.ord||0));
+const liveSems    = uid2 => db.sems.filter(s=>!s.deleted&&s.univId===uid2).sort((a,b)=>(a.ord||0)-(b.ord||0));
+const liveCourses = sid => db.courses.filter(c=>!c.deleted&&c.semId===sid).sort((a,b)=>(a.ord||0)-(b.ord||0));
+const liveMeets   = cid => db.meetings.filter(m=>!m.deleted&&m.courseId===cid).sort((a,b)=>(a.no||0)-(b.no||0));
+const liveTopics  = mid => db.topics.filter(t=>!t.deleted&&t.meetingId===mid).sort((a,b)=>(a.ord||0)-(b.ord||0));
+const getUniv = id => db.univs.find(u=>u.id===id);
+const getSem  = id => db.sems.find(s=>s.id===id);
+const getCourse = id => db.courses.find(c=>c.id===id);
+const getMeet = id => db.meetings.find(m=>m.id===id);
+const getTopic = id => db.topics.find(t=>t.id===id);
+const isAdmin = () => role==='admin';
+
+/* ══════════════════════════════════════
+   PERSISTENCE
+   ══════════════════════════════════════ */
+function mergeArr(g=[], b=[]){
+  const map = new Map();
+  for(const it of g) map.set(it.id, it);
+  for(const it of b){
+    const ex = map.get(it.id);
+    if(!ex || (it.updatedAt||0) >= (ex.updatedAt||0)) map.set(it.id, it);
+  }
+  return [...map.values()];
+}
+function mergeDb(g={}, b={}){
+  return {
+    univs:    mergeArr(g.univs||[], b.univs||[]),
+    sems:     mergeArr(g.sems||[], b.sems||[]),
+    courses:  mergeArr(g.courses||[], b.courses||[]),
+    meetings: mergeArr(g.meetings||[], b.meetings||[]),
+    topics:   mergeArr(g.topics||[], b.topics||[]),
+  };
+}
+function localLoad(){
+  try{ const d = JSON.parse(localStorage.getItem(LS_KEY)); if(d && d.univs) return d; }catch{}
+  return null;
+}
+async function remoteLoad(){
+  /* 1) Worker (bisa baca Gist secret) */
+  if(isSet(WORKER_URL)){
+    try{
+      const r = await fetch(WORKER_URL, {cache:'no-store'});
+      if(r.ok){ const j = await r.json(); if(j && j.univs) return j; }
+    }catch{}
+  }
+  /* 2) Gist publik langsung */
+  if(isSet(GIST_ID)){
+    try{
+      const r = await fetch(`https://api.github.com/gists/${GIST_ID}`, {cache:'no-store', headers:{'Accept':'application/vnd.github+json'}});
+      if(r.ok){
+        const g = await r.json();
+        const c = g.files?.[GIST_FILE]?.content;
+        if(c) return JSON.parse(c);
+      }
+    }catch{}
+  }
+  return null;
+}
+let _timer = null;
+function save(){
+  try{ localStorage.setItem(LS_KEY, JSON.stringify(db)); }catch{}
+  setSync(false);
+  if(!isSet(WORKER_URL)) return;
+  clearTimeout(_timer);
+  _timer = setTimeout(push, 400);
+}
+async function push(){
+  try{
+    await fetch(WORKER_URL, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(db)});
+    setSync(true);
+  }catch(e){ console.warn('save failed', e); }
+}
+window.addEventListener('beforeunload', ()=>{
+  if(!isSet(WORKER_URL)) return;
+  clearTimeout(_timer);
+  navigator.sendBeacon(WORKER_URL, new Blob([JSON.stringify(db)], {type:'application/json'}));
+});
+function setSync(ok){
+  const d = document.getElementById('syncDot'), t = document.getElementById('syncTxt');
+  if(!d) return;
+  d.classList.toggle('on', !!ok);
+  t.style.display = ok ? 'inline' : 'none';
+}
+
+/* ══════════════════════════════════════
+   ACTIONS
+   ══════════════════════════════════════ */
+function markDeleted(arr){ arr.forEach(i=>{ i.deleted = true; touch(i); }); }
+
+function addUniv(name){
+  const ord = Math.max(-1, ...liveUnivs().map(u=>u.ord||0)) + 1;
+  const u = touch({id:uid(), name, ord});
+  db.univs.push(u);
+  selUniv = u.id; selSem = null; openCourse = null;
+  save(); render();
+}
+function editUniv(id, name){
+  const u = getUniv(id); if(!u) return;
+  u.name = name; touch(u); save(); render();
+}
+function delUniv(id){
+  const u = getUniv(id); if(!u) return;
+  if(!confirm(`Hapus "${u.name}" beserta seluruh semester, mata kuliah, dan pertemuannya?`)) return;
+  const semIds  = db.sems.filter(s=>s.univId===id).map(s=>s.id);
+  const crsIds  = db.courses.filter(c=>semIds.includes(c.semId)).map(c=>c.id);
+  const meetIds = db.meetings.filter(m=>crsIds.includes(m.courseId)).map(m=>m.id);
+  markDeleted(db.topics.filter(t=>meetIds.includes(t.meetingId)));
+  markDeleted(db.meetings.filter(m=>meetIds.includes(m.id)));
+  markDeleted(db.courses.filter(c=>crsIds.includes(c.id)));
+  markDeleted(db.sems.filter(s=>semIds.includes(s.id)));
+  markDeleted([u]);
+  if(selUniv===id){ selUniv=null; selSem=null; openCourse=null; }
+  save(); render();
+}
+function addSem(univId, name){
+  const ord = Math.max(-1, ...liveSems(univId).map(s=>s.ord||0)) + 1;
+  const s = touch({id:uid(), univId, name, ord});
+  db.sems.push(s);
+  selSem = s.id; openCourse = null;
+  save(); render();
+}
+function editSem(id, name){
+  const s = getSem(id); if(!s) return;
+  s.name = name; touch(s); save(); render();
+}
+function delSem(id){
+  const s = getSem(id); if(!s) return;
+  if(!confirm(`Hapus semester "${s.name}" beserta mata kuliah dan pertemuannya?`)) return;
+  const crsIds  = db.courses.filter(c=>c.semId===id).map(c=>c.id);
+  const meetIds = db.meetings.filter(m=>crsIds.includes(m.courseId)).map(m=>m.id);
+  markDeleted(db.topics.filter(t=>meetIds.includes(t.meetingId)));
+  markDeleted(db.meetings.filter(m=>meetIds.includes(m.id)));
+  markDeleted(db.courses.filter(c=>crsIds.includes(c.id)));
+  markDeleted([s]);
+  if(selSem===id){ selSem = null; openCourse = null; }
+  save(); render();
+}
+function addCourse(semId, name, code, lecturer){
+  const ord = Math.max(-1, ...liveCourses(semId).map(c=>c.ord||0)) + 1;
+  const c = touch({id:uid(), semId, name, code:code||'', lecturer:lecturer||'', ord});
+  db.courses.push(c);
+  openCourse = c.id;
+  save(); render();
+}
+function editCourse(id, name, code, lecturer){
+  const c = getCourse(id); if(!c) return;
+  c.name = name; c.code = code||''; c.lecturer = lecturer||'';
+  touch(c); save(); render();
+}
+function delCourse(id){
+  const c = getCourse(id); if(!c) return;
+  if(!confirm(`Hapus mata kuliah "${c.name}" beserta riwayat pertemuannya?`)) return;
+  const meetIds = db.meetings.filter(m=>m.courseId===id).map(m=>m.id);
+  markDeleted(db.topics.filter(t=>meetIds.includes(t.meetingId)));
+  markDeleted(db.meetings.filter(m=>meetIds.includes(m.id)));
+  markDeleted([c]);
+  if(openCourse===id) openCourse = null;
+  save(); render();
+}
+function addMeeting(courseId, no, date, title, notes){
+  const ord = Math.max(-1, ...liveMeets(courseId).map(m=>m.no||0)) + 1;
+  const m = touch({id:uid(), courseId, no: no||ord, date: date||'', title: title||'', notes: notes||''});
+  db.meetings.push(m);
+  save(); render();
+}
+function editMeeting(id, no, date, title, notes){
+  const m = getMeet(id); if(!m) return;
+  m.no = no||m.no; m.date = date||''; m.title = title||''; m.notes = notes||'';
+  touch(m); save(); render();
+}
+function delMeeting(id){
+  const m = getMeet(id); if(!m) return;
+  if(!confirm(`Hapus pertemuan ${m.no} beserta topik-topiknya?`)) return;
+  markDeleted(db.topics.filter(t=>t.meetingId===id));
+  markDeleted([m]);
+  save(); render();
+}
+function addTopic(meetingId, text){
+  const ord = Math.max(-1, ...liveTopics(meetingId).map(t=>t.ord||0)) + 1;
+  db.topics.push(touch({id:uid(), meetingId, text, done:false, ord}));
+  save();
+}
+function toggleTopic(id, done){
+  const t = getTopic(id); if(!t) return;
+  t.done = done; touch(t); save();
+}
+function editTopic(id, text){
+  const t = getTopic(id); if(!t) return;
+  t.text = text; touch(t); save(); render();
+}
+function delTopic(id){
+  const t = getTopic(id); if(!t) return;
+  markDeleted([t]); save(); render();
+}
+
+/* ══════════════════════════════════════
+   UI HELPERS
+   ══════════════════════════════════════ */
+function openForm(title, fields, onSave){
+  const wrap = document.getElementById('modalWrap');
+  const card = document.getElementById('modalCard');
+  card.innerHTML = '';
+  const t = document.createElement('div');
+  t.className = 'modal-title'; t.textContent = title;
+  card.appendChild(t);
+
+  const form = document.createElement('form');
+  fields.forEach(f=>{
+    const row = document.createElement('label'); row.className = 'frow';
+    const lb = document.createElement('span'); lb.className = 'flabel'; lb.textContent = f.label;
+    row.appendChild(lb);
+    let input;
+    if(f.type === 'textarea'){ input = document.createElement('textarea'); input.rows = 3; }
+    else { input = document.createElement('input'); input.type = f.type || 'text'; }
+    input.name = f.key;
+    input.value = f.value ?? '';
+    if(f.placeholder) input.placeholder = f.placeholder;
+    if(f.required) input.required = true;
+    row.appendChild(input);
+    form.appendChild(row);
+  });
+  const err = document.createElement('div'); err.className = 'ferr';
+  form.appendChild(err);
+
+  const bar = document.createElement('div'); bar.className = 'modal-bar';
+  const cancel = document.createElement('button'); cancel.type = 'button'; cancel.className = 'btn'; cancel.textContent = 'Batal';
+  const ok = document.createElement('button'); ok.type = 'submit'; ok.className = 'btn btn-primary'; ok.textContent = 'Simpan';
+  bar.append(cancel, ok);
+  form.appendChild(bar);
+
+  cancel.onclick = closeForm;
+  form.onsubmit = e => {
+    e.preventDefault();
+    const vals = {};
+    fields.forEach(f => vals[f.key] = (form.elements[f.key].value || '').trim());
+    const miss = fields.find(f => f.required && !vals[f.key]);
+    if(miss){ err.textContent = `"${miss.label}" wajib diisi.`; return; }
+    closeForm();
+    onSave(vals);
+  };
+  card.appendChild(form);
+  wrap.style.display = 'flex';
+  wrap.onclick = e => { if(e.target === wrap) closeForm(); };
+  setTimeout(()=>{ const i = card.querySelector('input,textarea'); i && i.focus(); }, 60);
+}
+function closeForm(){ document.getElementById('modalWrap').style.display = 'none'; }
+
+function miniBtn(txt, cls, fn){
+  const b = document.createElement('button');
+  b.className = 'mini ' + (cls||''); b.textContent = txt; b.onclick = e => { e.stopPropagation(); fn(); };
+  return b;
+}
+function chipBox(label){
+  const d = document.createElement('div'); d.className = 'chip';
+  const b = document.createElement('button'); b.className = 'chip-btn'; b.textContent = label;
+  d.appendChild(b);
+  return {el:d, btn:b};
+}
+
+/* ══════════════════════════════════════
+   RENDER
+   ══════════════════════════════════════ */
+function render(){
+  renderUnivs();
+  renderSems();
+  if(openCourse && getCourse(openCourse)) renderDetail(openCourse);
+  else { openCourse = null; renderCourses(); }
+}
+
+function renderUnivs(){
+  const box = document.getElementById('univChips');
+  box.innerHTML = '';
+  const list = liveUnivs();
+  if(!list.length){
+    const e = document.createElement('div');
+    e.className = 'empty'; e.textContent = isAdmin() ? 'Belum ada universitas. Tambahkan lewat tombol "+ Tambah".' : 'Belum ada data universitas.';
+    box.appendChild(e);
+  }
+  list.forEach(u=>{
+    const c = chipBox(u.name);
+    c.el.classList.toggle('active', selUniv === u.id);
+    c.btn.onclick = ()=>{ selUniv = u.id; selSem = null; openCourse = null; render(); };
+    if(isAdmin()){
+      c.el.appendChild(miniBtn('✎','', ()=> openForm('Ubah Universitas', [{key:'name',label:'Nama Universitas',value:u.name,required:true}], v=>editUniv(u.id,v.name))));
+      c.el.appendChild(miniBtn('🗑','danger', ()=>delUniv(u.id)));
+    }
+    box.appendChild(c.el);
+  });
+  if(isAdmin()){
+    const add = chipBox('+ Tambah');
+    add.el.classList.add('add');
+    add.btn.onclick = ()=> openForm('Tambah Universitas', [{key:'name',label:'Nama Universitas',placeholder:'Contoh: Universitas Astrindo',required:true}], v=>addUniv(v.name));
+    box.appendChild(add.el);
+  }
+}
+
+function renderSems(){
+  const box = document.getElementById('semChips');
+  box.innerHTML = '';
+  if(!selUniv){
+    box.innerHTML = '<div class="empty">Pilih universitas dulu di atas.</div>';
+    return;
+  }
+  const list = liveSems(selUniv);
+  if(!list.length){
+    const e = document.createElement('div');
+    e.className = 'empty'; e.textContent = isAdmin() ? 'Belum ada semester. Tambahkan lewat tombol "+ Tambah".' : 'Belum ada semester.';
+    box.appendChild(e);
+  }
+  list.forEach(s=>{
+    const c = chipBox(s.name);
+    c.el.classList.toggle('active', selSem === s.id);
+    c.btn.onclick = ()=>{ selSem = s.id; openCourse = null; render(); };
+    if(isAdmin()){
+      c.el.appendChild(miniBtn('✎','', ()=> openForm('Ubah Semester', [{key:'name',label:'Nama Semester',value:s.name,required:true}], v=>editSem(s.id,v.name))));
+      c.el.appendChild(miniBtn('🗑','danger', ()=>delSem(s.id)));
+    }
+    box.appendChild(c.el);
+  });
+  if(isAdmin()){
+    const add = chipBox('+ Tambah');
+    add.el.classList.add('add');
+    add.btn.onclick = ()=> openForm('Tambah Semester', [{key:'name',label:'Nama Semester',placeholder:'Contoh: Ganjil 2026/2027',required:true}], v=>addSem(selUniv,v.name));
+    box.appendChild(add.el);
+  }
+}
+
+function renderCourses(){
+  document.getElementById('courseSection').style.display = '';
+  document.getElementById('detailSection').style.display = 'none';
+  document.getElementById('meetingList').innerHTML = '';
+  const grid = document.getElementById('courseGrid');
+  const head = document.getElementById('courseHead');
+  const addBtn = document.getElementById('addCourseBtn');
+  grid.innerHTML = '';
+
+  if(!selUniv){
+    head.textContent = 'Mata Kuliah';
+    addBtn.style.display = 'none';
+    grid.innerHTML = '<div class="empty">Pilih universitas di atas.</div>';
+    return;
+  }
+  if(!selSem){
+    head.textContent = 'Mata Kuliah';
+    addBtn.style.display = 'none';
+    grid.innerHTML = '<div class="empty">Pilih semester di atas.</div>';
+    return;
+  }
+  const u = getUniv(selUniv), s = getSem(selSem);
+  head.textContent = `Mata Kuliah — ${u.name} · ${s.name}`;
+  addBtn.style.display = isAdmin() ? '' : 'none';
+
+  const list = liveCourses(selSem);
+  if(!list.length){
+    grid.innerHTML = `<div class="empty">${isAdmin()?'Belum ada mata kuliah. Klik "+ Tambah Mata Kuliah".':'Belum ada mata kuliah di semester ini.'}</div>`;
+    return;
+  }
+  list.forEach(c=>{
+    const meets = liveMeets(c.id);
+    const tids = meets.flatMap(m=>liveTopics(m.id).map(t=>t.id));
+    const done = tids.filter(id=>getTopic(id)?.done).length;
+    const last = meets.map(m=>m.date).filter(Boolean).sort().pop() || '—';
+
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-top">
+        ${c.code ? `<span class="code">${esc(c.code)}</span>` : ''}
+        <span class="pill">${meets.length} pertemuan</span>
+      </div>
+      <h3>${esc(c.name)}</h3>
+      ${c.lecturer ? `<div class="sub">Pengajar: ${esc(c.lecturer)}</div>` : ''}
+      <div class="card-foot">
+        <span class="pill">Topik <b>${done}/${tids.length}</b> dibahas</span>
+        <span class="pill">Terakhir <b>${esc(last)}</b></span>
+      </div>`;
+    if(isAdmin()){
+      const ed = document.createElement('div'); ed.className = 'card-edit';
+      ed.appendChild(miniBtn('✎','', ()=> openForm('Ubah Mata Kuliah', [
+        {key:'name',label:'Nama Mata Kuliah',value:c.name,required:true},
+        {key:'code',label:'Kode',value:c.code,placeholder:'Contoh: IF201'},
+        {key:'lecturer',label:'Pengajar',value:c.lecturer,placeholder:'Nama pengajar'},
+      ], v=>editCourse(c.id,v.name,v.code,v.lecturer))));
+      ed.appendChild(miniBtn('🗑','danger', ()=>delCourse(c.id)));
+      card.appendChild(ed);
+    }
+    card.onclick = ()=>{ openCourse = c.id; render(); window.scrollTo({top:0,behavior:'smooth'}); };
+    grid.appendChild(card);
+  });
+}
+
+function renderDetail(courseId){
+  document.getElementById('courseSection').style.display = 'none';
+  document.getElementById('detailSection').style.display = '';
+
+  const c = getCourse(courseId);
+  const s = getSem(c.semId), u = s ? getUniv(s.univId) : null;
+  document.getElementById('dTitle').innerHTML = `${esc(c.name)} ${c.code?`<span class="code">${esc(c.code)}</span>`:''}`;
+  document.getElementById('dMeta').innerHTML =
+    `<span>🏛 ${esc(u?u.name:'—')}</span><span>📅 ${esc(s?s.name:'—')}</span>${c.lecturer?`<span>👤 ${esc(c.lecturer)}</span>`:''}`;
+
+  const addBtn = document.getElementById('addMeetingBtn');
+  addBtn.style.display = isAdmin() ? '' : 'none';
+
+  const list = document.getElementById('meetingList');
+  list.innerHTML = '';
+  const meets = liveMeets(courseId);
+  document.getElementById('dMeetHead').textContent = `Riwayat Pertemuan (${meets.length})`;
+
+  if(!meets.length){
+    list.innerHTML = `<div class="empty">${isAdmin()?'Belum ada pertemuan. Klik "+ Tambah Pertemuan".':'Belum ada riwayat pertemuan.'}</div>`;
+    return;
+  }
+  meets.forEach(m=>list.appendChild(renderMeeting(m)));
+}
+
+function renderMeeting(m){
+  const el = document.createElement('div');
+  el.className = 'meeting';
+  el.dataset.mid = m.id;
+
+  const head = document.createElement('div');
+  head.className = 'm-head';
+  head.innerHTML = `<span class="m-no">PERTEMUAN ${esc(m.no)}</span><span class="m-date">${esc(m.date||'tanpa tanggal')}</span>`;
+  if(isAdmin()){
+    const act = document.createElement('div'); act.className = 'm-actions';
+    act.appendChild(miniBtn('✎','', ()=> openForm('Ubah Pertemuan', [
+      {key:'no',label:'Nomor Pertemuan',type:'number',value:m.no},
+      {key:'date',label:'Tanggal',type:'date',value:m.date},
+      {key:'title',label:'Judul Pertemuan',value:m.title,placeholder:'Contoh: Pengenalan Basis Data'},
+      {key:'notes',label:'Catatan',type:'textarea',value:m.notes},
+    ], v=>editMeeting(m.id, Number(v.no), v.date, v.title, v.notes))));
+    act.appendChild(miniBtn('🗑','danger', ()=>delMeeting(m.id)));
+    head.appendChild(act);
+  }
+  el.appendChild(head);
+
+  if(m.title){
+    const t = document.createElement('div'); t.className = 'm-title'; t.textContent = m.title;
+    el.appendChild(t);
+  }
+
+  const ul = document.createElement('ul'); ul.className = 'topics';
+  liveTopics(m.id).forEach(t=>{
+    const li = document.createElement('li');
+    li.className = 'topic' + (t.done ? ' done' : '');
+    const cb = document.createElement('input');
+    cb.type = 'checkbox'; cb.checked = !!t.done;
+    cb.onchange = ()=>{ toggleTopic(t.id, cb.checked); li.classList.toggle('done', cb.checked); };
+    const sp = document.createElement('span'); sp.className = 'txt'; sp.textContent = t.text;
+    li.append(cb, sp);
+    if(isAdmin()){
+      li.appendChild(miniBtn('✎','edit', ()=> openForm('Ubah Topik', [{key:'text',label:'Isi Topik',value:t.text,required:true}], v=>editTopic(t.id,v.text))));
+      li.appendChild(miniBtn('🗑','del', ()=>delTopic(t.id)));
+    }
+    ul.appendChild(li);
+  });
+  el.appendChild(ul);
+
+  if(isAdmin()){
+    const form = document.createElement('div'); form.className = 'add-topic';
+    const inp = document.createElement('input');
+    inp.type = 'text'; inp.placeholder = 'Tambah topik yang dibahas…';
+    const btn = document.createElement('button'); btn.className = 'btn btn-sm btn-primary'; btn.textContent = '+ Topik';
+    const submit = ()=>{
+      const v = inp.value.trim();
+      if(!v) return;
+      addTopic(m.id, v);
+      inp.value = '';
+      render();
+      const box = document.querySelector(`.meeting[data-mid="${m.id}"] .add-topic input`);
+      box && box.focus();
+    };
+    btn.onclick = submit;
+    inp.onkeydown = e=>{ if(e.key==='Enter'){ e.preventDefault(); submit(); } };
+    form.append(inp, btn);
+    el.appendChild(form);
+  }
+
+  if(m.notes){
+    const n = document.createElement('div'); n.className = 'm-notes'; n.textContent = m.notes;
+    el.appendChild(n);
+  }
+  return el;
+}
+
+/* ══════════════════════════════════════
+   GATE
+   ══════════════════════════════════════ */
+function setRole(r){
+  role = r;
+  sessionStorage.setItem('ajar_role', r);
+  const badge = document.getElementById('roleBadge');
+  badge.textContent = r === 'admin' ? 'Pengajar' : 'Viewer';
+  badge.className = 'badge-role' + (r === 'admin' ? '' : ' viewer');
+  badge.style.display = '';
+  document.getElementById('logoutBtn').style.display = '';
+  document.getElementById('gate').style.display = 'none';
+  render();
+}
+function doLogin(code){
+  const err = document.getElementById('gateErr');
+  if(code === PASS_ADMIN){ setRole('admin'); return true; }
+  if(code === PASS_VIEW){ setRole('viewer'); return true; }
+  err.textContent = 'Kode tidak dikenali.';
+  return false;
+}
+
+/* ══════════════════════════════════════
+   BOOT
+   ══════════════════════════════════════ */
+(async function(){
+  /* theme */
+  const html = document.documentElement, tb = document.getElementById('themeBtn');
+  if(localStorage.getItem('theme') === 'light'){ html.setAttribute('data-theme','light'); tb.textContent = '☀️'; }
+  tb.onclick = ()=>{
+    if(html.getAttribute('data-theme') === 'light'){ html.removeAttribute('data-theme'); tb.textContent = '🌙'; localStorage.setItem('theme','dark'); }
+    else { html.setAttribute('data-theme','light'); tb.textContent = '☀️'; localStorage.setItem('theme','light'); }
+  };
+
+  /* data */
+  const local = localLoad();
+  const remote = await remoteLoad();
+  db = (remote && local) ? mergeDb(remote, local) : (remote || local || emptyDb());
+  localStorage.setItem(LS_KEY, JSON.stringify(db));
+  setSync(!!remote);
+
+  /* gate */
+  const gate = document.getElementById('gate');
+  const inp  = document.getElementById('gateInput');
+  const btn  = document.getElementById('gateBtn');
+  const err  = document.getElementById('gateErr');
+
+  if(PASS_ADMIN === 'GANTI_KODE_ADMIN' || PASS_VIEW === 'GANTI_KODE_VIEWER'){
+    document.getElementById('gateHint').innerHTML = '⚠️ Kode akses belum diganti. Edit <b>PASS_VIEW</b> &amp; <b>PASS_ADMIN</b> di <code>logpengajar/index.html</code>.';
+  }
+
+  const submit = ()=>{ if(!doLogin(inp.value.trim())) inp.select(); };
+  btn.onclick = submit;
+  inp.onkeydown = e=>{ if(e.key === 'Enter') submit(); };
+
+  const saved = sessionStorage.getItem('ajar_role');
+  if(saved === 'admin' || saved === 'viewer'){
+    setRole(saved);
+  } else {
+    gate.style.display = 'flex';
+    setTimeout(()=>inp.focus(), 100);
+  }
+
+  document.getElementById('logoutBtn').onclick = ()=>{
+    sessionStorage.removeItem('ajar_role');
+    location.reload();
+  };
+  document.getElementById('backBtn').onclick = ()=>{ openCourse = null; render(); };
+  document.getElementById('addCourseBtn').onclick = ()=>{
+    if(!selSem){ alert('Pilih semester dulu.'); return; }
+    openForm('Tambah Mata Kuliah', [
+      {key:'name',label:'Nama Mata Kuliah',placeholder:'Contoh: Basis Data',required:true},
+      {key:'code',label:'Kode',placeholder:'Contoh: IF201'},
+      {key:'lecturer',label:'Pengajar',placeholder:'Nama pengajar'},
+    ], v=>addCourse(selSem, v.name, v.code, v.lecturer));
+  };
+  document.getElementById('addMeetingBtn').onclick = ()=>{
+    const next = Math.max(0, ...liveMeets(openCourse).map(m=>m.no||0)) + 1;
+    openForm('Tambah Pertemuan', [
+      {key:'no',label:'Nomor Pertemuan',type:'number',value:next},
+      {key:'date',label:'Tanggal',type:'date',value:new Date().toISOString().slice(0,10)},
+      {key:'title',label:'Judul Pertemuan',placeholder:'Contoh: Pengenalan Basis Data'},
+      {key:'notes',label:'Catatan',type:'textarea',placeholder:'Catatan singkat pertemuan'},
+    ], v=>addMeeting(openCourse, Number(v.no), v.date, v.title, v.notes));
+  };
+})();
+</script>
+</body>
+</html>
