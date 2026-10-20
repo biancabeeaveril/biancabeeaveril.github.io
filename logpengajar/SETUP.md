@@ -92,6 +92,8 @@ const WORKER_URL = 'https://log-pengajar-writer.dionisiusn1.workers.dev';
 
 Commit & push → GitHub Pages deploy otomatis.
 
+> Kode yang sama juga dipakai homepage (`index.html`, konstanta `PASS_TEAM`) untuk fitur **Masuk** → **Ruang Tim**. Ganti di kedua file supaya sinkron.
+
 ---
 
 ## Langkah 5 — Mulai pakai

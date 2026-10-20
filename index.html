@@ -1,398 +1,346 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>Aliria Tech Community</title>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
-<style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-:root{
-  --bg:#0b0b12;--surface:#12121c;--card:#181825;--card2:#1e1e2e;
-  --bd:#23233a;--text:#e2e2f0;--muted:#9494b8;--dim:#4a4a6a;
-  --accent:#6c6ff5;--accent2:rgba(108,111,245,.1);
-  --font:'Inter',system-ui,sans-serif
-}
-[data-theme="light"]{
-  --bg:#f4f4f9;--surface:#eaeaef;--card:#e2e2ef;--card2:#d8d8ea;
-  --bd:#c5c5d4;--text:#15152a;--muted:#6a6a88;--dim:#b0b0cc;
-  --accent:#5356d1;--accent2:rgba(83,86,209,.08)
-}
-html{scroll-behavior:smooth}
-body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;transition:background .25s,color .25s}
-a{text-decoration:none;color:inherit}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aliria Tech Community — Wadah belajar kolaboratif pemrograman, teknologi informasi, dan pengembangan skill praktis bersama para mentor berpengalaman.">
+    <title>Aliria Tech Community — Mentoring</title>
 
-/* ─── NAV ─── */
-.nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;height:52px;padding:0 32px;background:var(--surface);border-bottom:1px solid var(--bd);transition:background .25s,border-color .25s}
-.nav-brand{font-size:.74rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
-.nav-spacer{flex:1}
-.nav-links{display:flex;gap:24px}
-.nav-links a{font-size:.74rem;font-weight:500;color:var(--muted);transition:color .2s}
-.nav-links a:hover{color:var(--text)}
-.theme-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--bd);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;margin-left:20px;transition:background .2s}
-.theme-btn:hover{background:var(--accent);border-color:var(--accent)}
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-/* ─── CAROUSEL ─── */
-.carousel{position:relative;width:100%;height:100vh;max-height:680px;overflow:hidden;background:#000}
-.carousel-slides{display:flex;width:300%;height:100%;transition:transform .6s cubic-bezier(.4,0,.2,1)}
-.slide{width:33.333%;height:100%;flex-shrink:0;position:relative}
-.slide img{width:100%;height:100%;object-fit:cover;opacity:.62;display:block;transition:opacity .25s}
-[data-theme="light"] .slide img{opacity:.72}
-.carousel-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px;pointer-events:none}
-.carousel-overlay h1{font-size:clamp(2rem,5.5vw,3.8rem);font-weight:900;letter-spacing:-.04em;line-height:1.05;color:#fff;text-shadow:0 2px 24px rgba(0,0,0,.5);margin-bottom:12px}
-.carousel-overlay h1 em{font-style:normal;color:#a5a8ff}
-.carousel-overlay p{font-size:.95rem;color:rgba(255,255,255,.72);max-width:460px;line-height:1.7;margin-bottom:28px}
-.carousel-member-count{display:inline-flex;align-items:baseline;gap:8px;background:rgba(0,0,0,.4);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.12);border-radius:100px;padding:8px 20px;pointer-events:all}
-.count-num{font-size:1.5rem;font-weight:900;letter-spacing:-.03em;color:#fff}
-.count-label{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.62);letter-spacing:.06em;text-transform:uppercase}
-.carousel-dots{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:8px;pointer-events:all}
-.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.35);border:none;cursor:pointer;transition:background .2s,width .3s}
-.dot.active{width:22px;border-radius:100px;background:#fff}
-.carousel-prev,.carousel-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.15);color:#fff;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:background .2s;backdrop-filter:blur(4px)}
-.carousel-prev{left:20px}
-.carousel-next{right:20px}
-.carousel-prev:hover,.carousel-next:hover{background:rgba(0,0,0,.6)}
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f3f4f6;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
 
-/* ─── SECTION BASE ─── */
-.sec{padding:80px 24px}
-.sec-inner{max-width:960px;margin:0 auto}
-.sec-tag{font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
-.sec-title{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;letter-spacing:-.03em;margin-bottom:12px;line-height:1.2}
-.sec-sub{font-size:.88rem;color:var(--muted);line-height:1.75;max-width:580px}
-.divider{border:none;border-top:1px solid var(--bd);margin:0}
+        .heading-font {
+            font-family: 'Montserrat', sans-serif;
+        }
 
-/* ─── TENTANG ─── */
-.tentang-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px;align-items:start}
-.tentang-naratif p{font-size:.88rem;color:var(--muted);line-height:1.85;margin-bottom:16px}
-.tentang-naratif p:last-child{margin-bottom:0}
-.tentang-right{display:flex;flex-direction:column;gap:24px}
-.visi-block{background:var(--card);border:1px solid var(--bd);border-left:3px solid var(--accent);border-radius:8px;padding:20px 22px}
-.visi-block-label{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
-.visi-block-text{font-size:.8rem;line-height:1.75;color:var(--muted)}
-.misi-list{display:flex;flex-direction:column;gap:12px;margin-top:4px}
-.misi-item{display:flex;gap:12px;align-items:flex-start}
-.misi-num{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--accent2);border:1px solid var(--accent);color:var(--accent);font-size:.6rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:2px}
-.misi-text{font-size:.78rem;color:var(--muted);line-height:1.7}
+        /* Latar belakang Silver Geometris khas Banner Aliria */
+        .silver-bg {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
+            position: relative;
+            overflow: hidden;
+        }
 
-/* ─── STRUKTUR ─── */
-.struktur-sec{background:var(--surface);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
-.prog-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:40px}
-.prog-card{background:var(--card);border:1px solid var(--bd);border-radius:9px;padding:22px 18px;transition:border-color .2s,background .2s}
-.prog-card:hover{border-color:var(--accent);background:var(--card2)}
-.prog-icon{font-size:1.3rem;margin-bottom:12px}
-.prog-name{font-size:.82rem;font-weight:700;margin-bottom:6px}
-.prog-desc{font-size:.72rem;color:var(--muted);line-height:1.65;margin-bottom:12px}
-.prog-tags{display:flex;flex-wrap:wrap;gap:4px}
-.prog-tag{font-size:.6rem;font-weight:600;color:var(--accent);background:var(--accent2);padding:2px 8px;border-radius:100px}
-.struktur-note{margin-top:24px;font-size:.74rem;color:var(--dim);text-align:center;font-style:italic}
+        /* Overlay Pola Belah Ketupat / Diamond Lines */
+        .diamond-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%),
+                linear-gradient(-45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%),
+                linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.4) 75%),
+                linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.4) 75%);
+            background-size: 120px 120px;
+            background-position: 0 0, 0 60px, 60px -60px, -60px 0px;
+            opacity: 0.6;
+            pointer-events: none;
+        }
 
-/* ─── KERJASAMA ─── */
-.kerja-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
-.kerja-card{background:var(--card);border:1px solid var(--bd);border-radius:10px;overflow:hidden;transition:border-color .2s}
-.kerja-card:hover{border-color:var(--accent)}
-.kerja-head{padding:22px 22px 16px;border-bottom:1px solid var(--bd)}
-.kerja-audience{font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
-.kerja-title{font-size:.9rem;font-weight:700;line-height:1.3}
-.kerja-body{padding:18px 22px}
-.kerja-items{list-style:none;display:flex;flex-direction:column;gap:10px}
-.kerja-items li{font-size:.78rem;color:var(--muted);line-height:1.6;padding-left:14px;position:relative}
-.kerja-items li::before{content:'—';position:absolute;left:0;color:var(--dim)}
+        /* Gradient Light Effects */
+        .glow-overlay {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+            top: -200px;
+            left: -100px;
+            pointer-events: none;
+        }
 
-/* ─── FOOTER ─── */
-.footer{border-top:1px solid var(--bd);padding:18px 24px;text-align:center;transition:border-color .25s}
-.footer-copy{font-size:.68rem;color:var(--dim)}
+        /* Floating animation for subtle interaction */
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
+            100% { transform: translateY(0px); }
+        }
 
-/* ─── FLOATING BUTTONS ─── */
-.fab-group{position:fixed;bottom:24px;right:24px;display:flex;flex-direction:column;gap:8px;align-items:flex-end;z-index:300}
-.fab-btn{display:inline-flex;align-items:center;gap:7px;font-size:.78rem;font-weight:700;padding:10px 18px;border-radius:100px;white-space:nowrap;box-shadow:0 4px 20px rgba(0,0,0,.35);transition:opacity .2s,transform .15s}
-.fab-btn:hover{opacity:.88;transform:translateY(-2px)}
-.fab-primary{background:var(--accent);color:#fff}
-.fab-secondary{background:var(--surface);border:1px solid var(--bd);color:var(--muted)}
-.fab-secondary:hover{border-color:var(--accent);color:var(--accent)}
-
-@media(max-width:900px){
-  .tentang-grid{grid-template-columns:1fr}
-  .prog-grid{grid-template-columns:repeat(3,1fr)}
-  .kerja-grid{grid-template-columns:1fr}
-}
-@media(max-width:600px){
-  .nav-links{display:none}
-  .carousel{max-height:520px}
-  .prog-grid{grid-template-columns:repeat(2,1fr)}
-  .sec{padding:56px 20px}
-}
-@media(max-width:400px){
-  .prog-grid{grid-template-columns:1fr}
-}
-</style>
+        .float-element {
+            animation: float 4s ease-in-out infinite;
+        }
+    </style>
 </head>
-<body>
+<body class="min-h-screen flex flex-col items-center p-4 md:p-8">
 
-<!-- NAV -->
-<nav class="nav">
-  <span class="nav-brand">Aliria Tech Community</span>
-  <span class="nav-spacer"></span>
-  <div class="nav-links">
-    <a href="#tentang">Tentang</a>
-    <a href="#struktur">Program</a>
-    <a href="#kerjasama">Kerjasama</a>
-  </div>
-  <button class="theme-btn" id="themeBtn" title="Ganti tema">🌙</button>
-</nav>
-
-<!-- SECTION 1: HERO CAROUSEL -->
-<div class="carousel" id="carousel">
-  <div class="carousel-slides" id="slides">
-    <div class="slide"><img src="banner_1.png" alt="Aliria Tech Community"/></div>
-    <div class="slide"><img src="banner_2.jpg" alt="Aliria Tech Community"/></div>
-    <div class="slide"><img src="banner_3.jpg" alt="Aliria Tech Community"/></div>
-  </div>
-  <div class="carousel-overlay">
-    <h1>Komunitas teknologi<br>yang <em>tumbuh bersama.</em></h1>
-    <p>Tempat mahasiswa belajar sambil mengerjakan hal nyata — bareng, dari nol, sampai selesai.</p>
-    <div class="carousel-member-count">
-      <span class="count-num" id="memberCount">267+</span>
-      <span class="count-label">Anggota</span>
-    </div>
-  </div>
-  <div class="carousel-dots" id="dots">
-    <button class="dot active" data-i="0"></button>
-    <button class="dot" data-i="1"></button>
-    <button class="dot" data-i="2"></button>
-  </div>
-  <button class="carousel-prev" id="prev">‹</button>
-  <button class="carousel-next" id="next">›</button>
-</div>
-
-<hr class="divider"/>
-
-<!-- SECTION 2: TENTANG -->
-<section class="sec" id="tentang">
-  <div class="sec-inner">
-    <div class="sec-tag">Tentang Komunitas</div>
-    <h2 class="sec-title">Dari satu orang, menjadi ratusan.</h2>
-    <div class="tentang-grid">
-      <div class="tentang-naratif">
-        <p>Aliria dimulai dari satu orang dan satu pertanyaan: bisakah komunitas teknologi di kampus benar-benar jalan? November 2025, jawaban itu mulai terbentuk — lewat sesi mentoring satu-satu, pembukaan tenant pertama di Universitas Dinamika, dan keikutsertaan di acara seperti Google Developer Group dan GADAS.</p>
-        <p>Masuk 2026, ritme komunitas mulai terbentuk. Ngebar (ngerjakan bareng) jadi kegiatan rutin, tim-tim muncul sesuai apa yang dibutuhkan, dan proyek pertama untuk klien universitas mulai dikerjakan. April 2026, nama resmi berganti menjadi Aliria Tech Community — bukan sekadar rebranding, tapi penanda arah yang lebih jelas.</p>
-        <p>Hari ini Aliria punya lebih dari 267 anggota, 8 proyek yang sedang berjalan, dan 12 mitra. ALIFT — program mingguan bersama Lab Riset FTI Universitas Dinamika — jadi salah satu ruang eksplorasi yang paling aktif. Komunitas ini tumbuh pelan, organik, dan kebanyakan dari mulut ke mulut.</p>
-      </div>
-      <div class="tentang-right">
-        <div class="visi-block">
-          <div class="visi-block-label">Visi</div>
-          <div class="visi-block-text">Menjadi rumah bagi setiap anggota dan media pengembangan diri — mewujudkan kader yang adaptif, kolaboratif, inisiatif, dan suportif konstruktif, serta menjunjung tinggi kekeluargaan dan profesionalisme dalam berkontribusi terhadap lingkungan maupun Negara Indonesia.</div>
+    <!-- ══════════════ NAV BAR ══════════════ -->
+    <nav class="w-full max-w-7xl mb-4 flex items-center justify-between gap-3 flex-wrap">
+        <a href="index.html" class="flex items-center gap-2">
+            <span class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-900 to-indigo-600 flex items-center justify-center text-white shadow-md">
+                <svg class="w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
+                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                    <circle cx="12" cy="12" r="4"/>
+                </svg>
+            </span>
+            <span class="heading-font text-sm font-extrabold text-[#0B192C] tracking-wide">ALIRIA TECH COMMUNITY</span>
+        </a>
+        <div class="flex items-center gap-2">
+            <a href="tentang.html" class="text-xs font-semibold text-slate-600 hover:text-[#0B192C] px-3 py-2 rounded-lg hover:bg-white/70 transition-colors">Tentang</a>
+            <button id="btnMasuk" class="text-xs font-bold tracking-tight text-white bg-[#0B192C] hover:bg-indigo-800 px-4 py-2 rounded-lg shadow-sm transition-colors">
+                Masuk
+            </button>
+            <button id="btnKeluar" class="hidden text-xs font-bold tracking-tight text-[#0B192C] bg-white border border-slate-300 hover:border-[#0B192C] px-4 py-2 rounded-lg shadow-sm transition-colors">
+                Keluar
+            </button>
         </div>
-        <div class="visi-block" style="border-left-color:var(--muted)">
-          <div class="visi-block-label" style="color:var(--muted)">Misi</div>
-          <div class="misi-list">
-            <div class="misi-item">
-              <span class="misi-num">1</span>
-              <span class="misi-text">Setiap kegiatan diusahakan dapat dilaksanakan secara luring dan daring, sehingga manfaat bisa dicapai tanpa batasan waktu dan lokasi.</span>
+    </nav>
+
+    <!-- ══════════════ BANNER HERO ══════════════ -->
+    <header class="w-full max-w-7xl silver-bg rounded-3xl shadow-2xl border border-white/60 relative overflow-hidden transition-all duration-300">
+
+        <!-- Layer Pola & Cahaya Latar -->
+        <div class="diamond-pattern"></div>
+        <div class="glow-overlay"></div>
+
+        <!-- Konten Hero Banner -->
+        <div class="relative z-10 px-6 py-8 md:px-12 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[500px]">
+
+            <!-- BAGIAN KIRI: Logo & Foto Mentoring -->
+            <div class="lg:col-span-6 flex flex-col justify-between items-center lg:items-start space-y-6">
+
+                <!-- Logo Top Section -->
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 md:gap-6 bg-white/70 backdrop-blur-md p-3 px-5 rounded-2xl border border-white/80 shadow-sm">
+                    <!-- Logo Universitas Dinamika (SVG Vector) -->
+                    <div class="flex items-center gap-2">
+                        <svg class="h-8 md:h-10 w-auto" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M50 10 L85 50 L50 90 L15 50 Z" fill="#DC2626"/>
+                            <path d="M50 25 L70 50 L50 75 L30 50 Z" fill="#FFFFFF"/>
+                            <circle cx="50" cy="50" r="10" fill="#DC2626"/>
+                        </svg>
+                        <div class="text-left">
+                            <span class="block text-[10px] uppercase tracking-wider font-bold text-gray-500 leading-tight">UNIVERSITAS</span>
+                            <span class="block text-base md:text-lg font-black text-gray-900 leading-none heading-font">Dinamika</span>
+                        </div>
+                    </div>
+
+                    <div class="h-8 w-[2px] bg-gray-300 hidden sm:block"></div>
+
+                    <!-- Logo Aliria Tech Community -->
+                    <div class="flex items-center gap-2">
+                        <div class="w-8 h-8 md:w-10 md:h-10 rounded-full bg-gradient-to-tr from-blue-900 to-indigo-600 flex items-center justify-center text-white font-black text-xs md:text-sm shadow-md">
+                            <svg class="w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
+                                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                                <circle cx="12" cy="12" r="4"/>
+                            </svg>
+                        </div>
+                        <div class="text-left">
+                            <span class="block text-xs md:text-sm font-extrabold text-[#0B192C] leading-tight">Aliria Tech</span>
+                            <span class="block text-[10px] md:text-xs font-semibold text-gray-600 leading-tight">Community</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Foto Mentoring -->
+                <div class="w-full max-w-md lg:max-w-lg float-element py-4">
+                    <div class="relative mx-auto aspect-[4/3] rounded-2xl overflow-hidden shadow-lg border-2 border-white/80 bg-gradient-to-b from-blue-50/50 to-indigo-100/50 flex items-center justify-center group">
+                        <img
+                            src="assets/hero-mentoring.jpg"
+                            alt="Sesi mentoring Aliria Tech Community di Universitas Dinamika"
+                            class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                            onerror="this.src='https://placehold.co/600x450/1E293B/FFFFFF?text=Mentoring+Tech+Community'"
+                        >
+                        <!-- Badge Overlay -->
+                        <div class="absolute bottom-3 left-3 right-3 bg-white/90 backdrop-blur-md p-2.5 rounded-xl border border-white/60 shadow-md flex items-center justify-between">
+                            <div class="flex items-center gap-2">
+                                <span class="flex h-3 w-3 relative">
+                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                  <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                                </span>
+                                <span class="text-xs font-bold text-gray-800">Program Mentoring Aktif</span>
+                            </div>
+                            <span class="text-[11px] font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg">4-5 Anggota / Sesi</span>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-            <div class="misi-item">
-              <span class="misi-num">2</span>
-              <span class="misi-text">Ketidakwajiban kehadiran adalah kewajiban itu sendiri — komunitas tidak membebani aktivitas utama dari masing-masing anggota.</span>
+
+            <!-- BAGIAN KANAN: Typography Heading & Sosial Media -->
+            <div class="lg:col-span-6 flex flex-col justify-between items-center lg:items-end text-center lg:text-right space-y-8 lg:space-y-10">
+
+                <!-- Main Header Text -->
+                <div class="space-y-2 max-w-xl">
+                    <h1 class="heading-font text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-black text-[#0B192C] tracking-tight leading-tight uppercase drop-shadow-sm">
+                        ALIRIA TECH
+                    </h1>
+                    <h1 class="heading-font text-3xl sm:text-4xl md:text-5xl lg:text-5xl xl:text-6xl font-black text-[#0B192C] tracking-tight leading-tight uppercase drop-shadow-sm">
+                        COMMUNITY
+                    </h1>
+                    <p class="heading-font text-2xl sm:text-3xl md:text-4xl font-bold text-slate-700 pt-2 tracking-wide">
+                        Mentoring
+                    </p>
+                </div>
+
+                <!-- Call To Action / Deskripsi Singkat -->
+                <p class="text-sm md:text-base text-gray-600 max-w-md font-medium leading-relaxed">
+                    Wadah belajar kolaboratif pemrograman, teknologi informasi, dan pengembangan skill praktis bersama para mentor berpengalaman.
+                </p>
+
+                <!-- Information & Social Contacts -->
+                <div class="w-full lg:w-auto flex flex-col sm:flex-row lg:flex-col items-center lg:items-end justify-center gap-3 md:gap-4 pt-2">
+
+                    <!-- Instagram Contact Card -->
+                    <a href="https://instagram.com/aliriatechcommunity" target="_blank" rel="noopener" class="w-full sm:w-auto flex items-center justify-center lg:justify-end gap-3 bg-white/80 hover:bg-white px-5 py-2.5 rounded-xl border border-white shadow-sm hover:shadow-md transition-all duration-200 group text-slate-800">
+                        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-amber-500 via-rose-500 to-purple-600 flex items-center justify-center text-white text-base shadow-sm group-hover:scale-110 transition-transform">
+                            <i class="fa-brands fa-instagram"></i>
+                        </div>
+                        <span class="text-sm md:text-base font-bold tracking-tight text-[#0B192C]">@aliriatechcommunity</span>
+                    </a>
+
+                    <!-- Phone / WhatsApp Contact Card -->
+                    <a href="https://wa.me/6282231379217" target="_blank" rel="noopener" class="w-full sm:w-auto flex items-center justify-center lg:justify-end gap-3 bg-white/80 hover:bg-white px-5 py-2.5 rounded-xl border border-white shadow-sm hover:shadow-md transition-all duration-200 group text-slate-800">
+                        <div class="w-8 h-8 rounded-lg bg-emerald-500 flex items-center justify-center text-white text-base shadow-sm group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-phone"></i>
+                        </div>
+                        <span class="text-sm md:text-base font-bold tracking-tight text-[#0B192C]">0822-3137-9217</span>
+                    </a>
+
+                    <!-- Masuk ke Ruang Tim -->
+                    <button id="btnMasukHero" class="w-full sm:w-auto flex items-center justify-center lg:justify-end gap-3 bg-[#0B192C] hover:bg-indigo-800 px-5 py-3 rounded-xl border border-[#0B192C] shadow-md hover:shadow-lg transition-all duration-200 group text-white">
+                        <div class="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center text-white text-base shadow-sm">
+                            <i class="fa-solid fa-arrow-right-to-bracket"></i>
+                        </div>
+                        <span class="text-sm md:text-base font-bold tracking-tight">Masuk ke Ruang Tim</span>
+                    </button>
+
+                </div>
+
             </div>
-            <div class="misi-item">
-              <span class="misi-num">3</span>
-              <span class="misi-text">Komunitas menyediakan ruang dan kesempatan yang sama. Pertumbuhan adalah pilihan dan tanggung jawab setiap individu.</span>
+
+        </div>
+    </header>
+
+    <!-- ══════════════ RUANG TIM (setelah masuk) ══════════════ -->
+    <section id="menuSection" class="hidden w-full max-w-7xl mt-4">
+        <div class="bg-white/80 backdrop-blur-md border border-white rounded-2xl shadow-lg p-5 md:p-6">
+            <div class="text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-2">Ruang Tim</div>
+            <div class="flex flex-col md:flex-row md:items-center gap-4">
+                <div class="flex-1">
+                    <h2 class="heading-font text-xl md:text-2xl font-extrabold text-[#0B192C]">Log Pengajaran</h2>
+                    <p class="text-sm text-gray-600 mt-1 leading-relaxed">
+                        Riwayat mengajar tim: pilih universitas → semester → mata kuliah, lalu lihat topik yang dibahas di tiap pertemuan rutin.
+                    </p>
+                </div>
+                <a href="logpengajar/index.html" class="shrink-0 inline-flex items-center justify-center gap-2 bg-[#0B192C] hover:bg-indigo-800 text-white text-sm font-bold tracking-tight px-5 py-3 rounded-xl shadow-md hover:shadow-lg transition-all">
+                    <i class="fa-solid fa-book-open"></i> Buka Log Pengajaran
+                </a>
             </div>
-            <div class="misi-item">
-              <span class="misi-num">4</span>
-              <span class="misi-text">Selektif terhadap mitra dan segala bentuk kolaborasinya, sehingga terwujudnya visi yang searah.</span>
+        </div>
+    </section>
+
+    <footer class="w-full max-w-7xl mt-6 text-center text-xs text-gray-500">
+        © 2026 Aliria Tech Community
+    </footer>
+
+    <!-- ══════════════ MODAL MASUK ══════════════ -->
+    <div id="loginWrap" class="fixed inset-0 z-50 hidden items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div class="w-full max-w-sm bg-white rounded-2xl shadow-2xl border border-white/60 p-6">
+            <div class="flex items-center gap-3 mb-1">
+                <span class="w-10 h-10 rounded-full bg-gradient-to-tr from-blue-900 to-indigo-600 flex items-center justify-center text-white shadow-md shrink-0">
+                    <svg class="w-5 h-5 fill-current text-white" viewBox="0 0 24 24">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/>
+                        <circle cx="12" cy="12" r="4"/>
+                    </svg>
+                </span>
+                <div>
+                    <h3 class="heading-font font-extrabold text-[#0B192C] leading-tight">Masuk ke Ruang Tim</h3>
+                    <p class="text-xs text-gray-500">Kode diberikan oleh koordinator tim pengajar.</p>
+                </div>
             </div>
-          </div>
+
+            <form id="loginForm" class="mt-5">
+                <input id="loginPass" type="password" placeholder="Kode akses" autocomplete="off"
+                       class="w-full bg-gray-50 border border-gray-200 focus:border-[#0B192C] focus:ring-2 focus:ring-indigo-100 outline-none text-sm text-center tracking-widest rounded-xl px-4 py-3 transition">
+                <div id="loginErr" class="text-xs text-red-600 font-semibold mt-2 min-h-[16px] text-center"></div>
+                <button type="submit" class="w-full mt-2 bg-[#0B192C] hover:bg-indigo-800 text-white text-sm font-bold tracking-tight py-3 rounded-xl shadow-md transition-colors">
+                    Masuk
+                </button>
+            </form>
+
+            <button id="loginClose" class="w-full mt-2 text-xs font-semibold text-gray-500 hover:text-[#0B192C] py-2 transition-colors">Batal</button>
         </div>
-      </div>
     </div>
-  </div>
-</section>
-
-<hr class="divider"/>
-
-<!-- SECTION 3: STRUKTUR -->
-<section class="sec struktur-sec" id="struktur">
-  <div class="sec-inner">
-    <div class="sec-tag">Struktur Program</div>
-    <h2 class="sec-title">Tim yang lahir dari kebutuhan, bukan dari desain.</h2>
-    <p class="sec-sub">Di Aliria, tim terbentuk karena ada sesuatu yang perlu dikerjakan dan ada orang yang mau mengerjakannya. Anggota memilih jalur sesuai minat dan kapasitas masing-masing.</p>
-    <div class="prog-grid">
-      <div class="prog-card">
-        <div class="prog-icon">🛠️</div>
-        <div class="prog-name">Tim Proyekan</div>
-        <div class="prog-desc">Mengerjakan proyek teknologi untuk klien — dari aplikasi akademik, chatbot AI, sampai sistem internal kampus.</div>
-        <div class="prog-tags">
-          <span class="prog-tag">Portofolio</span>
-          <span class="prog-tag">Pengalaman</span>
-          <span class="prog-tag">Komisi</span>
-        </div>
-      </div>
-      <div class="prog-card">
-        <div class="prog-icon">🧑‍🏫</div>
-        <div class="prog-name">Tim Pengajar</div>
-        <div class="prog-desc">Mentoring rutin ke sesama anggota. Bukan sekadar transfer ilmu, tapi juga jadi ruang untuk memperdalam domain sendiri.</div>
-        <div class="prog-tags">
-          <span class="prog-tag">Pendampingan</span>
-          <span class="prog-tag">Pengalaman</span>
-          <span class="prog-tag">Komisi</span>
-        </div>
-      </div>
-      <div class="prog-card">
-        <div class="prog-icon">📣</div>
-        <div class="prog-name">Tim Pemasar</div>
-        <div class="prog-desc">Langsung turun ke lapangan — menghubungi calon klien, menyajikan penawaran, dan menangani proses dari awal sampai closing.</div>
-        <div class="prog-tags">
-          <span class="prog-tag">Koneksi</span>
-          <span class="prog-tag">Pengalaman</span>
-          <span class="prog-tag">Komisi</span>
-        </div>
-      </div>
-      <div class="prog-card">
-        <div class="prog-icon">💼</div>
-        <div class="prog-name">Tim Magang</div>
-        <div class="prog-desc">Ditempatkan di perusahaan atau unit kampus untuk pengalaman kerja yang lebih langsung dan terstruktur.</div>
-        <div class="prog-tags">
-          <span class="prog-tag">Pengalaman</span>
-          <span class="prog-tag">Jaringan</span>
-        </div>
-      </div>
-      <div class="prog-card">
-        <div class="prog-icon">🏆</div>
-        <div class="prog-name">Tim Lomba</div>
-        <div class="prog-desc">Ikut kompetisi — hackathon, startup challenge, dan lomba sejenis — dengan dukungan pendampingan dan dana dari komunitas.</div>
-        <div class="prog-tags">
-          <span class="prog-tag">Pendampingan</span>
-          <span class="prog-tag">Uang Saku</span>
-        </div>
-      </div>
-    </div>
-    <p class="struktur-note">Tim yang terbentuk menyesuaikan kebutuhan dan minat anggota komunitas.</p>
-  </div>
-</section>
-
-<hr class="divider"/>
-
-<!-- SECTION 4: KERJASAMA -->
-<section class="sec" id="kerjasama">
-  <div class="sec-inner">
-    <div class="sec-tag">Kerjasama</div>
-    <h2 class="sec-title">Ada banyak cara untuk bergerak bersama.</h2>
-    <p class="sec-sub">Aliria terbuka untuk kolaborasi — selama arahnya searah dan manfaatnya bisa dirasakan kedua pihak.</p>
-    <div class="kerja-grid">
-      <div class="kerja-card">
-        <div class="kerja-head">
-          <div class="kerja-audience">Kampus</div>
-          <div class="kerja-title">Membantu membangun sistem yang selama ini belum ada</div>
-        </div>
-        <div class="kerja-body">
-          <ul class="kerja-items">
-            <li>Tim Proyekan sudah mengerjakan sistem untuk P3AI, PRM, PSDM, dan AAK Undika — proyek serupa terbuka untuk unit lain</li>
-            <li>Program ALIFT bersama Lab Riset FTI berjalan tiap minggu — model ini bisa diadaptasi bersama unit atau lab lain</li>
-            <li>Anggota bisa ditempatkan magang di unit-unit kampus yang membutuhkan tenaga teknis</li>
-            <li>Ada jalur resmi lewat Steering Committee yang sudah melibatkan perwakilan PPTI dan SSI</li>
-          </ul>
-        </div>
-      </div>
-      <div class="kerja-card">
-        <div class="kerja-head">
-          <div class="kerja-audience">Komunitas Serupa</div>
-          <div class="kerja-title">Bergerak lebih jauh kalau dilakukan bareng</div>
-        </div>
-        <div class="kerja-body">
-          <ul class="kerja-items">
-            <li>Co-host event, kompetisi, atau expo — Aliria punya pengalaman di GADAS, GDG, dan SurabayaDev</li>
-            <li>Berbagi pengajar atau program mentoring antar komunitas</li>
-            <li>Delegasi bersama ke lomba dan hackathon — jaringannya sudah ada, tinggal diperluas</li>
-            <li>Kalau mau coba model ngebar atau ALIFT di komunitas lain, bisa dikembangkan bersama</li>
-          </ul>
-        </div>
-      </div>
-      <div class="kerja-card">
-        <div class="kerja-head">
-          <div class="kerja-audience">Industri</div>
-          <div class="kerja-title">Dari pengembangan produk sampai distribusi ke pasar</div>
-        </div>
-        <div class="kerja-body">
-          <ul class="kerja-items">
-            <li>Tim Proyekan bisa mengerjakan proyek custom — web, mobile, maupun AI automation</li>
-            <li>Tim Pemasar membantu mendistribusikan produk atau jasa ke calon pengguna secara langsung</li>
-            <li>Anggota yang masuk tim proyek punya portofolio dari pekerjaan nyata, bukan simulasi</li>
-            <li>Steering Committee sudah melibatkan perwakilan industri — ada jalur komunikasi yang bisa digunakan</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- FOOTER -->
-<footer class="footer">
-  <span class="footer-copy">© 2026 Aliria Tech Community</span>
-</footer>
-
-<!-- FLOATING BUTTONS -->
-<div class="fab-group">
-  <a href="logpengajar/index.html" class="fab-btn fab-secondary">📚 Log Pengajaran</a>
-  <a href="proyekan/index.html" class="fab-btn fab-secondary">⌨️ Command Penting</a>
-  <a href="todolist/index.html" class="fab-btn fab-primary" id="footerKelola">Manajemen Aliria</a>
-</div>
 
 <script>
-// orgName dynamic
-(function(){
-  try{
-    const d=JSON.parse(localStorage.getItem('rakperpus_alteco_v2'));
-    if(d){
-      if(d.orgName){
-        document.getElementById('footerKelola').textContent='Manajemen '+d.orgName;
-      }
-      // member count: find kelompok ANGGOTA jumlah
-      const anggota=( d.kelompoks||[] ).find(k=>!k.deleted&&k.name==='ANGGOTA');
-      if(anggota&&anggota.jumlah){
-        document.getElementById('memberCount').textContent=anggota.jumlah.toLocaleString('id-ID')+'+';
-      }
+/* ══════════════════════════════════════
+   CONFIG — kode akses tim pengajar
+   (sama dengan yang dipakai di logpengajar/index.html)
+   ══════════════════════════════════════ */
+const PASS_TEAM = 'GANTI_KODE_TIM';
+const SESSION_KEY = 'aliria_in';
+
+/* ══════════════════════════════════════
+   LOGIN
+   ══════════════════════════════════════ */
+const wrap = document.getElementById('loginWrap');
+const pass = document.getElementById('loginPass');
+const err  = document.getElementById('loginErr');
+
+function openLogin(){
+    wrap.classList.remove('hidden');
+    wrap.classList.add('flex');
+    err.textContent = '';
+    setTimeout(()=>pass.focus(), 80);
+}
+function closeLogin(){
+    wrap.classList.add('hidden');
+    wrap.classList.remove('flex');
+    pass.value = '';
+}
+function isIn(){ return sessionStorage.getItem(SESSION_KEY) === '1'; }
+
+function showMenu(){
+    document.getElementById('menuSection').classList.remove('hidden');
+    document.getElementById('btnMasuk').classList.add('hidden');
+    document.getElementById('btnMasukHero').classList.add('hidden');
+    document.getElementById('btnKeluar').classList.remove('hidden');
+}
+function hideMenu(){
+    document.getElementById('menuSection').classList.add('hidden');
+    document.getElementById('btnMasuk').classList.remove('hidden');
+    document.getElementById('btnMasukHero').classList.remove('hidden');
+    document.getElementById('btnKeluar').classList.add('hidden');
+}
+
+document.getElementById('btnMasuk').onclick = openLogin;
+document.getElementById('btnMasukHero').onclick = openLogin;
+document.getElementById('loginClose').onclick = closeLogin;
+wrap.onclick = e => { if(e.target === wrap) closeLogin(); };
+
+document.getElementById('loginForm').onsubmit = e => {
+    e.preventDefault();
+    if(pass.value.trim() === PASS_TEAM){
+        sessionStorage.setItem(SESSION_KEY, '1');
+        closeLogin();
+        showMenu();
+        document.getElementById('menuSection').scrollIntoView({behavior:'smooth', block:'center'});
+    } else {
+        err.textContent = 'Kode tidak dikenali.';
+        pass.select();
     }
-  }catch{}
-})();
+};
 
-// carousel
-(function(){
-  const slides=document.getElementById('slides');
-  const dots=[...document.querySelectorAll('.dot')];
-  let cur=0,timer;
-  function goTo(i){
-    cur=i;
-    slides.style.transform='translateX(-'+( 100/3*i )+'%)';
-    dots.forEach((d,j)=>d.classList.toggle('active',j===i));
-  }
-  function next(){ goTo((cur+1)%3); }
-  function prev(){ goTo((cur+2)%3); }
-  function startAuto(){ timer=setInterval(next,4000); }
-  function stopAuto(){ clearInterval(timer); }
-  document.getElementById('next').addEventListener('click',()=>{ stopAuto(); next(); startAuto(); });
-  document.getElementById('prev').addEventListener('click',()=>{ stopAuto(); prev(); startAuto(); });
-  dots.forEach(d=>d.addEventListener('click',()=>{ stopAuto(); goTo(+d.dataset.i); startAuto(); }));
-  // swipe
-  let sx=0;
-  const el=document.getElementById('carousel');
-  el.addEventListener('touchstart',e=>{ sx=e.touches[0].clientX; },{ passive:true });
-  el.addEventListener('touchend',e=>{
-    const dx=e.changedTouches[0].clientX-sx;
-    if(Math.abs(dx)>40){ stopAuto(); dx<0?next():prev(); startAuto(); }
-  });
-  startAuto();
-})();
+document.getElementById('btnKeluar').onclick = ()=>{
+    sessionStorage.removeItem(SESSION_KEY);
+    hideMenu();
+};
 
-// theme
-(function(){
-  const btn=document.getElementById('themeBtn'),html=document.documentElement;
-  if(localStorage.getItem('theme')==='light'){html.setAttribute('data-theme','light');btn.textContent='☀️'}
-  btn.addEventListener('click',()=>{
-    if(html.getAttribute('data-theme')==='light'){html.removeAttribute('data-theme');btn.textContent='🌙';localStorage.setItem('theme','dark')}
-    else{html.setAttribute('data-theme','light');btn.textContent='☀️';localStorage.setItem('theme','light')}
-  });
-})();
+/* restore session */
+if(isIn()) showMenu();
+else hideMenu();
 </script>
 </body>
 </html>

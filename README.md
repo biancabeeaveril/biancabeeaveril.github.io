@@ -8,7 +8,10 @@ Portal multi-halaman berisi alat kerja tim + **Kelola Alteco** — aplikasi mana
 
 ```
 /
-├── index.html              ← Homepage (nav ke semua rak)
+├── index.html              ← Homepage (banner Aliria Tech Community + fitur Masuk)
+├── tentang.html           ← Isi homepage lama: misi, program, keratin sama, carousel
+├── assets/                 ← Aset gambar homepage
+│   └── hero-mentoring.jpg  ← Foto mentoring Universitas Dinamika
 ├── proyekan/index.html     ← Referensi command & AI tools
 ├── pengajar/index.html     ← Sektor industri + modul ERP
 ├── pemasaran/index.html    ← Siklus penawaran
@@ -18,10 +21,28 @@ Portal multi-halaman berisi alat kerja tim + **Kelola Alteco** — aplikasi mana
 │   ├── index.html          ← Aplikasi (single-file)
 │   ├── worker.js           ← Cloudflare Worker (write proxy)
 │   └── SETUP.md            ← Panduan setup Gist + Worker
+├── banner_1.png            ← Foto komunitas (carousel halaman Tentang)
+├── banner_2.jpg            ← Foto mentoring (carousel halaman Tentang)
+├── banner_3.jpg            ← Foto komunitas (carousel halaman Tentang)
 ├── OneSignalSDKWorker.js   ← Service worker push notif
 └── .github/workflows/
     └── daily-notif.yml     ← Cron harian kirim push notif
 ```
+
+---
+
+## Homepage & Fitur Masuk
+
+Homepage (`index.html`) adalah banner **Aliria Tech Community × Universitas Dinamika — Mentoring** (silver geometris, logo, foto mentoring, kontak Instagram & WhatsApp).
+
+Tombol **Masuk** membuka modal kode akses. Kode yang benar memunculkan section **Ruang Tim** berisi link ke **Log Pengajaran**.
+
+| Nilai | Lokasi |
+|-------|--------|
+| `PASS_TEAM` | `index.html` (blok `CONFIG` di bawah) |
+| `PASS_TEAM` | `logpengajar/index.html` (blok `CONFIG`) |
+
+> Gunakan kode yang sama di kedua file. Session login disimpan di `sessionStorage` per tab — logout saat tab ditutup.
 
 ---
 

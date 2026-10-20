@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Tentang — Aliria Tech Community</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0b0b12;--surface:#12121c;--card:#181825;--card2:#1e1e2e;
+  --bd:#23233a;--text:#e2e2f0;--muted:#9494b8;--dim:#4a4a6a;
+  --accent:#6c6ff5;--accent2:rgba(108,111,245,.1);
+  --font:'Inter',system-ui,sans-serif
+}
+[data-theme="light"]{
+  --bg:#f4f4f9;--surface:#eaeaef;--card:#e2e2ef;--card2:#d8d8ea;
+  --bd:#c5c5d4;--text:#15152a;--muted:#6a6a88;--dim:#b0b0cc;
+  --accent:#5356d1;--accent2:rgba(83,86,209,.08)
+}
+html{scroll-behavior:smooth}
+body{font-family:var(--font);background:var(--bg);color:var(--text);line-height:1.6;transition:background .25s,color .25s}
+a{text-decoration:none;color:inherit}
+
+/* ─── NAV ─── */
+.nav{position:sticky;top:0;z-index:200;display:flex;align-items:center;height:52px;padding:0 32px;background:var(--surface);border-bottom:1px solid var(--bd);transition:background .25s,border-color .25s}
+.nav-brand{font-size:.74rem;font-weight:800;letter-spacing:.07em;text-transform:uppercase}
+.nav-spacer{flex:1}
+.nav-links{display:flex;gap:24px}
+.nav-links a{font-size:.74rem;font-weight:500;color:var(--muted);transition:color .2s}
+.nav-links a:hover{color:var(--text)}
+.theme-btn{width:28px;height:28px;border-radius:6px;border:1px solid var(--bd);background:transparent;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;margin-left:20px;transition:background .2s}
+.theme-btn:hover{background:var(--accent);border-color:var(--accent)}
+
+/* ─── CAROUSEL ─── */
+.carousel{position:relative;width:100%;height:100vh;max-height:680px;overflow:hidden;background:#000}
+.carousel-slides{display:flex;width:300%;height:100%;transition:transform .6s cubic-bezier(.4,0,.2,1)}
+.slide{width:33.333%;height:100%;flex-shrink:0;position:relative}
+.slide img{width:100%;height:100%;object-fit:cover;opacity:.62;display:block;transition:opacity .25s}
+[data-theme="light"] .slide img{opacity:.72}
+.carousel-overlay{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px;pointer-events:none}
+.carousel-overlay h1{font-size:clamp(2rem,5.5vw,3.8rem);font-weight:900;letter-spacing:-.04em;line-height:1.05;color:#fff;text-shadow:0 2px 24px rgba(0,0,0,.5);margin-bottom:12px}
+.carousel-overlay h1 em{font-style:normal;color:#a5a8ff}
+.carousel-overlay p{font-size:.95rem;color:rgba(255,255,255,.72);max-width:460px;line-height:1.7;margin-bottom:28px}
+.carousel-member-count{display:inline-flex;align-items:baseline;gap:8px;background:rgba(0,0,0,.4);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.12);border-radius:100px;padding:8px 20px;pointer-events:all}
+.count-num{font-size:1.5rem;font-weight:900;letter-spacing:-.03em;color:#fff}
+.count-label{font-size:.72rem;font-weight:600;color:rgba(255,255,255,.62);letter-spacing:.06em;text-transform:uppercase}
+.carousel-dots{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);display:flex;gap:8px;pointer-events:all}
+.dot{width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,.35);border:none;cursor:pointer;transition:background .2s,width .3s}
+.dot.active{width:22px;border-radius:100px;background:#fff}
+.carousel-prev,.carousel-next{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.15);color:#fff;width:40px;height:40px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1rem;transition:background .2s;backdrop-filter:blur(4px)}
+.carousel-prev{left:20px}
+.carousel-next{right:20px}
+.carousel-prev:hover,.carousel-next:hover{background:rgba(0,0,0,.6)}
+
+/* ─── SECTION BASE ─── */
+.sec{padding:80px 24px}
+.sec-inner{max-width:960px;margin:0 auto}
+.sec-tag{font-size:.62rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:10px}
+.sec-title{font-size:clamp(1.5rem,3vw,2rem);font-weight:800;letter-spacing:-.03em;margin-bottom:12px;line-height:1.2}
+.sec-sub{font-size:.88rem;color:var(--muted);line-height:1.75;max-width:580px}
+.divider{border:none;border-top:1px solid var(--bd);margin:0}
+
+/* ─── TENTANG ─── */
+.tentang-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:48px;align-items:start}
+.tentang-naratif p{font-size:.88rem;color:var(--muted);line-height:1.85;margin-bottom:16px}
+.tentang-naratif p:last-child{margin-bottom:0}
+.tentang-right{display:flex;flex-direction:column;gap:24px}
+.visi-block{background:var(--card);border:1px solid var(--bd);border-left:3px solid var(--accent);border-radius:8px;padding:20px 22px}
+.visi-block-label{font-size:.6rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
+.visi-block-text{font-size:.8rem;line-height:1.75;color:var(--muted)}
+.misi-list{display:flex;flex-direction:column;gap:12px;margin-top:4px}
+.misi-item{display:flex;gap:12px;align-items:flex-start}
+.misi-num{flex-shrink:0;width:20px;height:20px;border-radius:50%;background:var(--accent2);border:1px solid var(--accent);color:var(--accent);font-size:.6rem;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:2px}
+.misi-text{font-size:.78rem;color:var(--muted);line-height:1.7}
+
+/* ─── STRUKTUR ─── */
+.struktur-sec{background:var(--surface);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+.prog-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:40px}
+.prog-card{background:var(--card);border:1px solid var(--bd);border-radius:9px;padding:22px 18px;transition:border-color .2s,background .2s}
+.prog-card:hover{border-color:var(--accent);background:var(--card2)}
+.prog-icon{font-size:1.3rem;margin-bottom:12px}
+.prog-name{font-size:.82rem;font-weight:700;margin-bottom:6px}
+.prog-desc{font-size:.72rem;color:var(--muted);line-height:1.65;margin-bottom:12px}
+.prog-tags{display:flex;flex-wrap:wrap;gap:4px}
+.prog-tag{font-size:.6rem;font-weight:600;color:var(--accent);background:var(--accent2);padding:2px 8px;border-radius:100px}
+.struktur-note{margin-top:24px;font-size:.74rem;color:var(--dim);text-align:center;font-style:italic}
+
+/* ─── KERJASAMA ─── */
+.kerja-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:48px}
+.kerja-card{background:var(--card);border:1px solid var(--bd);border-radius:10px;overflow:hidden;transition:border-color .2s}
+.kerja-card:hover{border-color:var(--accent)}
+.kerja-head{padding:22px 22px 16px;border-bottom:1px solid var(--bd)}
+.kerja-audience{font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.kerja-title{font-size:.9rem;font-weight:700;line-height:1.3}
+.kerja-body{padding:18px 22px}
+.kerja-items{list-style:none;display:flex;flex-direction:column;gap:10px}
+.kerja-items li{font-size:.78rem;color:var(--muted);line-height:1.6;padding-left:14px;position:relative}
+.kerja-items li::before{content:'—';position:absolute;left:0;color:var(--dim)}
+
+/* ─── FOOTER ─── */
+.footer{border-top:1px solid var(--bd);padding:18px 24px;text-align:center;transition:border-color .25s}
+.footer-copy{font-size:.68rem;color:var(--dim)}
+
+@media(max-width:900px){
+  .tentang-grid{grid-template-columns:1fr}
+  .prog-grid{grid-template-columns:repeat(3,1fr)}
+  .kerja-grid{grid-template-columns:1fr}
+}
+@media(max-width:600px){
+  .nav-links{display:none}
+  .carousel{max-height:520px}
+  .prog-grid{grid-template-columns:repeat(2,1fr)}
+  .sec{padding:56px 20px}
+}
+@media(max-width:400px){
+  .prog-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a href="index.html" class="nav-brand">Aliria Tech Community</a>
+  <span class="nav-spacer"></span>
+  <div class="nav-links">
+    <a href="#tentang">Tentang</a>
+    <a href="#struktur">Program</a>
+    <a href="#kerjasama">Kerjasama</a>
+    <a href="index.html">← Kembali</a>
+  </div>
+  <button class="theme-btn" id="themeBtn" title="Ganti tema">🌙</button>
+</nav>
+
+<!-- SECTION 1: HERO CAROUSEL -->
+<div class="carousel" id="carousel">
+  <div class="carousel-slides" id="slides">
+    <div class="slide"><img src="banner_1.png" alt="Aliria Tech Community"/></div>
+    <div class="slide"><img src="banner_2.jpg" alt="Aliria Tech Community"/></div>
+    <div class="slide"><img src="banner_3.jpg" alt="Aliria Tech Community"/></div>
+  </div>
+  <div class="carousel-overlay">
+    <h1>Komunitas teknologi<br>yang <em>tumbuh bersama.</em></h1>
+    <p>Tempat mahasiswa belajar sambil mengerjakan hal nyata — bareng, dari nol, sampai selesai.</p>
+    <div class="carousel-member-count">
+      <span class="count-num" id="memberCount">267+</span>
+      <span class="count-label">Anggota</span>
+    </div>
+  </div>
+  <div class="carousel-dots" id="dots">
+    <button class="dot active" data-i="0"></button>
+    <button class="dot" data-i="1"></button>
+    <button class="dot" data-i="2"></button>
+  </div>
+  <button class="carousel-prev" id="prev">‹</button>
+  <button class="carousel-next" id="next">›</button>
+</div>
+
+<hr class="divider"/>
+
+<!-- SECTION 2: TENTANG -->
+<section class="sec" id="tentang">
+  <div class="sec-inner">
+    <div class="sec-tag">Tentang Komunitas</div>
+    <h2 class="sec-title">Dari satu orang, menjadi ratusan.</h2>
+    <div class="tentang-grid">
+      <div class="tentang-naratif">
+        <p>Aliria dimulai dari satu orang dan satu pertanyaan: bisakah komunitas teknologi di kampus benar-benar jalan? November 2025, jawaban itu mulai terbentuk — lewat sesi mentoring satu-satu, pembukaan tenant pertama di Universitas Dinamika, dan keikutsertaan di acara seperti Google Developer Group dan GADAS.</p>
+        <p>Masuk 2026, ritme komunitas mulai terbentuk. Ngebar (ngerjakan bareng) jadi kegiatan rutin, tim-tim muncul sesuai apa yang dibutuhkan, dan proyek pertama untuk klien universitas mulai dikerjakan. April 2026, nama resmi berganti menjadi Aliria Tech Community — bukan sekadar rebranding, tapi penanda arah yang lebih jelas.</p>
+        <p>Hari ini Aliria punya lebih dari 267 anggota, 8 proyek yang sedang berjalan, dan 12 mitra. ALIFT — program mingguan bersama Lab Riset FTI Universitas Dinamika — jadi salah satu ruang eksplorasi yang paling aktif. Komunitas ini tumbuh pelan, organik, dan kebanyakan dari mulut ke mulut.</p>
+      </div>
+      <div class="tentang-right">
+        <div class="visi-block">
+          <div class="visi-block-label">Visi</div>
+          <div class="visi-block-text">Menjadi rumah bagi setiap anggota dan media pengembangan diri — mewujudkan kader yang adaptif, kolaboratif, inisiatif, dan suportif konstruktif, serta menjunjung tinggi kekeluargaan dan profesionalisme dalam berkontribusi terhadap lingkungan maupun Negara Indonesia.</div>
+        </div>
+        <div class="visi-block" style="border-left-color:var(--muted)">
+          <div class="visi-block-label" style="color:var(--muted)">Misi</div>
+          <div class="misi-list">
+            <div class="misi-item">
+              <span class="misi-num">1</span>
+              <span class="misi-text">Setiap kegiatan diusahakan dapat dilaksanakan secara luring dan daring, sehingga manfaat bisa dicapai tanpa batasan waktu dan lokasi.</span>
+            </div>
+            <div class="misi-item">
+              <span class="misi-num">2</span>
+              <span class="misi-text">Ketidakwajiban kehadiran adalah kewajiban itu sendiri — komunitas tidak membebani aktivitas utama dari masing-masing anggota.</span>
+            </div>
+            <div class="misi-item">
+              <span class="misi-num">3</span>
+              <span class="misi-text">Komunitas menyediakan ruang dan kesempatan yang sama. Pertumbuhan adalah pilihan dan tanggung jawab setiap individu.</span>
+            </div>
+            <div class="misi-item">
+              <span class="misi-num">4</span>
+              <span class="misi-text">Selektif terhadap mitra dan segala bentuk kolaborasinya, sehingga terwujudnya visi yang searah.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- SECTION 3: STRUKTUR -->
+<section class="sec struktur-sec" id="struktur">
+  <div class="sec-inner">
+    <div class="sec-tag">Struktur Program</div>
+    <h2 class="sec-title">Tim yang lahir dari kebutuhan, bukan dari desain.</h2>
+    <p class="sec-sub">Di Aliria, tim terbentuk karena ada sesuatu yang perlu dikerjakan dan ada orang yang mau mengerjakannya. Anggota memilih jalur sesuai minat dan kapasitas masing-masing.</p>
+    <div class="prog-grid">
+      <div class="prog-card">
+        <div class="prog-icon">🛠️</div>
+        <div class="prog-name">Tim Proyekan</div>
+        <div class="prog-desc">Mengerjakan proyek teknologi untuk klien — dari aplikasi akademik, chatbot AI, sampai sistem internal kampus.</div>
+        <div class="prog-tags">
+          <span class="prog-tag">Portofolio</span>
+          <span class="prog-tag">Pengalaman</span>
+          <span class="prog-tag">Komisi</span>
+        </div>
+      </div>
+      <div class="prog-card">
+        <div class="prog-icon">🧑‍🏫</div>
+        <div class="prog-name">Tim Pengajar</div>
+        <div class="prog-desc">Mentoring rutin ke sesama anggota. Bukan sekadar transfer ilmu, tapi juga jadi ruang untuk memperdalam domain sendiri.</div>
+        <div class="prog-tags">
+          <span class="prog-tag">Pendampingan</span>
+          <span class="prog-tag">Pengalaman</span>
+          <span class="prog-tag">Komisi</span>
+        </div>
+      </div>
+      <div class="prog-card">
+        <div class="prog-icon">📣</div>
+        <div class="prog-name">Tim Pemasar</div>
+        <div class="prog-desc">Langsung turun ke lapangan — menghubungi calon klien, menyajikan penawaran, dan menangani proses dari awal sampai closing.</div>
+        <div class="prog-tags">
+          <span class="prog-tag">Koneksi</span>
+          <span class="prog-tag">Pengalaman</span>
+          <span class="prog-tag">Komisi</span>
+        </div>
+      </div>
+      <div class="prog-card">
+        <div class="prog-icon">💼</div>
+        <div class="prog-name">Tim Magang</div>
+        <div class="prog-desc">Ditempatkan di perusahaan atau unit kampus untuk pengalaman kerja yang lebih langsung dan terstruktur.</div>
+        <div class="prog-tags">
+          <span class="prog-tag">Pengalaman</span>
+          <span class="prog-tag">Jaringan</span>
+        </div>
+      </div>
+      <div class="prog-card">
+        <div class="prog-icon">🏆</div>
+        <div class="prog-name">Tim Lomba</div>
+        <div class="prog-desc">Ikut kompetisi — hackathon, startup challenge, dan lomba sejenis — dengan dukungan pendampingan dan dana dari komunitas.</div>
+        <div class="prog-tags">
+          <span class="prog-tag">Pendampingan</span>
+          <span class="prog-tag">Uang Saku</span>
+        </div>
+      </div>
+    </div>
+    <p class="struktur-note">Tim yang terbentuk menyesuaikan kebutuhan dan minat anggota komunitas.</p>
+  </div>
+</section>
+
+<hr class="divider"/>
+
+<!-- SECTION 4: KERJASAMA -->
+<section class="sec" id="kerjasama">
+  <div class="sec-inner">
+    <div class="sec-tag">Kerjasama</div>
+    <h2 class="sec-title">Ada banyak cara untuk bergerak bersama.</h2>
+    <p class="sec-sub">Aliria terbuka untuk kolaborasi — selama arahnya searah dan manfaatnya bisa dirasakan kedua pihak.</p>
+    <div class="kerja-grid">
+      <div class="kerja-card">
+        <div class="kerja-head">
+          <div class="kerja-audience">Kampus</div>
+          <div class="kerja-title">Membantu membangun sistem yang selama ini belum ada</div>
+        </div>
+        <div class="kerja-body">
+          <ul class="kerja-items">
+            <li>Tim Proyekan sudah mengerjakan sistem untuk P3AI, PRM, PSDM, dan AAK Undika — proyek serupa terbuka untuk unit lain</li>
+            <li>Program ALIFT bersama Lab Riset FTI berjalan tiap minggu — model ini bisa diadaptasi bersama unit atau lab lain</li>
+            <li>Anggota bisa ditempatkan magang di unit-unit kampus yang membutuhkan tenaga teknis</li>
+            <li>Ada jalur resmi lewat Steering Committee yang sudah melibatkan perwakilan PPTI dan SSI</li>
+          </ul>
+        </div>
+      </div>
+      <div class="kerja-card">
+        <div class="kerja-head">
+          <div class="kerja-audience">Komunitas Serupa</div>
+          <div class="kerja-title">Bergerak lebih jauh kalau dilakukan bareng</div>
+        </div>
+        <div class="kerja-body">
+          <ul class="kerja-items">
+            <li>Co-host event, kompetisi, atau expo — Aliria punya pengalaman di GADAS, GDG, dan SurabayaDev</li>
+            <li>Berbagi pengajar atau program mentoring antar komunitas</li>
+            <li>Delegasi bersama ke lomba dan hackathon — jaringannya sudah ada, tinggal diperluas</li>
+            <li>Kalau mau coba model ngebar atau ALIFT di komunitas lain, bisa dikembangkan bersama</li>
+          </ul>
+        </div>
+      </div>
+      <div class="kerja-card">
+        <div class="kerja-head">
+          <div class="kerja-audience">Industri</div>
+          <div class="kerja-title">Dari pengembangan produk sampai distribusi ke pasar</div>
+        </div>
+        <div class="kerja-body">
+          <ul class="kerja-items">
+            <li>Tim Proyekan bisa mengerjakan proyek custom — web, mobile, maupun AI automation</li>
+            <li>Tim Pemasar membantu mendistribusikan produk atau jasa ke calon pengguna secara langsung</li>
+            <li>Anggota yang masuk tim proyek punya portofolio dari pekerjaan nyata, bukan simulasi</li>
+            <li>Steering Committee sudah melibatkan perwakilan industri — ada jalur komunikasi yang bisa digunakan</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <span class="footer-copy">© 2026 Aliria Tech Community</span>
+</footer>
+
+<!-- FLOATING BUTTONS: dihapus -->
+
+<script>
+// orgName dynamic
+(function(){
+  try{
+    const d=JSON.parse(localStorage.getItem('rakperpus_alteco_v2'));
+    if(d){
+      // member count: find kelompok ANGGOTA jumlah
+      const anggota=( d.kelompoks||[] ).find(k=>!k.deleted&&k.name==='ANGGOTA');
+      if(anggota&&anggota.jumlah){
+        document.getElementById('memberCount').textContent=anggota.jumlah.toLocaleString('id-ID')+'+';
+      }
+    }
+  }catch{}
+})();
+
+// carousel
+(function(){
+  const slides=document.getElementById('slides');
+  const dots=[...document.querySelectorAll('.dot')];
+  let cur=0,timer;
+  function goTo(i){
+    cur=i;
+    slides.style.transform='translateX(-'+( 100/3*i )+'%)';
+    dots.forEach((d,j)=>d.classList.toggle('active',j===i));
+  }
+  function next(){ goTo((cur+1)%3); }
+  function prev(){ goTo((cur+2)%3); }
+  function startAuto(){ timer=setInterval(next,4000); }
+  function stopAuto(){ clearInterval(timer); }
+  document.getElementById('next').addEventListener('click',()=>{ stopAuto(); next(); startAuto(); });
+  document.getElementById('prev').addEventListener('click',()=>{ stopAuto(); prev(); startAuto(); });
+  dots.forEach(d=>d.addEventListener('click',()=>{ stopAuto(); goTo(+d.dataset.i); startAuto(); }));
+  // swipe
+  let sx=0;
+  const el=document.getElementById('carousel');
+  el.addEventListener('touchstart',e=>{ sx=e.touches[0].clientX; },{ passive:true });
+  el.addEventListener('touchend',e=>{
+    const dx=e.changedTouches[0].clientX-sx;
+    if(Math.abs(dx)>40){ stopAuto(); dx<0?next():prev(); startAuto(); }
+  });
+  startAuto();
+})();
+
+// theme
+(function(){
+  const btn=document.getElementById('themeBtn'),html=document.documentElement;
+  if(localStorage.getItem('theme')==='light'){html.setAttribute('data-theme','light');btn.textContent='☀️'}
+  btn.addEventListener('click',()=>{
+    if(html.getAttribute('data-theme')==='light'){html.removeAttribute('data-theme');btn.textContent='🌙';localStorage.setItem('theme','dark')}
+    else{html.setAttribute('data-theme','light');btn.textContent='☀️';localStorage.setItem('theme','light')}
+  });
+})();
+</script>
+</body>
+</html>
