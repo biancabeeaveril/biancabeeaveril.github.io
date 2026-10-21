@@ -11,6 +11,7 @@ Portal multi-halaman berisi alat kerja tim + **Kelola Alteco** — aplikasi mana
 ├── index.html              ← Homepage (banner Aliria Tech Community + fitur Masuk)
 ├── tentang.html           ← Isi homepage lama: misi, program, keratin sama, carousel
 ├── assets/                 ← Aset gambar homepage
+│   ├── bg-hex.png          ← Background pola heksagon
 │   ├── hero-mentoring.jpg  ← Foto mentoring Universitas Dinamika
 │   ├── logo-universitas-dinamika.png  ← Logo Universitas Dinamika (transparan)
 │   ├── logo-aliria-tech.png            ← Logo Aliria Tech Community (transparan)
@@ -38,14 +39,14 @@ Portal multi-halaman berisi alat kerja tim + **Kelola Alteco** — aplikasi mana
 
 Homepage (`index.html`) adalah banner **Aliria Tech Community × Universitas Dinamika — Mentoring** (silver geometris, logo, foto mentoring, kontak Instagram & WhatsApp).
 
-Tombol **Masuk** membuka modal kode akses. Kode yang benar memunculkan section **Ruang Tim** berisi link ke **Log Pengajaran**.
+Tombol **Masuk** membuka modal kode akses (punya tombol mata untuk tampil/sembunyikan kode). Kode yang benar memunculkan section **Ruang Tim** berisi link ke **Log Pengajaran**.
 
 | Nilai | Lokasi |
 |-------|--------|
-| `PASS_TEAM` | `index.html` (blok `CONFIG` di bawah) |
-| `PASS_TEAM` | `logpengajar/index.html` (blok `CONFIG`) |
+| `PASS_TEAM = '20070704'` | `index.html` (blok `CONFIG` di bawah) |
+| `PASS_TEAM = '20070704'` | `logpengajar/index.html` (blok `CONFIG`) |
 
-> Gunakan kode yang sama di kedua file. Session login disimpan di `sessionStorage` per tab — logout saat tab ditutup.
+> Satu login berlaku untuk homepage **dan** app Log Pengajaran (session `sessionStorage`): masuk di homepage → buka Log Pengajaran → langsung terbuka, tidak diminta kode lagi. "Keluar" di salah satu keduanya mengakhiri sesi di keduanya.
 
 ---
 

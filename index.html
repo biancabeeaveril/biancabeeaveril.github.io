@@ -16,7 +16,7 @@
     <style>
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f3f4f6;
+            background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
             margin: 0;
             padding: 0;
             overflow-x: hidden;
@@ -26,40 +26,13 @@
             font-family: 'Montserrat', sans-serif;
         }
 
-        /* Latar belakang Silver Geometris khas Banner Aliria */
-        .silver-bg {
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 50%, #cbd5e1 100%);
-            position: relative;
-            overflow: hidden;
-        }
-
-        /* Overlay Pola Belah Ketupat / Diamond Lines */
-        .diamond-pattern {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image:
-                linear-gradient(45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%),
-                linear-gradient(-45deg, rgba(255, 255, 255, 0.4) 25%, transparent 25%),
-                linear-gradient(45deg, transparent 75%, rgba(255, 255, 255, 0.4) 75%),
-                linear-gradient(-45deg, transparent 75%, rgba(255, 255, 255, 0.4) 75%);
-            background-size: 120px 120px;
-            background-position: 0 0, 0 60px, 60px -60px, -60px 0px;
-            opacity: 0.6;
-            pointer-events: none;
-        }
-
-        /* Gradient Light Effects */
-        .glow-overlay {
-            position: absolute;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
-            top: -200px;
-            left: -100px;
-            pointer-events: none;
+        /* Latar belakang pola heksagon (assets/bg-hex.png) */
+        .hero-bg {
+            background-color: #ffffff;
+            background-image: url('assets/bg-hex.png');
+            background-size: cover;
+            background-position: left center;
+            background-repeat: no-repeat;
         }
 
         /* Floating animation for subtle interaction */
@@ -94,11 +67,7 @@
     </nav>
 
     <!-- ══════════════ BANNER HERO ══════════════ -->
-    <header class="w-full max-w-7xl silver-bg rounded-3xl shadow-2xl border border-white/60 relative overflow-hidden transition-all duration-300">
-
-        <!-- Layer Pola & Cahaya Latar -->
-        <div class="diamond-pattern"></div>
-        <div class="glow-overlay"></div>
+    <header class="w-full max-w-7xl hero-bg rounded-3xl shadow-2xl border border-white/80 relative overflow-hidden transition-all duration-300">
 
         <!-- Konten Hero Banner -->
         <div class="relative z-10 px-6 py-8 md:px-12 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center min-h-[500px]">
@@ -233,8 +202,14 @@
             </div>
 
             <form id="loginForm" class="mt-5">
-                <input id="loginPass" type="password" placeholder="Kode akses" autocomplete="off"
-                       class="w-full bg-gray-50 border border-gray-200 focus:border-[#0B192C] focus:ring-2 focus:ring-indigo-100 outline-none text-sm text-center tracking-widest rounded-xl px-4 py-3 transition">
+                <div class="relative">
+                    <input id="loginPass" type="password" placeholder="Kode akses" autocomplete="off"
+                           class="w-full bg-gray-50 border border-gray-200 focus:border-[#0B192C] focus:ring-2 focus:ring-indigo-100 outline-none text-sm text-center tracking-widest rounded-xl px-4 py-3 pr-12 transition">
+                    <button type="button" id="togglePass" title="Tampilkan / sembunyikan kode"
+                            class="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-lg text-gray-400 hover:text-[#0B192C] hover:bg-gray-100 transition-colors">
+                        <i class="fa-regular fa-eye"></i>
+                    </button>
+                </div>
                 <div id="loginErr" class="text-xs text-red-600 font-semibold mt-2 min-h-[16px] text-center"></div>
                 <button type="submit" class="w-full mt-2 bg-[#0B192C] hover:bg-indigo-800 text-white text-sm font-bold tracking-tight py-3 rounded-xl shadow-md transition-colors">
                     Masuk
@@ -250,7 +225,7 @@
    CONFIG — kode akses tim pengajar
    (sama dengan yang dipakai di logpengajar/index.html)
    ══════════════════════════════════════ */
-const PASS_TEAM = 'GANTI_KODE_TIM';
+const PASS_TEAM = '20070704';
 const SESSION_KEY = 'aliria_in';
 
 /* ══════════════════════════════════════
@@ -291,21 +266,37 @@ document.getElementById('btnMasukHero').onclick = openLogin;
 document.getElementById('loginClose').onclick = closeLogin;
 wrap.onclick = e => { if(e.target === wrap) closeLogin(); };
 
-document.getElementById('loginForm').onsubmit = e => {
-    e.preventDefault();
-    if(pass.value.trim() === PASS_TEAM){
+/* Tampilkan / sembunyikan kode akses */
+const toggleBtn = document.getElementById('togglePass');
+toggleBtn.onclick = ()=>{
+    const show = pass.type === 'password';
+    pass.type = show ? 'text' : 'password';
+    toggleBtn.innerHTML = show ? '<i class="fa-regular fa-eye-slash"></i>' : '<i class="fa-regular fa-eye"></i>';
+    toggleBtn.title = show ? 'Sembunyikan kode' : 'Tampilkan kode';
+    pass.focus();
+};
+
+function doLogin(code){
+    if(code === PASS_TEAM){
         sessionStorage.setItem(SESSION_KEY, '1');
+        sessionStorage.setItem('ajar_in', '1');
         closeLogin();
         showMenu();
         document.getElementById('menuSection').scrollIntoView({behavior:'smooth', block:'center'});
-    } else {
-        err.textContent = 'Kode tidak dikenali.';
-        pass.select();
+        return true;
     }
+    document.getElementById('loginErr').textContent = 'Kode tidak dikenali.';
+    return false;
+}
+
+document.getElementById('loginForm').onsubmit = e => {
+    e.preventDefault();
+    if(!doLogin(pass.value.trim())) pass.select();
 };
 
 document.getElementById('btnKeluar').onclick = ()=>{
     sessionStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem('ajar_in');
     hideMenu();
 };
 

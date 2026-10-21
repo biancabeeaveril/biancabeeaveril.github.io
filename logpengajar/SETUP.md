@@ -84,7 +84,7 @@ const WORKER_URL = 'WORKER_URL_DISINI';
 Isi:
 
 ```javascript
-const PASS_TEAM  = '20260101';
+const PASS_TEAM  = '20070704';
 
 const GIST_ID    = '6bf5ebb0397393324168d3dd14c018c8';
 const WORKER_URL = 'https://log-pengajar-writer.dionisiusn1.workers.dev';
@@ -93,6 +93,8 @@ const WORKER_URL = 'https://log-pengajar-writer.dionisiusn1.workers.dev';
 Commit & push → GitHub Pages deploy otomatis.
 
 > Kode yang sama juga dipakai homepage (`index.html`, konstanta `PASS_TEAM`) untuk fitur **Masuk** → **Ruang Tim**. Ganti di kedua file supaya sinkron.
+>
+> Sudah login di homepage? App ini **tidak** lagi meminta kode — session `aliria_in` dipakai bersama antara homepage dan app.
 
 ---
 

@@ -123,8 +123,11 @@ button{font-family:inherit}
 .gate-card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:28px;width:100%;max-width:340px;text-align:center}
 .gate-card h2{font-size:1.05rem;font-weight:800;margin-bottom:4px}
 .gate-card p{font-size:.75rem;color:var(--muted);margin-bottom:16px}
-.gate-card input{width:100%;background:var(--bg);border:1px solid var(--bd);color:var(--text);font-size:.85rem;text-align:center;letter-spacing:.08em;padding:11px;border-radius:7px;outline:none;margin-bottom:10px;transition:border-color .15s}
+.gate-card input{width:100%;background:var(--bg);border:1px solid var(--bd);color:var(--text);font-size:.85rem;text-align:center;letter-spacing:.08em;padding:11px 44px 11px 11px;border-radius:7px;outline:none;margin-bottom:10px;transition:border-color .15s}
 .gate-card input:focus{border-color:var(--accent)}
+.gate-pass{position:relative}
+.gate-eye{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:none;background:none;color:var(--muted);cursor:pointer;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:color .15s,background .15s}
+.gate-eye:hover{color:var(--accent);background:var(--card2)}
 .gate-err{font-size:.7rem;color:var(--red);margin-bottom:10px;min-height:14px}
 .gate-hint{font-size:.65rem;color:var(--muted);margin-top:12px;line-height:1.6}
 
@@ -203,7 +206,12 @@ button{font-family:inherit}
   <div class="gate-card">
     <h2>Log Pengajaran</h2>
     <p>Masukkan kode akses tim pengajar</p>
-    <input type="password" id="gateInput" placeholder="••••••" autocomplete="off"/>
+    <div class="gate-pass">
+      <input type="password" id="gateInput" placeholder="••••••" autocomplete="off"/>
+      <button type="button" class="gate-eye" id="gateToggle" title="Tampilkan / sembunyikan kode">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </div>
     <div class="gate-err" id="gateErr"></div>
     <button class="btn btn-primary" id="gateBtn" style="width:100%">Masuk</button>
     <div class="gate-hint" id="gateHint">Kode diberikan oleh koordinator tim pengajar.</div>
@@ -214,7 +222,7 @@ button{font-family:inherit}
 /* ══════════════════════════════════════
    CONFIG — ganti nilai di sini
    ══════════════════════════════════════ */
-const PASS_TEAM  = 'GANTI_KODE_TIM';     // kode akses tim pengajar
+const PASS_TEAM  = '20070704';            // kode akses tim pengajar
 const LS_KEY     = 'rakperpus_ajar_v1';
 const GIST_ID    = 'GIST_ID_DISINI';
 const GIST_FILE  = 'ajar-data.json';
@@ -689,8 +697,10 @@ function renderMeeting(m){
    GATE
    ══════════════════════════════════════ */
 function login(code){
-  if(code === PASS_TEAM){
+  /* boleh masuk pakai kode, atau sudah login di homepage (Ruang Tim) */
+  if(code === PASS_TEAM || sessionStorage.getItem('aliria_in') === '1'){
     sessionStorage.setItem('ajar_in', '1');
+    sessionStorage.setItem('aliria_in', '1');
     document.getElementById('gate').style.display = 'none';
     document.getElementById('logoutBtn').style.display = '';
     render();
@@ -732,6 +742,18 @@ function login(code){
   btn.onclick = submit;
   inp.onkeydown = e=>{ if(e.key === 'Enter') submit(); };
 
+  /* Tampilkan / sembunyikan kode akses */
+  const eye = document.getElementById('gateToggle');
+  const ICON_EYE = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+  const ICON_OFF = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+  eye.onclick = ()=>{
+    const show = inp.type === 'password';
+    inp.type = show ? 'text' : 'password';
+    eye.innerHTML = show ? ICON_OFF : ICON_EYE;
+    eye.title = show ? 'Sembunyikan kode' : 'Tampilkan kode';
+    inp.focus();
+  };
+
   if(sessionStorage.getItem('ajar_in') === '1'){
     gate.style.display = 'none';
     document.getElementById('logoutBtn').style.display = '';
@@ -743,6 +765,7 @@ function login(code){
 
   document.getElementById('logoutBtn').onclick = ()=>{
     sessionStorage.removeItem('ajar_in');
+    sessionStorage.removeItem('aliria_in');
     location.reload();
   };
   document.getElementById('backBtn').onclick = ()=>{ openCourse = null; render(); };
