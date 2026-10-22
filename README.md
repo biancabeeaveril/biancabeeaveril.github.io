@@ -43,8 +43,8 @@ Tombol **Masuk** membuka modal kode akses (punya tombol mata untuk tampil/sembun
 
 | Nilai | Lokasi |
 |-------|--------|
-| `PASS_TEAM = '20070704'` | `index.html` (blok `CONFIG` di bawah) |
-| `PASS_TEAM = '20070704'` | `logpengajar/index.html` (blok `CONFIG`) |
+| `PASS_TEAM = '20070407'` | `index.html` (blok `CONFIG` di bawah) |
+| `PASS_TEAM = '20070407'` | `logpengajar/index.html` (blok `CONFIG`) |
 
 > Satu login berlaku untuk homepage **dan** app Log Pengajaran (session `sessionStorage`): masuk di homepage → buka Log Pengajaran → langsung terbuka, tidak diminta kode lagi. "Keluar" di salah satu keduanya mengakhiri sesi di keduanya.
 
@@ -52,16 +52,25 @@ Tombol **Masuk** membuka modal kode akses (punya tombol mata untuk tampil/sembun
 
 ## Log Pengajaran (Tim Pengajar)
 
-App terpisah untuk mencatat riwayat mengajar: **universitas → semester → mata kuliah (card) → topik per pertemuan rutin**.
+App terpisah untuk mencatat riwayat mengajar: **universitas → semester → mata kuliah (card) → pertemuan → topik**.
 
 | Komponen | Isi |
 |----------|-----|
 | Frontend | `logpengajar/index.html` (single-file, tanpa build, tanpa dependency) |
 | Data | GitHub Gist — file `ajar-data.json` |
-| Write proxy | Cloudflare Worker — `logpengajar/worker.js` |
+| Sinkronisasi | **Gist langsung** (panel ⚙ di app) atau **Cloudflare Worker** (opsional, `logpengajar/worker.js`) |
 | Deploy | GitHub Pages |
 
-Cara setup (Gist, PAT, Worker, kode akses): **[`logpengajar/SETUP.md`](logpengajar/SETUP.md)**
+Fitur yang dipakai tim pengajar:
+
+- Hierarki **Universitas → Semester → Mata Kuliah → Pertemuan → Topik**
+- **Deskripsi topik** berupa teks panjang (textarea, multi-baris, tanpa batas panjang)
+- Centang **sudah dibahas** per topik + progres persentase per mata kuliah
+- Flag **Berbayar / Gratis** per mata kuliah (checkbox di form, tampil sebagai badge di card & detail)
+- Sinkron ke Gist: klik **⚙** di nav → isi Gist ID + PAT (scope `gist`) → **Hubungkan** (file dibuat otomatis bila belum ada)
+- Status sinkron di nav: hijau "Sinkron Gist" / "Lokal saja" kalau belum tersambung
+
+Cara setup (Gist, PAT, koneksi ⚙, Worker opsional, kode akses): **[`logpengajar/SETUP.md`](logpengajar/SETUP.md)**
 
 ---
 

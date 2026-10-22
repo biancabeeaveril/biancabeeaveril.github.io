@@ -102,9 +102,11 @@ button{font-family:inherit}
 .topic.done .txt{color:var(--muted);text-decoration:line-through}
 .topic .mini{opacity:0}
 .topic:hover .mini{opacity:1}
-.add-topic{display:flex;gap:7px;margin-top:10px}
-.add-topic input{flex:1;background:var(--bg);border:1px solid var(--bd);color:var(--text);font-size:.76rem;padding:7px 10px;border-radius:6px;outline:none;transition:border-color .15s}
-.add-topic input:focus{border-color:var(--accent)}
+.add-topic{display:flex;gap:7px;margin-top:10px;align-items:flex-start}
+.add-topic input, .add-topic textarea{flex:1;background:var(--bg);border:1px solid var(--bd);color:var(--text);font-size:.76rem;padding:7px 10px;border-radius:6px;outline:none;font-family:inherit;line-height:1.5;resize:none;overflow-y:auto;min-height:33px;max-height:200px;transition:border-color .15s}
+.add-topic textarea{transition:border-color .15s}
+.add-topic input:focus, .add-topic textarea:focus{border-color:var(--accent)}
+.add-topic .btn{align-self:stretch}
 
 /* ── MODAL ── */
 .modal-wrap{position:fixed;inset:0;background:rgba(0,0,0,.6);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:200;padding:20px}
@@ -113,10 +115,30 @@ button{font-family:inherit}
 .modal-title{font-size:.9rem;font-weight:700;margin-bottom:14px}
 .frow{display:block;margin-bottom:12px}
 .flabel{display:block;font-size:.68rem;font-weight:600;color:var(--muted);margin-bottom:5px}
-.frow input{width:100%;background:var(--bg);border:1px solid var(--bd);color:var(--text);font-size:.8rem;padding:9px 11px;border-radius:6px;outline:none;font-family:inherit;transition:border-color .15s}
-.frow input:focus{border-color:var(--accent)}
+.frow input, .frow textarea{width:100%;background:var(--bg);border:1px solid var(--bd);color:var(--text);font-size:.8rem;padding:9px 11px;border-radius:6px;outline:none;font-family:inherit;transition:border-color .15s}
+.frow input:focus, .frow textarea:focus{border-color:var(--accent)}
+.frow textarea{resize:vertical;min-height:76px;line-height:1.55}
+.frow-check{display:flex;align-items:center;gap:8px}
+.frow-check input[type=checkbox]{width:auto;accent-color:var(--accent);cursor:pointer}
+.frow-check .flabel{margin:0;color:var(--text);font-size:.76rem;font-weight:500}
+.fnote{font-size:.65rem;color:var(--muted);line-height:1.55;margin-top:5px}
 .ferr{font-size:.7rem;color:var(--red);margin-bottom:8px}
 .modal-bar{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
+
+/* ── TAG BERBAYAR / GRATIS ── */
+.tag{display:inline-block;font-size:.55rem;font-weight:800;letter-spacing:.06em;padding:2px 7px;border-radius:20px;vertical-align:middle;margin-left:6px;border:1px solid transparent;white-space:nowrap}
+.tag.paid{background:#fde68a;color:#78350f;border-color:#fcd34d}
+.tag.free{background:#a7f3d0;color:#064e3b;border-color:#6ee7b7}
+[data-theme="light"] .tag.paid{background:#fef3c7;color:#92400e}
+[data-theme="light"] .tag.free{background:#d1fae5;color:#065f46}
+
+/* ── PANEL KONEKSI GIST ── */
+.gist-status{font-size:.7rem;line-height:1.5;margin:0 0 10px;min-height:14px}
+.gist-status.ok{color:var(--green)}
+.gist-status.bad{color:var(--red)}
+.gist-pass{position:relative}
+.gist-help{font-size:.64rem;color:var(--muted);line-height:1.65;margin-top:12px;border-top:1px dashed var(--bd);padding-top:10px;text-align:left}
+.gist-help code{font-size:.62rem;background:var(--card2);padding:1px 4px;border-radius:4px}
 
 /* ── GATE ── */
 .gate{position:fixed;inset:0;background:var(--bg);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
@@ -152,6 +174,7 @@ button{font-family:inherit}
   <span class="nav-title">Log Pengajaran</span>
   <span class="nav-spacer"></span>
   <span class="nav-meta"><span class="dot-sync" id="syncDot"></span><span id="syncTxt" style="display:none">Tersimpan</span></span>
+  <button class="icon-btn" id="gistBtn" title="Koneksi Gist">⚙</button>
   <button class="icon-btn" id="logoutBtn" style="display:none" title="Keluar">⎋</button>
   <button class="theme-btn" id="themeBtn">🌙</button>
 </nav>
@@ -222,13 +245,23 @@ button{font-family:inherit}
 /* ══════════════════════════════════════
    CONFIG — ganti nilai di sini
    ══════════════════════════════════════ */
-const PASS_TEAM  = '20070704';            // kode akses tim pengajar
+const PASS_TEAM  = '20070407';            // kode akses tim pengajar
 const LS_KEY     = 'rakperpus_ajar_v1';
 const GIST_ID    = 'GIST_ID_DISINI';
 const GIST_FILE  = 'ajar-data.json';
 const WORKER_URL = 'WORKER_URL_DISINI';
 
 const isSet = v => !!v && !/^(GIST_ID|WORKER_URL|GANTI_)/.test(v);
+
+/* Koneksi Gist juga bisa diisi dari aplikasi (tombol ⚙ di nav).
+   Nilai tersimpan di localStorage browser admin. */
+const LS_GIST_ID  = 'ajar_gist_id';
+const LS_GIST_PAT = 'ajar_gist_pat';
+const cfgGistId = () => isSet(GIST_ID) ? GIST_ID : (localStorage.getItem(LS_GIST_ID) || '');
+const cfgPat    = () => localStorage.getItem(LS_GIST_PAT) || '';
+const useWorker = () => isSet(WORKER_URL);
+const useGist   = () => !useWorker() && !!cfgGistId() && !!cfgPat();
+const synced    = () => useWorker() || useGist();
 
 /* ══════════════════════════════════════
    STATE
@@ -281,16 +314,18 @@ function localLoad(){
 }
 async function remoteLoad(){
   /* 1) Worker (bisa baca Gist secret) */
-  if(isSet(WORKER_URL)){
+  if(useWorker()){
     try{
       const r = await fetch(WORKER_URL, {cache:'no-store'});
       if(r.ok){ const j = await r.json(); if(j && j.univs) return j; }
     }catch{}
   }
-  /* 2) Gist publik langsung */
-  if(isSet(GIST_ID)){
+  /* 2) Gist langsung — token dari panel ⚙ (atau Gist publik tanpa token) */
+  if(cfgGistId()){
     try{
-      const r = await fetch(`https://api.github.com/gists/${GIST_ID}`, {cache:'no-store', headers:{'Accept':'application/vnd.github+json'}});
+      const h = {'Accept':'application/vnd.github+json'};
+      if(cfgPat()) h['Authorization'] = `Bearer ${cfgPat()}`;
+      const r = await fetch(`https://api.github.com/gists/${cfgGistId()}`, {cache:'no-store', headers:h});
       if(r.ok){
         const g = await r.json();
         const c = g.files?.[GIST_FILE]?.content;
@@ -304,18 +339,38 @@ let _timer = null;
 function save(){
   try{ localStorage.setItem(LS_KEY, JSON.stringify(db)); }catch{}
   setSync(false);
-  if(!isSet(WORKER_URL)) return;
+  if(!synced()) return;
   clearTimeout(_timer);
   _timer = setTimeout(push, 400);
 }
 async function push(){
   try{
-    await fetch(WORKER_URL, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(db)});
-    setSync(true);
-  }catch(e){ console.warn('save failed', e); }
+    if(useWorker()){
+      await fetch(WORKER_URL, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(db)});
+      setSync(true);
+      return;
+    }
+    if(useGist()){
+      /* read-merge-write langsung ke Gist (sama seperti logika Worker) */
+      const url = `https://api.github.com/gists/${cfgGistId()}`;
+      const h = {'Accept':'application/vnd.github+json','Authorization':`Bearer ${cfgPat()}`,'Content-Type':'application/json'};
+      const r = await fetch(url, {headers:h});
+      if(!r.ok) throw new Error('baca gist ' + r.status);
+      const g = await r.json();
+      let gistDb = emptyDb();
+      const c = g.files?.[GIST_FILE]?.content;
+      if(c){ try{ gistDb = {...emptyDb(), ...JSON.parse(c)}; }catch{} }
+      const merged = mergeDb(gistDb, db);
+      const p = await fetch(url, {method:'PATCH', headers:h,
+        body:JSON.stringify({files:{[GIST_FILE]:{content:JSON.stringify(merged, null, 2)}}})});
+      if(!p.ok) throw new Error('tulis gist ' + p.status);
+      setSync(true);
+    }
+  }catch(e){ console.warn('save failed', e); setSync(false); }
 }
 window.addEventListener('beforeunload', ()=>{
-  if(!isSet(WORKER_URL)) return;
+  /* beacon cuma bisa ke Worker (tanpa header Authorization) */
+  if(!useWorker()) return;
   clearTimeout(_timer);
   navigator.sendBeacon(WORKER_URL, new Blob([JSON.stringify(db)], {type:'application/json'}));
 });
@@ -323,7 +378,10 @@ function setSync(ok){
   const d = document.getElementById('syncDot'), t = document.getElementById('syncTxt');
   if(!d) return;
   d.classList.toggle('on', !!ok);
-  t.style.display = ok ? 'inline' : 'none';
+  if(ok)              t.textContent = useWorker() ? 'Sinkron' : 'Sinkron Gist';
+  else if(synced())   t.textContent = 'Menyimpan…';
+  else                t.textContent = 'Lokal saja';
+  t.style.display = 'inline';
 }
 
 /* ══════════════════════════════════════
@@ -371,16 +429,16 @@ function delSem(id){
   if(selSem===id){ selSem = null; openCourse = null; }
   save(); render();
 }
-function addCourse(semId, name, code, lecturer){
+function addCourse(semId, name, code, lecturer, paid){
   const ord = Math.max(-1, ...liveCourses(semId).map(c=>c.ord||0)) + 1;
-  const c = touch({id:uid(), semId, name, code:code||'', lecturer:lecturer||'', ord});
+  const c = touch({id:uid(), semId, name, code:code||'', lecturer:lecturer||'', paid:!!paid, ord});
   db.courses.push(c);
   openCourse = c.id;
   save(); render();
 }
-function editCourse(id, name, code, lecturer){
+function editCourse(id, name, code, lecturer, paid){
   const c = getCourse(id); if(!c) return;
-  c.name = name; c.code = code||''; c.lecturer = lecturer||'';
+  c.name = name; c.code = code||''; c.lecturer = lecturer||''; c.paid = !!paid;
   touch(c); save(); render();
 }
 function delCourse(id){
@@ -442,16 +500,29 @@ function openForm(title, fields, onSave){
 
   const form = document.createElement('form');
   fields.forEach(f=>{
+    /* checkbox (untuk flag seperti berbayar/gratis) */
+    if(f.type === 'checkbox'){
+      const row = document.createElement('label'); row.className = 'frow frow-check';
+      const cb = document.createElement('input');
+      cb.type = 'checkbox'; cb.name = f.key; cb.checked = !!f.value;
+      const lb = document.createElement('span'); lb.className = 'flabel'; lb.textContent = f.label;
+      row.append(cb, lb);
+      form.appendChild(row);
+      return;
+    }
     const row = document.createElement('label'); row.className = 'frow';
     const lb = document.createElement('span'); lb.className = 'flabel'; lb.textContent = f.label;
     row.appendChild(lb);
-    const input = document.createElement('input');
-    input.type = f.type || 'text';
-    input.name = f.key;
-    input.value = f.value ?? '';
-    if(f.placeholder) input.placeholder = f.placeholder;
-    if(f.required) input.required = true;
-    row.appendChild(input);
+    /* textarea untuk teks panjang (deskripsi/topik) */
+    const el = (f.type === 'textarea') ? document.createElement('textarea') : document.createElement('input');
+    if(f.type === 'textarea') el.rows = f.rows || 4;
+    else el.type = f.type || 'text';
+    el.name = f.key;
+    el.value = f.value ?? '';
+    if(f.placeholder) el.placeholder = f.placeholder;
+    if(f.required) el.required = true;
+    row.appendChild(el);
+    if(f.note){ const n = document.createElement('div'); n.className = 'fnote'; n.textContent = f.note; row.appendChild(n); }
     form.appendChild(row);
   });
   const err = document.createElement('div'); err.className = 'ferr';
@@ -467,8 +538,10 @@ function openForm(title, fields, onSave){
   form.onsubmit = e => {
     e.preventDefault();
     const vals = {};
-    fields.forEach(f => vals[f.key] = (form.elements[f.key].value || '').trim());
-    const miss = fields.find(f => f.required && !vals[f.key]);
+    fields.forEach(f => vals[f.key] = f.type === 'checkbox'
+      ? !!form.elements[f.key].checked
+      : ((form.elements[f.key].value || '').trim()));
+    const miss = fields.find(f => f.required && f.type !== 'checkbox' && !vals[f.key]);
     if(miss){ err.textContent = `"${miss.label}" wajib diisi.`; return; }
     closeForm();
     onSave(vals);
@@ -476,9 +549,102 @@ function openForm(title, fields, onSave){
   card.appendChild(form);
   wrap.style.display = 'flex';
   wrap.onclick = e => { if(e.target === wrap) closeForm(); };
-  setTimeout(()=>{ const i = card.querySelector('input'); i && i.focus(); }, 60);
+  setTimeout(()=>{ const i = card.querySelector('input, textarea'); i && i.focus(); }, 60);
 }
 function closeForm(){ document.getElementById('modalWrap').style.display = 'none'; }
+
+/* ══════════════════════════════════════
+   PANEL KONEKSI GIST (tombol ⚙ di nav)
+   ══════════════════════════════════════ */
+const ICON_EYE  = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
+const ICON_OFF  = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+
+function openGistPanel(){
+  const wrap = document.getElementById('modalWrap');
+  const card = document.getElementById('modalCard');
+  card.innerHTML = '';
+
+  const t = document.createElement('div');
+  t.className = 'modal-title'; t.textContent = 'Koneksi Gist';
+  card.appendChild(t);
+
+  const st = document.createElement('div');
+  st.className = 'gist-status';
+  st.textContent = useWorker()
+    ? 'Mode aktif: lewat Worker (WORKER_URL terisi di kode).'
+    : (synced() ? 'Mode aktif: Gist langsung dari browser.'
+                : 'Mode aktif: lokal saja — data baru tersimpan di browser ini.');
+  card.appendChild(st);
+
+  const form = document.createElement('form');
+
+  const r1 = document.createElement('label'); r1.className = 'frow';
+  const l1 = document.createElement('span'); l1.className = 'flabel'; l1.textContent = 'Gist ID';
+  const gi = document.createElement('input');
+  gi.name = 'gid'; gi.placeholder = 'id gist, contoh: a1b2c3d4e5f6…'; gi.autocomplete = 'off';
+  gi.value = isSet(GIST_ID) ? GIST_ID : (localStorage.getItem(LS_GIST_ID) || '');
+  if(isSet(GIST_ID)) gi.readOnly = true;
+  r1.append(l1, gi); form.appendChild(r1);
+
+  const r2 = document.createElement('label'); r2.className = 'frow';
+  const l2 = document.createElement('span'); l2.className = 'flabel'; l2.textContent = 'Token GitHub (PAT, scope: gist)';
+  const pw = document.createElement('div'); pw.className = 'gist-pass';
+  const pt = document.createElement('input');
+  pt.name = 'pat'; pt.type = 'password'; pt.placeholder = 'ghp_…'; pt.autocomplete = 'off';
+  pt.value = localStorage.getItem(LS_GIST_PAT) || '';
+  const eye = document.createElement('button');
+  eye.type = 'button'; eye.className = 'gate-eye'; eye.innerHTML = ICON_EYE;
+  eye.title = 'Tampilkan / sembunyikan token';
+  eye.onclick = ()=>{ const show = pt.type === 'password'; pt.type = show ? 'text' : 'password'; eye.innerHTML = show ? ICON_OFF : ICON_EYE; pt.focus(); };
+  pw.append(pt, eye); r2.append(l2, pw); form.appendChild(r2);
+
+  const err = document.createElement('div'); err.className = 'ferr'; form.appendChild(err);
+
+  const bar = document.createElement('div'); bar.className = 'modal-bar';
+  const del = document.createElement('button'); del.type = 'button'; del.className = 'btn'; del.textContent = 'Putuskan';
+  const cancel = document.createElement('button'); cancel.type = 'button'; cancel.className = 'btn'; cancel.textContent = 'Batal';
+  const ok = document.createElement('button'); ok.type = 'submit'; ok.className = 'btn btn-primary'; ok.textContent = 'Hubungkan';
+  bar.append(del, cancel, ok); form.appendChild(bar);
+
+  del.onclick = ()=>{ localStorage.removeItem(LS_GIST_ID); localStorage.removeItem(LS_GIST_PAT); location.reload(); };
+  cancel.onclick = closeForm;
+  form.onsubmit = async e => {
+    e.preventDefault();
+    const id = gi.value.trim(), pat = pt.value.trim();
+    if(!id){ err.textContent = 'Gist ID wajib diisi.'; return; }
+    if(!pat){ err.textContent = 'Token wajib diisi.'; return; }
+    ok.disabled = true; ok.textContent = 'Mengecek…'; err.textContent = '';
+    try{
+      const url = `https://api.github.com/gists/${id}`;
+      const h = {'Accept':'application/vnd.github+json','Authorization':`Bearer ${pat}`};
+      const r = await fetch(url, {headers:h});
+      if(r.status === 401) throw new Error('Token tidak valid / sudah kedaluwarsa.');
+      if(r.status === 404) throw new Error('Gist tidak ditemukan, atau token tidak punya akses ke gist itu.');
+      if(!r.ok) throw new Error('GitHub balas HTTP ' + r.status + '.');
+      const g = await r.json();
+      if(!g.files?.[GIST_FILE]){
+        const p = await fetch(url, {method:'PATCH', headers:{...h, 'Content-Type':'application/json'},
+          body:JSON.stringify({files:{[GIST_FILE]:{content:JSON.stringify(emptyDb(), null, 2)}}})});
+        if(!p.ok) throw new Error('Gagal membuat file ' + GIST_FILE + ' (HTTP ' + p.status + ').');
+      }
+      localStorage.setItem(LS_GIST_ID, id);
+      localStorage.setItem(LS_GIST_PAT, pat);
+      location.reload();
+    }catch(ex){
+      err.textContent = ex.message;
+      ok.disabled = false; ok.textContent = 'Hubungkan';
+    }
+  };
+  card.appendChild(form);
+
+  const help = document.createElement('div'); help.className = 'gist-help';
+  help.innerHTML = 'Buat gist secret di <b>gist.github.com</b>, lalu tempel <b>Gist ID</b> + token PAT (scope <b>gist</b>) di atas. ' +
+    `File <code>${GIST_FILE}</code> dibuat otomatis bila belum ada. Token disimpan di browser admin (localStorage), tidak pernah masuk ke repository.`;
+  card.appendChild(help);
+
+  wrap.style.display = 'flex';
+  wrap.onclick = e => { if(e.target === wrap) closeForm(); };
+}
 
 function miniBtn(txt, cls, fn){
   const b = document.createElement('button');
@@ -592,7 +758,7 @@ function renderCourses(){
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
-      <h3>${esc(c.name)}</h3>
+      <h3>${esc(c.name)}<span class="tag ${c.paid?'paid':'free'}">${c.paid?'Berbayar':'Gratis'}</span></h3>
       <div class="sub">${[c.code, c.lecturer].filter(Boolean).map(esc).join(' · ') || '—'}</div>
       <div class="card-foot">
         <span class="pill">${meets.length} pertemuan</span>
@@ -604,7 +770,8 @@ function renderCourses(){
       {key:'name',label:'Nama Mata Kuliah',value:c.name,required:true},
       {key:'code',label:'Kode',value:c.code,placeholder:'Contoh: IF201'},
       {key:'lecturer',label:'Pengajar',value:c.lecturer,placeholder:'Nama pengajar'},
-    ], v=>editCourse(c.id,v.name,v.code,v.lecturer))));
+      {key:'paid',label:'Program berbayar',type:'checkbox',value:!!c.paid,note:'Centang bila kelas ini kelas berbayar. Tanpa centang = gratis.'},
+    ], v=>editCourse(c.id,v.name,v.code,v.lecturer,v.paid))));
     ed.appendChild(miniBtn('🗑','danger', ()=>delCourse(c.id)));
     card.appendChild(ed);
     card.onclick = ()=>{ openCourse = c.id; render(); window.scrollTo({top:0,behavior:'smooth'}); };
@@ -618,7 +785,7 @@ function renderDetail(courseId){
 
   const c = getCourse(courseId);
   const s = getSem(c.semId), u = s ? getUniv(s.univId) : null;
-  document.getElementById('dTitle').textContent = c.name;
+  document.getElementById('dTitle').innerHTML = `${esc(c.name)}<span class="tag ${c.paid?'paid':'free'}">${c.paid?'Berbayar':'Gratis'}</span>`;
   document.getElementById('dMeta').innerHTML =
     `<span>🏛 ${esc(u?u.name:'—')}</span><span>📅 ${esc(s?s.name:'—')}</span>` +
     `${c.code?`<span>🔖 ${esc(c.code)}</span>`:''}${c.lecturer?`<span>👤 ${esc(c.lecturer)}</span>`:''}`;
@@ -667,15 +834,19 @@ function renderMeeting(m){
     cb.onchange = ()=>{ toggleTopic(t.id, cb.checked); li.classList.toggle('done', cb.checked); };
     const sp = document.createElement('span'); sp.className = 'txt'; sp.textContent = t.text;
     li.append(cb, sp);
-    li.appendChild(miniBtn('✎','', ()=> openForm('Ubah Topik', [{key:'text',label:'Isi Topik',value:t.text,required:true}], v=>editTopic(t.id,v.text))));
+    li.appendChild(miniBtn('✎','', ()=> openForm('Ubah Topik', [
+      {key:'text',label:'Deskripsi Topik',type:'textarea',value:t.text,required:true,note:'Teks panjang diperbolehkan — Enter di textarea membuat baris baru.'},
+    ], v=>editTopic(t.id,v.text))));
     li.appendChild(miniBtn('🗑','danger', ()=>delTopic(t.id)));
     ul.appendChild(li);
   });
   el.appendChild(ul);
 
   const form = document.createElement('div'); form.className = 'add-topic';
-  const inp = document.createElement('input');
-  inp.type = 'text'; inp.placeholder = 'Tambah topik yang dibahas…';
+  const inp = document.createElement('textarea');
+  inp.rows = 1; inp.placeholder = 'Tambah topik yang dibahas… (Enter simpan, Shift+Enter baris baru)';
+  const autoGrow = ()=>{ inp.style.height = 'auto'; inp.style.height = Math.min(200, inp.scrollHeight) + 'px'; };
+  inp.addEventListener('input', autoGrow);
   const btn = document.createElement('button'); btn.className = 'btn btn-sm btn-primary'; btn.textContent = '+ Topik';
   const submit = ()=>{
     const v = inp.value.trim();
@@ -683,11 +854,11 @@ function renderMeeting(m){
     addTopic(m.id, v);
     inp.value = '';
     render();
-    const box = document.querySelector(`.meeting[data-mid="${m.id}"] .add-topic input`);
+    const box = document.querySelector(`.meeting[data-mid="${m.id}"] .add-topic textarea`);
     box && box.focus();
   };
   btn.onclick = submit;
-  inp.onkeydown = e=>{ if(e.key==='Enter'){ e.preventDefault(); submit(); } };
+  inp.onkeydown = e=>{ if(e.key==='Enter' && !e.shiftKey){ e.preventDefault(); submit(); } };
   form.append(inp, btn);
   el.appendChild(form);
   return el;
@@ -744,8 +915,6 @@ function login(code){
 
   /* Tampilkan / sembunyikan kode akses */
   const eye = document.getElementById('gateToggle');
-  const ICON_EYE = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
-  const ICON_OFF = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
   eye.onclick = ()=>{
     const show = inp.type === 'password';
     inp.type = show ? 'text' : 'password';
@@ -769,13 +938,15 @@ function login(code){
     location.reload();
   };
   document.getElementById('backBtn').onclick = ()=>{ openCourse = null; render(); };
+  document.getElementById('gistBtn').onclick = openGistPanel;
   document.getElementById('addCourseBtn').onclick = ()=>{
     if(!selSem){ alert('Pilih semester dulu.'); return; }
     openForm('Tambah Mata Kuliah', [
       {key:'name',label:'Nama Mata Kuliah',placeholder:'Contoh: Basis Data',required:true},
       {key:'code',label:'Kode',placeholder:'Contoh: IF201'},
       {key:'lecturer',label:'Pengajar',placeholder:'Nama pengajar'},
-    ], v=>addCourse(selSem, v.name, v.code, v.lecturer));
+      {key:'paid',label:'Program berbayar',type:'checkbox',note:'Centang bila kelas ini kelas berbayar. Tanpa centang = gratis.'},
+    ], v=>addCourse(selSem, v.name, v.code, v.lecturer, v.paid));
   };
   document.getElementById('addMeetingBtn').onclick = ()=>{
     const next = Math.max(0, ...liveMeets(openCourse).map(m=>m.no||0)) + 1;
