@@ -52,7 +52,7 @@ Tombol **Masuk** membuka modal kode akses (punya tombol mata untuk tampil/sembun
 
 ## Log Pengajaran (Tim Pengajar)
 
-App terpisah untuk mencatat riwayat mengajar: **universitas → semester → mata kuliah (card) → pertemuan → topik**.
+App terpisah untuk mencatat riwayat mengajar: **universitas → semester (statis 1–8) → mata kuliah (card) → pertemuan → topik**, plus daftar **anggota tim pengajar**.
 
 | Komponen | Isi |
 |----------|-----|
@@ -64,9 +64,11 @@ App terpisah untuk mencatat riwayat mengajar: **universitas → semester → mat
 Fitur yang dipakai tim pengajar:
 
 - Hierarki **Universitas → Semester → Mata Kuliah → Pertemuan → Topik**
-- **Deskripsi topik** berupa teks panjang (textarea, multi-baris, tanpa batas panjang)
+- **Semester 1–8 statis** — bukan CRUD: tidak ada tombol tambah/hapus, langsung tersedia di tiap universitas
+- **Deskripsi** (topik & pertemuan) berupa **long text** — textarea multi-baris tanpa batas panjang
 - Centang **sudah dibahas** per topik + progres persentase per mata kuliah
 - Flag **Berbayar / Gratis** per mata kuliah (checkbox di form, tampil sebagai badge di card & detail)
+- **Tambah Anggota** (modal multi-baris, `+ Tambah baris`): nama pendek, nama lengkap, angkatan, jabatan/role, kelompok — plus **+ Kelompok** (chip bisa difilter, ✎ ubah, 🗑 hapus)
 - Sinkron ke Gist: klik **⚙** di nav → isi Gist ID + PAT (scope `gist`) → **Hubungkan** (file dibuat otomatis bila belum ada)
 - Status sinkron di nav: hijau "Sinkron Gist" / "Lokal saja" kalau belum tersambung
 

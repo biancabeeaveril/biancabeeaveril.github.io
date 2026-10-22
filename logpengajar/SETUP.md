@@ -117,12 +117,13 @@ Nilai sudah terpasang di kedua file. Ganti di **dua** file supaya sinkron.
 
 1. Masuk dengan kode tim pengajar → full akses tambah/edit/hapus
 2. **+ Tambah** di baris **Universitas** → jadi chip label
-3. Pilih universitas → **+ Tambah** di baris **Semester**
+3. Pilih universitas → pilih **Semester 1–8** (statis, tidak perlu dibuat — tidak ada tombol tambah/hapus)
 4. **+ Tambah Mata Kuliah** → isi nama/kode/pengajar + centang **Program berbayar** bila kelas berbayar (tanpa centang = **Gratis**)
 5. Klik card → halaman detail: daftar **pertemuan**
-6. Di tiap pertemuan: `+ Topik` untuk menambah **deskripsi topik** (teks panjang, boleh banyak baris — `Enter` simpan, `Shift+Enter` baris baru), centang checkbox kalau **sudah dibahas**
+6. Di tiap pertemuan: `+ Topik` untuk menambah **deskripsi topik** (teks panjang, boleh banyak baris — `Enter` simpan, `Shift+Enter` baris baru), centang checkbox kalau **sudah dibahas**; **Deskripsi Pertemuan** juga berupa textarea panjang
+7. **+ Kelompok** lalu **+ Anggota** untuk mengisi tim pengajar — modal mendukung **+ Tambah baris** (bisa isi banyak anggota sekaligus), ✕ menghapus baris, dan tombol Simpan menyimpan semua baris yang terisi
 
-> Label universitas & semester bersifat tetap: tambah sekali, hapus kalau memang dibatalkan (menghapus label ikut menghapus isinya). Isi yang berkembang tiap pertemuan tetap bisa di-ubah lewat tombol ✎.
+> Label universitas bersifat tetap: tambah sekali, hapus kalau memang dibatalkan (menghapus label ikut menghapus isinya). Semester 1–8 selalu tersedia untuk setiap universitas.
 
 ---
 
@@ -131,18 +132,23 @@ Nilai sudah terpasang di kedua file. Ganti di **dua** file supaya sinkron.
 ```jsonc
 {
   "univs":    [{ "id":"u1", "name":"Universitas Astrindo", "ord":0, "updatedAt":0 }],
-  "sems":     [{ "id":"s1", "univId":"u1", "name":"Ganjil 2026/2027", "ord":0, "updatedAt":0 }],
-  "courses":  [{ "id":"c1", "semId":"s1", "name":"Basis Data", "code":"IF201", "lecturer":"Budi",
-                 "paid":false, "ord":0, "updatedAt":0 }],
-  "meetings": [{ "id":"m1", "courseId":"c1", "no":1, "date":"2026-09-05", "title":"Pengenalan Basis Data", "updatedAt":0 }],
-  "topics":   [{ "id":"t1", "meetingId":"m1", "text":"Deskripsi topik (teks panjang, boleh multi-baris)",
-                 "done":true, "ord":0, "updatedAt":0 }]
+  "courses":  [{ "id":"c1", "univId":"u1", "sem":1, "name":"Basis Data", "code":"IF201",
+                 "lecturer":"Budi", "paid":false, "ord":0, "updatedAt":0 }],
+  "meetings": [{ "id":"m1", "courseId":"c1", "no":1, "date":"2026-09-05",
+                 "title":"Deskripsi pertemuan (long text, boleh multi-baris)", "updatedAt":0 }],
+  "topics":   [{ "id":"t1", "meetingId":"m1", "text":"Deskripsi topik (long text)",
+                 "done":true, "ord":0, "updatedAt":0 }],
+  "members":  [{ "id":"a1", "shortName":"Dion", "fullName":"Dionisius Nur P", "batch":"2023",
+                 "role":"Koordinator", "groupId":"g1", "ord":0, "updatedAt":0 }],
+  "groups":   [{ "id":"g1", "name":"Pengajar", "ord":0, "updatedAt":0 }]
 }
 ```
 
 - Semua array **flat** (relasi pakai `id`) → merge cukup satu aturan untuk semua tabel.
+- **Tidak ada array `sems`** — semester adalah angka `sem: 1..8` di setiap mata kuliah (statis). Data lama format `sems` + `semId` otomatis dimigrasikan saat aplikasi dibuka (`migrate()`).
 - `paid: true` = kelas **berbayar**; tidak ada / `false` = **gratis**.
-- `text` di `topics` adalah **long text** (tidak dibatasi panjangnya).
+- `title` (pertemuan) dan `text` (topik) adalah **long text** — tidak dibatasi panjangnya.
+- `groupId: ""` = anggota tanpa kelompok. Menghapus kelompok mengosongkan `groupId` anggotanya (anggota tidak ikut terhapus).
 
 ---
 
@@ -152,7 +158,7 @@ Baik Worker maupun Mode A memakai **read-merge-write** — tidak pernah menimpa 
 
 | Tipe | Strategi |
 |------|----------|
-| Semua array | Merge by `id` — item dengan `updatedAt` lebih baru menang |
+| Semua array (`univs`, `courses`, `meetings`, `topics`, `members`, `groups`) | Merge by `id` — item dengan `updatedAt` lebih baru menang |
 
 Dua orang edit data berbeda bersamaan → keduanya tetap tersimpan.
 

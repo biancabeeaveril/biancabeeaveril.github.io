@@ -46,6 +46,8 @@ button{font-family:inherit}
 .chip-btn{background:none;border:none;color:inherit;cursor:pointer;font-size:.76rem;font-weight:600;padding:6px 12px;text-align:left}
 .chip-del{background:none;border:none;border-left:1px solid var(--bd);color:var(--muted);cursor:pointer;font-size:.7rem;padding:0 9px;transition:color .15s,background .15s}
 .chip-del:hover{color:var(--red);background:var(--card2)}
+.chip-edit{background:none;border:none;border-left:1px solid var(--bd);color:var(--muted);cursor:pointer;font-size:.66rem;padding:0 8px;transition:color .15s,background .15s}
+.chip-edit:hover{color:var(--accent);background:var(--card2)}
 .chip.add{border-style:dashed;color:var(--muted)}
 .chip.add .chip-btn{color:var(--muted)}
 .chip.add:hover .chip-btn{color:var(--accent)}
@@ -91,7 +93,7 @@ button{font-family:inherit}
 .m-no{font-size:.7rem;font-weight:700;color:var(--accent)}
 .m-date{font-size:.68rem;color:var(--muted)}
 .m-actions{margin-left:auto;display:flex;gap:5px}
-.m-title{font-size:.85rem;font-weight:600;margin-bottom:9px}
+.m-title{font-size:.85rem;font-weight:600;margin-bottom:9px;white-space:pre-line;word-break:break-word;line-height:1.55}
 
 /* ── TOPIK ── */
 .topics{list-style:none;padding:0;margin:0}
@@ -139,6 +141,29 @@ button{font-family:inherit}
 .gist-pass{position:relative}
 .gist-help{font-size:.64rem;color:var(--muted);line-height:1.65;margin-top:12px;border-top:1px dashed var(--bd);padding-top:10px;text-align:left}
 .gist-help code{font-size:.62rem;background:var(--card2);padding:1px 4px;border-radius:4px}
+
+/* ── ANGGOTA TIM PENGAJAR ── */
+.members{display:grid;grid-template-columns:repeat(auto-fill,minmax(238px,1fr));gap:9px}
+.member{background:var(--card);border:1px solid var(--bd);border-radius:9px;padding:11px 13px;position:relative;transition:border-color .15s}
+.member:hover{border-color:var(--accent)}
+.member .m-short{font-size:.82rem;font-weight:700;padding-right:56px}
+.member .m-meta{font-size:.66rem;color:var(--muted);margin-top:3px;line-height:1.5;word-break:break-word;padding-right:56px}
+.member .m-badge{display:inline-block;font-size:.58rem;font-weight:700;letter-spacing:.05em;padding:1px 7px;border-radius:20px;background:var(--card2);border:1px solid var(--bd);color:var(--muted);margin:6px 4px 0 0}
+.member .m-badge.grp{border-color:var(--accent);color:var(--accent)}
+.member .m-actions{position:absolute;top:9px;right:9px;display:flex;gap:4px;opacity:0;transition:opacity .15s}
+.member:hover .m-actions{opacity:1}
+.members-empty{grid-column:1/-1;text-align:center;padding:22px 14px;color:var(--muted);font-size:.76rem;border:1px dashed var(--bd);border-radius:9px}
+
+/* form multi-baris (Tambah Anggota) */
+.member-rows{display:flex;flex-direction:column;gap:13px;max-height:min(52vh,430px);overflow-y:auto;padding:1px 3px 3px 1px}
+.mrow{border:1px solid var(--bd);border-radius:8px;padding:11px;background:var(--bg)}
+.mrow-top{display:flex;gap:8px;align-items:flex-start}
+.mrow-top .frow{flex:1;margin-bottom:0}
+.mrow-x{border:1px solid var(--bd);background:var(--card2);color:var(--muted);border-radius:6px;width:30px;height:30px;cursor:pointer;font-size:.85rem;line-height:1;flex-shrink:0;transition:color .15s,border-color .15s}
+.mrow-x:hover{color:var(--red);border-color:var(--red)}
+.mrow-add{margin-top:11px}
+select.fsel{width:100%;background:var(--bg);border:1px solid var(--bd);color:var(--text);font-size:.8rem;padding:9px 11px;border-radius:6px;outline:none;font-family:inherit}
+select.fsel:focus{border-color:var(--accent)}
 
 /* ── GATE ── */
 .gate{position:fixed;inset:0;background:var(--bg);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
@@ -219,6 +244,17 @@ button{font-family:inherit}
     </div>
     <div id="meetingList"></div>
   </div>
+
+  <!-- TIM PENGAJAR (anggota) -->
+  <div id="memberSection" style="display:none">
+    <div class="section-head">
+      <h2 id="memberHead">Tim Pengajar</h2>
+      <button class="btn" id="addGroupBtn">+ Kelompok</button>
+      <button class="btn btn-primary" id="addMemberBtn">+ Anggota</button>
+    </div>
+    <div id="groupChips" class="chips" style="margin-bottom:9px"></div>
+    <div id="memberList" class="members"></div>
+  </div>
 </div>
 
 <!-- MODAL FORM -->
@@ -266,10 +302,12 @@ const synced    = () => useWorker() || useGist();
 /* ══════════════════════════════════════
    STATE
    ══════════════════════════════════════ */
-const emptyDb = () => ({univs:[],sems:[],courses:[],meetings:[],topics:[]});
+const emptyDb = () => ({univs:[],courses:[],meetings:[],topics:[],members:[],groups:[]});
+const SEM_COUNT = 8;                     /* Semester 1–8, statis (tanpa CRUD) */
 let db = emptyDb();
 let selUniv = null;
-let selSem  = null;
+let selSem  = null;                      /* nomor semester 1–8 */
+let selGroup = null;                     /* filter kelompok anggota */
 let openCourse = null;      /* courseId */
 
 const uid = () => Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4);
@@ -277,15 +315,20 @@ const esc = s => String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;'
 const touch = it => { it.updatedAt = Date.now(); return it; };
 
 const liveUnivs   = () => db.univs.filter(u=>!u.deleted).sort((a,b)=>(a.ord||0)-(b.ord||0));
-const liveSems    = uid2 => db.sems.filter(s=>!s.deleted&&s.univId===uid2).sort((a,b)=>(a.ord||0)-(b.ord||0));
-const liveCourses = sid => db.courses.filter(c=>!c.deleted&&c.semId===sid).sort((a,b)=>(a.ord||0)-(b.ord||0));
+const semList     = () => Array.from({length:SEM_COUNT}, (_,i)=>i+1);   /* 1..8 */
+const liveCourses = (uid2, semNo) => db.courses.filter(c=>!c.deleted && c.univId===uid2 && c.sem===semNo).sort((a,b)=>(a.ord||0)-(b.ord||0));
+const coursesOf   = uid2 => db.courses.filter(c=>!c.deleted && c.univId===uid2);
 const liveMeets   = cid => db.meetings.filter(m=>!m.deleted&&m.courseId===cid).sort((a,b)=>(a.no||0)-(b.no||0));
 const liveTopics  = mid => db.topics.filter(t=>!t.deleted&&t.meetingId===mid).sort((a,b)=>(a.ord||0)-(b.ord||0));
+const liveMembers = () => db.members.filter(m=>!m.deleted).sort((a,b)=>(a.ord||0)-(b.ord||0));
+const liveGroups  = () => db.groups.filter(g=>!g.deleted).sort((a,b)=>(a.ord||0)-(b.ord||0));
 const getUniv = id => db.univs.find(u=>u.id===id);
-const getSem  = id => db.sems.find(s=>s.id===id);
 const getCourse = id => db.courses.find(c=>c.id===id);
 const getMeet = id => db.meetings.find(m=>m.id===id);
 const getTopic = id => db.topics.find(t=>t.id===id);
+const getMember = id => db.members.find(m=>m.id===id);
+const getGroup  = id => db.groups.find(g=>g.id===id);
+const groupName = gid => (liveGroups().find(g=>g.id===gid)||{}).name || '';
 
 /* ══════════════════════════════════════
    PERSISTENCE
@@ -302,11 +345,38 @@ function mergeArr(g=[], b=[]){
 function mergeDb(g={}, b={}){
   return {
     univs:    mergeArr(g.univs||[], b.univs||[]),
-    sems:     mergeArr(g.sems||[], b.sems||[]),
     courses:  mergeArr(g.courses||[], b.courses||[]),
     meetings: mergeArr(g.meetings||[], b.meetings||[]),
     topics:   mergeArr(g.topics||[], b.topics||[]),
+    members:  mergeArr(g.members||[], b.members||[]),
+    groups:   mergeArr(g.groups||[], b.groups||[]),
   };
+}
+/* Normalisasi data lama:
+   - format lama punya array `sems` + course.semId → diubah jadi univId + sem (1..8)
+   - field members/groups dijamin ada */
+function migrate(d){
+  d = {...emptyDb(), ...(d||{})};
+  if(Array.isArray(d.sems) && d.sems.length){
+    const semsByUniv = {};
+    d.sems.forEach(s=>{ if(!s.deleted){ (semsByUniv[s.univId] ||= []).push(s); } });
+    Object.values(semsByUniv).forEach(list=>list.sort((a,b)=>(a.ord||0)-(b.ord||0)));
+    d.courses.forEach(c=>{
+      if(c.semId){
+        const sems = semsByUniv[(d.sems.find(s=>s.id===c.semId)||{}).univId] || [];
+        const idx  = sems.findIndex(s=>s.id===c.semId);
+        const src  = d.sems.find(s=>s.id===c.semId);
+        c.univId = (src && src.univId) || c.univId || '';
+        c.sem    = idx >= 0 ? idx + 1 : 1;
+        delete c.semId;
+      }
+    });
+  }
+  d.courses.forEach(c=>{ if(!c.univId) c.univId = ''; if(!c.sem) c.sem = 1; });
+  d.members = Array.isArray(d.members) ? d.members : [];
+  d.groups  = Array.isArray(d.groups)  ? d.groups  : [];
+  delete d.sems;
+  return d;
 }
 function localLoad(){
   try{ const d = JSON.parse(localStorage.getItem(LS_KEY)); if(d && d.univs) return d; }catch{}
@@ -398,40 +468,19 @@ function addUniv(name){
 }
 function delUniv(id){
   const u = getUniv(id); if(!u) return;
-  if(!confirm(`Hapus "${u.name}"? Semua semester, mata kuliah, dan riwayat pertemuannya ikut terhapus.`)) return;
-  const semIds  = db.sems.filter(s=>s.univId===id).map(s=>s.id);
-  const crsIds  = db.courses.filter(c=>semIds.includes(c.semId)).map(c=>c.id);
+  if(!confirm(`Hapus "${u.name}"? Semua mata kuliah dan riwayat pertemuannya ikut terhapus.`)) return;
+  const crsIds  = coursesOf(id).map(c=>c.id);
   const meetIds = db.meetings.filter(m=>crsIds.includes(m.courseId)).map(m=>m.id);
   markDeleted(db.topics.filter(t=>meetIds.includes(t.meetingId)));
   markDeleted(db.meetings.filter(m=>meetIds.includes(m.id)));
   markDeleted(db.courses.filter(c=>crsIds.includes(c.id)));
-  markDeleted(db.sems.filter(s=>semIds.includes(s.id)));
   markDeleted([u]);
   if(selUniv===id){ selUniv=null; selSem=null; openCourse=null; }
   save(); render();
 }
-function addSem(univId, name){
-  const ord = Math.max(-1, ...liveSems(univId).map(s=>s.ord||0)) + 1;
-  const s = touch({id:uid(), univId, name, ord});
-  db.sems.push(s);
-  selSem = s.id; openCourse = null;
-  save(); render();
-}
-function delSem(id){
-  const s = getSem(id); if(!s) return;
-  if(!confirm(`Hapus semester "${s.name}"? Mata kuliah dan riwayat pertemuannya ikut terhapus.`)) return;
-  const crsIds  = db.courses.filter(c=>c.semId===id).map(c=>c.id);
-  const meetIds = db.meetings.filter(m=>crsIds.includes(m.courseId)).map(m=>m.id);
-  markDeleted(db.topics.filter(t=>meetIds.includes(t.meetingId)));
-  markDeleted(db.meetings.filter(m=>meetIds.includes(m.id)));
-  markDeleted(db.courses.filter(c=>crsIds.includes(c.id)));
-  markDeleted([s]);
-  if(selSem===id){ selSem = null; openCourse = null; }
-  save(); render();
-}
-function addCourse(semId, name, code, lecturer, paid){
-  const ord = Math.max(-1, ...liveCourses(semId).map(c=>c.ord||0)) + 1;
-  const c = touch({id:uid(), semId, name, code:code||'', lecturer:lecturer||'', paid:!!paid, ord});
+function addCourse(univId, semNo, name, code, lecturer, paid){
+  const ord = Math.max(-1, ...liveCourses(univId, semNo).map(c=>c.ord||0)) + 1;
+  const c = touch({id:uid(), univId, sem: semNo, name, code:code||'', lecturer:lecturer||'', paid:!!paid, ord});
   db.courses.push(c);
   openCourse = c.id;
   save(); render();
@@ -485,6 +534,64 @@ function editTopic(id, text){
 function delTopic(id){
   const t = getTopic(id); if(!t) return;
   markDeleted([t]); save(); render();
+}
+
+/* ══════════════════════════════════════
+   TIM PENGAJAR — anggota & kelompok
+   ══════════════════════════════════════ */
+function addGroup(name){
+  const ord = Math.max(-1, ...liveGroups().map(g=>g.ord||0)) + 1;
+  const g = touch({id:uid(), name, ord});
+  db.groups.push(g);
+  save(); render();
+  return g;
+}
+function editGroup(id, name){
+  const g = getGroup(id); if(!g) return;
+  g.name = name; touch(g); save(); render();
+}
+function delGroup(id){
+  const g = getGroup(id); if(!g) return;
+  if(!confirm(`Hapus kelompok "${g.name}"? Anggota di dalamnya tetap ada, hanya jadi tanpa kelompok.`)) return;
+  db.members.filter(m=>m.groupId===id).forEach(m=>{ m.groupId = ''; touch(m); });
+  markDeleted([g]); save(); render();
+}
+function addMember(v){
+  const ord = Math.max(-1, ...liveMembers().map(m=>m.ord||0)) + 1;
+  db.members.push(touch({
+    id:uid(),
+    shortName: v.shortName,
+    fullName: v.fullName || '',
+    batch: v.batch || '',
+    role: v.role || '',
+    groupId: v.groupId || '',
+    ord,
+  }));
+  save(); render();
+}
+function addMembers(list){          /* simpan banyak baris sekaligus */
+  let ord = Math.max(-1, ...liveMembers().map(m=>m.ord||0));
+  list.forEach(v=>{
+    if(!v.shortName) return;
+    ord += 1;
+    db.members.push(touch({
+      id:uid(),
+      shortName: v.shortName, fullName: v.fullName || '', batch: v.batch || '',
+      role: v.role || '', groupId: v.groupId || '', ord,
+    }));
+  });
+  save(); render();
+}
+function editMember(id, v){
+  const m = getMember(id); if(!m) return;
+  m.shortName = v.shortName; m.fullName = v.fullName || ''; m.batch = v.batch || '';
+  m.role = v.role || ''; m.groupId = v.groupId || '';
+  touch(m); save(); render();
+}
+function delMember(id){
+  const m = getMember(id); if(!m) return;
+  if(!confirm(`Hapus anggota "${m.shortName}"?`)) return;
+  markDeleted([m]); save(); render();
 }
 
 /* ══════════════════════════════════════
@@ -658,6 +765,7 @@ function miniBtn(txt, cls, fn){
 function render(){
   renderUnivs();
   renderSems();
+  renderMembers();
   if(openCourse && getCourse(openCourse)) renderDetail(openCourse);
   else { openCourse = null; renderCourses(); }
 }
@@ -700,37 +808,22 @@ function renderSems(){
     box.innerHTML = '<div class="empty">Pilih universitas dulu di atas.</div>';
     return;
   }
-  const list = liveSems(selUniv);
-  if(!list.length){
-    const e = document.createElement('div');
-    e.className = 'empty'; e.textContent = 'Belum ada semester. Klik "+ Tambah" untuk membuat.';
-    box.appendChild(e);
-  }
-  list.forEach(s=>{
+  /* Semester 1–8: statis, tanpa tombol tambah/hapus */
+  semList().forEach(n=>{
     const chip = document.createElement('div');
-    chip.className = 'chip' + (selSem === s.id ? ' active' : '');
+    chip.className = 'chip' + (selSem === n ? ' active' : '');
     const btn = document.createElement('button');
-    btn.className = 'chip-btn'; btn.textContent = s.name;
-    btn.onclick = ()=>{ selSem = s.id; openCourse = null; render(); };
+    btn.className = 'chip-btn'; btn.textContent = `Semester ${n}`;
+    btn.onclick = ()=>{ selSem = n; openCourse = null; render(); };
     chip.appendChild(btn);
-    const del = document.createElement('button');
-    del.className = 'chip-del'; del.textContent = '🗑'; del.title = 'Hapus semester';
-    del.onclick = ()=>delSem(s.id);
-    chip.appendChild(del);
     box.appendChild(chip);
   });
-  const add = document.createElement('div');
-  add.className = 'chip add';
-  const addBtn = document.createElement('button');
-  addBtn.className = 'chip-btn'; addBtn.textContent = '+ Tambah';
-  addBtn.onclick = ()=> openForm('Tambah Semester', [{key:'name',label:'Nama Semester',placeholder:'Contoh: Ganjil 2026/2027',required:true}], v=>addSem(selUniv,v.name));
-  add.appendChild(addBtn);
-  box.appendChild(add);
 }
 
 function renderCourses(){
   document.getElementById('courseSection').style.display = '';
   document.getElementById('detailSection').style.display = 'none';
+  document.getElementById('memberSection').style.display = '';
   document.getElementById('meetingList').innerHTML = '';
   const grid = document.getElementById('courseGrid');
   const head = document.getElementById('courseHead');
@@ -741,10 +834,10 @@ function renderCourses(){
     grid.innerHTML = `<div class="empty">${selUniv ? 'Pilih semester di atas.' : 'Pilih universitas di atas.'}</div>`;
     return;
   }
-  const u = getUniv(selUniv), s = getSem(selSem);
-  head.textContent = `Mata Kuliah — ${u.name} · ${s.name}`;
+  const u = getUniv(selUniv);
+  head.textContent = `Mata Kuliah — ${u.name} · Semester ${selSem}`;
 
-  const list = liveCourses(selSem);
+  const list = liveCourses(selUniv, selSem);
   if(!list.length){
     grid.innerHTML = '<div class="empty">Belum ada mata kuliah. Klik "+ Tambah Mata Kuliah".</div>';
     return;
@@ -782,12 +875,13 @@ function renderCourses(){
 function renderDetail(courseId){
   document.getElementById('courseSection').style.display = 'none';
   document.getElementById('detailSection').style.display = '';
+  document.getElementById('memberSection').style.display = 'none';
 
   const c = getCourse(courseId);
-  const s = getSem(c.semId), u = s ? getUniv(s.univId) : null;
+  const u = getUniv(c.univId);
   document.getElementById('dTitle').innerHTML = `${esc(c.name)}<span class="tag ${c.paid?'paid':'free'}">${c.paid?'Berbayar':'Gratis'}</span>`;
   document.getElementById('dMeta').innerHTML =
-    `<span>🏛 ${esc(u?u.name:'—')}</span><span>📅 ${esc(s?s.name:'—')}</span>` +
+    `<span>🏛 ${esc(u?u.name:'—')}</span><span>📅 Semester ${esc(c.sem||1)}</span>` +
     `${c.code?`<span>🔖 ${esc(c.code)}</span>`:''}${c.lecturer?`<span>👤 ${esc(c.lecturer)}</span>`:''}`;
 
   const list = document.getElementById('meetingList');
@@ -814,7 +908,7 @@ function renderMeeting(m){
   act.appendChild(miniBtn('✎','', ()=> openForm('Ubah Pertemuan', [
     {key:'no',label:'Nomor Pertemuan',type:'number',value:m.no},
     {key:'date',label:'Tanggal',type:'date',value:m.date},
-    {key:'title',label:'Judul Pertemuan',value:m.title,placeholder:'Contoh: Pengenalan Basis Data'},
+    {key:'title',label:'Deskripsi Pertemuan',type:'textarea',value:m.title,note:'Teks panjang diperbolehkan.'},
   ], v=>editMeeting(m.id, Number(v.no), v.date, v.title))));
   act.appendChild(miniBtn('🗑','danger', ()=>delMeeting(m.id)));
   head.appendChild(act);
@@ -865,6 +959,170 @@ function renderMeeting(m){
 }
 
 /* ══════════════════════════════════════
+   TIM PENGAJAR — render & form
+   ══════════════════════════════════════ */
+function renderMembers(){
+  const head = document.getElementById('memberHead');
+  const chips = document.getElementById('groupChips');
+  const list = document.getElementById('memberList');
+  chips.innerHTML = ''; list.innerHTML = '';
+
+  const groups = liveGroups();
+  const all = liveMembers();
+  head.textContent = `Tim Pengajar (${all.length})`;
+
+  /* chip kelompok: klik = filter, ✎ = ubah, 🗑 = hapus */
+  groups.forEach(g=>{
+    const chip = document.createElement('div');
+    chip.className = 'chip' + (selGroup === g.id ? ' active' : '');
+    const btn = document.createElement('button');
+    btn.className = 'chip-btn';
+    btn.textContent = `${g.name} (${all.filter(m=>m.groupId===g.id).length})`;
+    btn.onclick = ()=>{ selGroup = (selGroup === g.id) ? null : g.id; render(); };
+    chip.appendChild(btn);
+    chip.appendChild(miniBtn('✎','chip-edit', ()=> openForm('Ubah Kelompok',
+      [{key:'name',label:'Nama Kelompok',value:g.name,required:true}],
+      v=>editGroup(g.id, v.name))));
+    chip.appendChild(miniBtn('🗑','chip-del', ()=>delGroup(g.id)));
+    chips.appendChild(chip);
+  });
+
+  const list2 = all.filter(m=>!selGroup || m.groupId===selGroup);
+  if(!list2.length){
+    const e = document.createElement('div');
+    e.className = 'members-empty';
+    e.textContent = all.length
+      ? 'Tidak ada anggota di kelompok ini. Klik chip kelompok lagi untuk menampilkan semua.'
+      : 'Belum ada anggota. Klik "+ Anggota" untuk menambah tim pengajar.';
+    list.appendChild(e);
+    return;
+  }
+  list2.forEach(m=>{
+    const el = document.createElement('div');
+    el.className = 'member';
+    el.dataset.id = m.id;
+    const meta = [m.fullName, m.batch ? `Angkatan ${m.batch}` : '', m.role].filter(Boolean).map(esc).join(' · ');
+    el.innerHTML =
+      `<div class="m-short">${esc(m.shortName)}</div>` +
+      (meta ? `<div class="m-meta">${meta}</div>` : '') +
+      `<span class="m-badge ${m.groupId ? 'grp' : ''}">${m.groupId ? esc(groupName(m.groupId)) : 'Tanpa Kelompok'}</span>`;
+    const act = document.createElement('div'); act.className = 'm-actions';
+    act.appendChild(miniBtn('✎','', ()=>openMemberForm(m)));
+    act.appendChild(miniBtn('🗑','danger', ()=>delMember(m.id)));
+    el.appendChild(act);
+    list.appendChild(el);
+  });
+}
+
+/* Modal "Tambah Anggota" — beberapa baris dalam satu modal (+ Tambah baris) */
+function openMemberForm(single){
+  const wrap = document.getElementById('modalWrap');
+  const card = document.getElementById('modalCard');
+  card.innerHTML = '';
+
+  const t = document.createElement('div');
+  t.className = 'modal-title';
+  t.textContent = single ? 'Ubah Anggota' : 'Tambah Anggota';
+  card.appendChild(t);
+
+  const form = document.createElement('form');
+  const rows = document.createElement('div');
+  rows.className = 'member-rows';
+
+  const groups = liveGroups();
+  const mkField = (cls, ph, val)=>{
+    const lab = document.createElement('label'); lab.className = 'frow';
+    const i = document.createElement('input');
+    i.type = 'text'; i.className = cls; i.placeholder = ph; i.value = val || ''; i.autocomplete = 'off';
+    lab.appendChild(i);
+    return { lab, input: i };
+  };
+  const mkRow = (v = {})=>{
+    const row = document.createElement('div'); row.className = 'mrow';
+
+    const top = document.createElement('div'); top.className = 'mrow-top';
+    const short = mkField('f-short', 'Nama pendek (akses proyek)', v.shortName);
+    top.appendChild(short.lab);
+    if(!single){
+      const x = document.createElement('button');
+      x.type = 'button'; x.className = 'mrow-x'; x.textContent = '✕'; x.title = 'Hapus baris';
+      x.onclick = ()=>{
+        if(rows.querySelectorAll('.mrow').length > 1) row.remove();
+        else { short.input.value = ''; short.input.focus(); }
+      };
+      top.appendChild(x);
+    }
+    row.appendChild(top);
+
+    row.appendChild(mkField('f-full',  'Nama lengkap (opsional)', v.fullName).lab);
+    row.appendChild(mkField('f-batch', 'Angkatan (opsional, cth: 2023)', v.batch).lab);
+    row.appendChild(mkField('f-role',  'Jabatan / Role (opsional)', v.role).lab);
+
+    const glab = document.createElement('label'); glab.className = 'frow';
+    const sel = document.createElement('select'); sel.className = 'f-group fsel';
+    const opt0 = document.createElement('option');
+    opt0.value = ''; opt0.textContent = '— Tanpa Kelompok —';
+    sel.appendChild(opt0);
+    groups.forEach(g=>{
+      const o = document.createElement('option');
+      o.value = g.id; o.textContent = g.name;
+      if(v.groupId === g.id) o.selected = true;
+      sel.appendChild(o);
+    });
+    glab.appendChild(sel);
+    row.appendChild(glab);
+
+    rows.appendChild(row);
+    return row;
+  };
+
+  if(single) mkRow(single);
+  else mkRow();
+  form.appendChild(rows);
+
+  let addBtn = null;
+  if(!single){
+    addBtn = document.createElement('button');
+    addBtn.type = 'button'; addBtn.className = 'btn mrow-add'; addBtn.textContent = '+ Tambah baris';
+    addBtn.onclick = ()=>{
+      mkRow();
+      const last = rows.querySelectorAll('.f-short');
+      last[last.length - 1].focus();
+    };
+    form.appendChild(addBtn);
+  }
+
+  const err = document.createElement('div'); err.className = 'ferr'; form.appendChild(err);
+  const bar = document.createElement('div'); bar.className = 'modal-bar';
+  const cancel = document.createElement('button'); cancel.type = 'button'; cancel.className = 'btn'; cancel.textContent = 'Batal';
+  const ok = document.createElement('button'); ok.type = 'submit'; ok.className = 'btn btn-primary'; ok.textContent = 'Simpan';
+  bar.append(cancel, ok);
+  form.appendChild(bar);
+
+  cancel.onclick = closeForm;
+  form.onsubmit = e=>{
+    e.preventDefault();
+    const read = row => ({
+      shortName: row.querySelector('.f-short').value.trim(),
+      fullName:  row.querySelector('.f-full').value.trim(),
+      batch:     row.querySelector('.f-batch').value.trim(),
+      role:      row.querySelector('.f-role').value.trim(),
+      groupId:   row.querySelector('.f-group').value,
+    });
+    const filled = [...rows.querySelectorAll('.mrow')].map(read).filter(v=>v.shortName);
+    if(!filled.length){ err.textContent = 'Nama pendek wajib diisi minimal satu baris.'; return; }
+    if(single) editMember(single.id, filled[0]);
+    else addMembers(filled);
+    closeForm();
+  };
+  card.appendChild(form);
+
+  wrap.style.display = 'flex';
+  wrap.onclick = e => { if(e.target === wrap) closeForm(); };
+  setTimeout(()=>{ const i = card.querySelector('.f-short'); i && i.focus(); }, 60);
+}
+
+/* ══════════════════════════════════════
    GATE
    ══════════════════════════════════════ */
 function login(code){
@@ -896,7 +1154,7 @@ function login(code){
   /* data */
   const local = localLoad();
   const remote = await remoteLoad();
-  db = (remote && local) ? mergeDb(remote, local) : (remote || local || emptyDb());
+  db = migrate((remote && local) ? mergeDb(remote, local) : (remote || local || emptyDb()));
   localStorage.setItem(LS_KEY, JSON.stringify(db));
   setSync(!!remote);
 
@@ -939,21 +1197,26 @@ function login(code){
   };
   document.getElementById('backBtn').onclick = ()=>{ openCourse = null; render(); };
   document.getElementById('gistBtn').onclick = openGistPanel;
+  document.getElementById('addMemberBtn').onclick = ()=>openMemberForm();
+  document.getElementById('addGroupBtn').onclick = ()=> openForm('Tambah Kelompok',
+    [{key:'name',label:'Nama Kelompok',placeholder:'Contoh: Pengajar / Koordinator',required:true}],
+    v=>addGroup(v.name.trim()));
   document.getElementById('addCourseBtn').onclick = ()=>{
-    if(!selSem){ alert('Pilih semester dulu.'); return; }
+    if(!selUniv){ alert('Pilih universitas dulu.'); return; }
+    if(!selSem){ alert('Pilih semester di atas.'); return; }
     openForm('Tambah Mata Kuliah', [
       {key:'name',label:'Nama Mata Kuliah',placeholder:'Contoh: Basis Data',required:true},
       {key:'code',label:'Kode',placeholder:'Contoh: IF201'},
       {key:'lecturer',label:'Pengajar',placeholder:'Nama pengajar'},
       {key:'paid',label:'Program berbayar',type:'checkbox',note:'Centang bila kelas ini kelas berbayar. Tanpa centang = gratis.'},
-    ], v=>addCourse(selSem, v.name, v.code, v.lecturer, v.paid));
+    ], v=>addCourse(selUniv, selSem, v.name, v.code, v.lecturer, v.paid));
   };
   document.getElementById('addMeetingBtn').onclick = ()=>{
     const next = Math.max(0, ...liveMeets(openCourse).map(m=>m.no||0)) + 1;
     openForm('Tambah Pertemuan', [
       {key:'no',label:'Nomor Pertemuan',type:'number',value:next},
       {key:'date',label:'Tanggal',type:'date',value:new Date().toISOString().slice(0,10)},
-      {key:'title',label:'Judul Pertemuan',placeholder:'Contoh: Pengenalan Basis Data'},
+      {key:'title',label:'Deskripsi Pertemuan',type:'textarea',placeholder:'Ceritakan apa yang dibahas di pertemuan ini… (boleh panjang, multi-baris)'},
     ], v=>addMeeting(openCourse, Number(v.no), v.date, v.title));
   };
 })();
