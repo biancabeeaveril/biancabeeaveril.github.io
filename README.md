@@ -41,6 +41,8 @@ Homepage (`index.html`) adalah banner **Aliria Tech Community × Universitas Din
 
 Tombol **Masuk** membuka modal kode akses (punya tombol mata untuk tampil/sembunyikan kode). Kode yang benar memunculkan section **Ruang Tim** berisi link ke **Log Pengajaran**.
 
+**Kunci otomatis**: sesi berakhir sendiri setelah **30 menit tanpa aktivitas** (gerakan mouse, klik, ketukan, atau pengetikan) — modal masuk terbuka kembali dengan catatan "Sesi berakhir — 30 menit tanpa aktivitas", dan kode akses harus dimasukkan lagi. Sesi juga dicek ulang saat halaman dibuka, saat tab kembali terlihat, dan tiap 30 detik; kuncinya berlaku di seluruh halaman karena session `aliria_in` dipakai bersama dengan app Log Pengajaran.
+
 Tombol **EN/ID** di nav mengganti bahasa tampilan homepage (terlihat sebelum login — tanpa perlu masuk); preferensi bahasa dipakai bersama dengan app Log Pengajaran (`localStorage` `ajar_lang`). Di dalam app, tombol yang sama juga tersedia di layar gerbang sebelum kode dimasukkan.
 
 | Nilai | Lokasi |

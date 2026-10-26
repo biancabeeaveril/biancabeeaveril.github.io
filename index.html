@@ -192,6 +192,10 @@
                 </div>
             </div>
 
+            <div id="idleNote" class="hidden mt-4 text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-xl px-3 py-2.5 text-center leading-relaxed" data-i18n="idleNote">
+                Sesi berakhir — 30 menit tanpa aktivitas. Silakan masukkan kode akses tim pengajar kembali.
+            </div>
+
             <form id="loginForm" class="mt-5">
                 <div class="relative">
                     <input id="loginPass" type="password" placeholder="Kode akses" autocomplete="off" data-i18n-ph="phCode"
@@ -242,6 +246,8 @@ const L = {
     errCode:'Kode tidak dikenali.',
     eyeShow:'Tampilkan / sembunyikan kode', eyeShowOnly:'Tampilkan kode', eyeHide:'Sembunyikan kode',
     langSwitch:'Switch to English (US)',
+    idleNote:'Sesi berakhir — 30 menit tanpa aktivitas. Silakan masukkan kode akses tim pengajar kembali.',
+    idleTitle:'Sesi berakhir otomatis',
   },
   en: {
     navAbout:'About', navSignIn:'Sign In', navSignOut:'Sign Out',
@@ -257,6 +263,8 @@ const L = {
     errCode:'Code not recognized.',
     eyeShow:'Show / hide the code', eyeShowOnly:'Show the code', eyeHide:'Hide the code',
     langSwitch:'Ganti ke Bahasa Indonesia',
+    idleNote:'Session ended — 30 minutes with no activity. Please enter the teaching team access code again.',
+    idleTitle:'Session ended automatically',
   },
 };
 const t = k => (L[lang][k] !== undefined ? L[lang][k] : (L.id[k] !== undefined ? L.id[k] : k));
@@ -323,6 +331,8 @@ function doLogin(code){
     if(code === PASS_TEAM){
         sessionStorage.setItem(SESSION_KEY, '1');
         sessionStorage.setItem('ajar_in', '1');
+        touchIdle();
+        document.getElementById('idleNote').classList.add('hidden');
         closeLogin();
         showMenu();
         document.getElementById('menuSection').scrollIntoView({behavior:'smooth', block:'center'});
@@ -337,17 +347,63 @@ document.getElementById('loginForm').onsubmit = e => {
     if(!doLogin(pass.value.trim())) pass.select();
 };
 
-document.getElementById('btnKeluar').onclick = ()=>{
+function endSession(){
     sessionStorage.removeItem(SESSION_KEY);
     sessionStorage.removeItem('ajar_in');
+    sessionStorage.removeItem(LS_IDLE);
     hideMenu();
+}
+
+document.getElementById('btnKeluar').onclick = ()=>{
+    endSession();
+    document.getElementById('idleNote').classList.add('hidden');
 };
+
+/* ══════════════════════════════════════════════════
+   KUNCI OTOMATIS — 30 MENIT TANPA AKTIVITAS
+   Sesi (aliria_in) diakhiri & modal masuk dibuka lagi
+   ══════════════════════════════════════════════════ */
+const IDLE_MS = 30 * 60 * 1000;          // 30 menit
+const LS_IDLE = 'ajar_last_active';      // stempel aktivitas terakhir (sessionStorage)
+
+function touchIdle(){ try{ sessionStorage.setItem(LS_IDLE, String(Date.now())); }catch(e){} }
+function idleFor(){ const v = +sessionStorage.getItem(LS_IDLE); return v > 0 ? Date.now() - v : 0; }
+
+function lockForIdle(){
+    if(!isIn()) return;
+    endSession();
+    document.getElementById('idleNote').classList.remove('hidden');
+    openLogin();
+}
+function checkIdle(){ if(isIn() && idleFor() >= IDLE_MS) lockForIdle(); }
+
+/* perbarui stempel aktivitas (di-throttle: maks 1x tiap 30 detik) */
+let idleTouchAt = 0;
+function onActivity(){
+    if(!isIn()) return;
+    const now = Date.now();
+    if(now - idleTouchAt < 30000) return;
+    idleTouchAt = now;
+    touchIdle();
+}
+['mousemove','mousedown','keydown','touchstart','scroll','wheel'].forEach(ev =>
+    window.addEventListener(ev, onActivity, { passive: true }));
+
+/* cek berkala + saat tab kembali terlihat / fokus */
+setInterval(checkIdle, 30000);
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) checkIdle(); });
+window.addEventListener('focus', checkIdle);
 
 /* Ganti bahasa: ID ⇄ EN (terlihat tanpa harus login) */
 document.getElementById('langBtn').onclick = ()=> setLang(lang === 'id' ? 'en' : 'id');
 
 /* restore session + terapkan bahasa tersimpan */
 applyLang();
+if(isIn()){
+    /* stempel belum ada (mis. sesi dibuat sebelum fitur ini) → mulai hitung dari sekarang */
+    if(!sessionStorage.getItem(LS_IDLE)) touchIdle();
+    checkIdle();     /* bila sudah lebih dari 30 menit (tab dibiarkan lama) → langsung kunci */
+}
 if(isIn()) showMenu();
 else hideMenu();
 </script>
