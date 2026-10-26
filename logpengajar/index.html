@@ -131,8 +131,11 @@ button{font-family:inherit}
 .tag{display:inline-block;font-size:.55rem;font-weight:800;letter-spacing:.06em;padding:2px 7px;border-radius:20px;vertical-align:middle;margin-left:6px;border:1px solid transparent;white-space:nowrap}
 .tag.paid{background:#fde68a;color:#78350f;border-color:#fcd34d}
 .tag.free{background:#a7f3d0;color:#064e3b;border-color:#6ee7b7}
+.tag.on{background:#dbeafe;color:#1e3a8a;border-color:#93c5fd}
+.tag.off{background:var(--card2);color:var(--muted);border-color:var(--bd)}
 [data-theme="light"] .tag.paid{background:#fef3c7;color:#92400e}
 [data-theme="light"] .tag.free{background:#d1fae5;color:#065f46}
+[data-theme="light"] .tag.on{background:#dbeafe;color:#1e40af}
 
 /* ── PANEL KONEKSI GIST ── */
 .gist-status{font-size:.7rem;line-height:1.5;margin:0 0 10px;min-height:14px}
@@ -165,6 +168,40 @@ button{font-family:inherit}
 select.fsel{width:100%;background:var(--bg);border:1px solid var(--bd);color:var(--text);font-size:.8rem;padding:9px 11px;border-radius:6px;outline:none;font-family:inherit}
 select.fsel:focus{border-color:var(--accent)}
 
+/* ── NAVIGASI TAB (punya URL sendiri-sendiri) ── */
+.tabs{display:flex;gap:4px;padding:0 24px;background:var(--surface);border-bottom:1px solid var(--bd);position:sticky;top:49px;z-index:49}
+.tab{display:inline-flex;align-items:center;gap:6px;font-size:.76rem;font-weight:600;color:var(--muted);padding:10px 14px;border-bottom:2px solid transparent;transition:color .15s,border-color .15s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+
+/* ── TOMBOL MENGAMBANG: PANDUAN MENGAJUKAN MENTORING ── */
+.fab{position:fixed;right:18px;bottom:18px;z-index:150;display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border-radius:30px;border:none;cursor:pointer;background:linear-gradient(135deg,var(--accent),var(--accent2));color:#fff;font-size:.78rem;font-weight:700;box-shadow:0 10px 26px rgba(0,0,0,.45);transition:transform .15s,box-shadow .15s}
+.fab:hover{transform:translateY(-2px);box-shadow:0 14px 30px rgba(0,0,0,.5)}
+.panduan{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:11px;max-height:min(56vh,440px);overflow-y:auto;padding-right:3px}
+.panduan li{background:var(--bg);border:1px solid var(--bd);border-radius:8px;padding:10px 12px}
+.panduan b{display:block;font-size:.78rem;margin-bottom:3px}
+.panduan span{font-size:.72rem;color:var(--muted);line-height:1.65;white-space:pre-line}
+
+/* ── DESKRIPSI, HARGA & KODE KELAS ── */
+.card .desc{font-size:.72rem;color:var(--muted);margin:5px 0 2px;line-height:1.55;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;white-space:pre-line;word-break:break-word}
+.price{font-size:.76rem;font-weight:700;color:var(--green);margin-top:7px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.kcode{font-size:.62rem;letter-spacing:.04em;color:var(--text)}
+.d-desc{font-size:.8rem;color:var(--muted);margin-top:8px;white-space:pre-line;word-break:break-word;line-height:1.6}
+.d-pay{margin-top:10px;padding:10px 13px;background:var(--card);border:1px solid var(--bd);border-radius:8px;font-size:.78rem;display:flex;gap:6px 16px;flex-wrap:wrap;align-items:center}
+.d-pay b{color:var(--green)}
+.frow.hide{display:none}
+
+/* ── JADWAL ── */
+.sched{background:var(--card);border:1px solid var(--bd);border-radius:9px;padding:14px 16px;position:relative;transition:border-color .15s}
+.sched:hover{border-color:var(--accent)}
+.sched h3{font-size:.84rem;font-weight:700;padding-right:60px;line-height:1.4}
+.sched .s-when{font-size:.74rem;margin-top:7px;display:flex;flex-wrap:wrap;gap:5px 14px}
+.sched .s-where,.sched .s-people{font-size:.72rem;color:var(--muted);margin-top:5px;word-break:break-word}
+.sched .s-people{white-space:pre-line}
+.sched .card-edit{opacity:0}
+.sched:hover .card-edit{opacity:1}
+@media(hover:none){.sched .card-edit{opacity:1}}
+
 /* ── GATE ── */
 .gate{position:fixed;inset:0;background:var(--bg);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
 .gate-card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:28px;width:100%;max-width:340px;text-align:center}
@@ -186,9 +223,12 @@ select.fsel:focus{border-color:var(--accent)}
 @media(max-width:640px){
   .nav{padding:8px 12px;gap:7px}
   .nav-title{font-size:.74rem}
+  .tabs{padding:0 12px}
+  .tab{padding:9px 10px;font-size:.72rem}
   .page{padding:14px 12px 40px}
   .grid{grid-template-columns:1fr}
   .detail-head h2{font-size:1rem}
+  .fab{right:12px;bottom:12px;padding:10px 14px;font-size:.72rem}
 }
 </style>
 </head>
@@ -204,58 +244,98 @@ select.fsel:focus{border-color:var(--accent)}
   <button class="theme-btn" id="themeBtn">🌙</button>
 </nav>
 
+<nav class="tabs" id="tabs">
+  <a href="#/univ"   class="tab" data-tab="univ">🏛 Universitas</a>
+  <a href="#/matkul" class="tab" data-tab="matkul">📚 Mata Kuliah</a>
+  <a href="#/jadwal" class="tab" data-tab="jadwal">🗓 Jadwal</a>
+</nav>
+
 <div class="page">
-  <div class="header">
-    <h1>Log Pengajaran</h1>
-    <p>Pilih universitas dan semester, lalu klik mata kuliah untuk melihat topik yang dibahas di tiap pertemuan.</p>
-  </div>
 
-  <!-- LABEL 1: UNIVERSITAS -->
-  <div class="filter-block">
-    <div class="filter-label">Universitas</div>
-    <div class="chips" id="univChips"></div>
-  </div>
-
-  <!-- LABEL 2: SEMESTER -->
-  <div class="filter-block">
-    <div class="filter-label">Semester</div>
-    <div class="chips" id="semChips"></div>
-  </div>
-
-  <!-- MATA KULIAH -->
-  <div id="courseSection">
-    <div class="section-head">
-      <h2 id="courseHead">Mata Kuliah</h2>
-      <button class="btn btn-primary" id="addCourseBtn">+ Tambah Mata Kuliah</button>
+  <!-- ══ TAB 1: UNIVERSITAS ══ -->
+  <section id="tabUniv" class="tabpane">
+    <div class="header">
+      <h1>Universitas</h1>
+      <p>Kelola daftar universitas mitra mentoring, lalu lengkapi data tim pengajar di bawah.</p>
     </div>
-    <div class="grid" id="courseGrid"></div>
-  </div>
 
-  <!-- DETAIL MATA KULIAH -->
-  <div id="detailSection" style="display:none">
-    <div class="detail-head">
-      <button class="back-link" id="backBtn">← Kembali ke daftar mata kuliah</button>
-      <h2 id="dTitle"></h2>
-      <div class="detail-meta" id="dMeta"></div>
+    <div class="filter-block">
+      <div class="filter-label">Universitas</div>
+      <div class="chips" id="univChips"></div>
+    </div>
+
+    <!-- TIM PENGAJAR (anggota) -->
+    <div id="memberSection">
+      <div class="section-head">
+        <h2 id="memberHead">Tim Pengajar</h2>
+        <button class="btn" id="addGroupBtn">+ Kelompok</button>
+        <button class="btn btn-primary" id="addMemberBtn">+ Anggota</button>
+      </div>
+      <div id="groupChips" class="chips" style="margin-bottom:9px"></div>
+      <div id="memberList" class="members"></div>
+    </div>
+  </section>
+
+  <!-- ══ TAB 2: MATA KULIAH ══ -->
+  <section id="tabMatkul" class="tabpane" style="display:none">
+    <div class="header">
+      <h1>Mata Kuliah</h1>
+      <p>Pilih universitas & semester, lalu klik mata kuliah untuk melihat jadwal dan topik tiap pertemuan.</p>
+    </div>
+
+    <!-- LABEL: SEMESTER (statis 1–8) -->
+    <div class="filter-block">
+      <div class="filter-label">Semester</div>
+      <div class="chips" id="semChips"></div>
+    </div>
+
+    <!-- DAFTAR MATA KULIAH -->
+    <div id="courseSection">
+      <div class="section-head">
+        <h2 id="courseHead">Mata Kuliah</h2>
+        <button class="btn btn-primary" id="addCourseBtn">+ Tambah Mata Kuliah</button>
+      </div>
+      <div class="grid" id="courseGrid"></div>
+    </div>
+
+    <!-- DETAIL MATA KULIAH -->
+    <div id="detailSection" style="display:none">
+      <div class="detail-head">
+        <button class="back-link" id="backBtn">← Kembali ke daftar mata kuliah</button>
+        <h2 id="dTitle"></h2>
+        <div class="detail-meta" id="dMeta"></div>
+        <div id="dDescWrap"></div>
+        <div id="dPayWrap"></div>
+      </div>
+      <div class="section-head">
+        <h2 id="dSchedHead">Jadwal</h2>
+        <button class="btn" id="addSchedBtn2">+ Tambah Jadwal</button>
+      </div>
+      <div class="grid" id="dSchedList"></div>
+      <div class="section-head">
+        <h2 id="dMeetHead">Riwayat Pertemuan</h2>
+        <button class="btn btn-primary" id="addMeetingBtn">+ Tambah Pertemuan</button>
+      </div>
+      <div id="meetingList"></div>
+    </div>
+  </section>
+
+  <!-- ══ TAB 3: JADWAL ══ -->
+  <section id="tabJadwal" class="tabpane" style="display:none">
+    <div class="header">
+      <h1>Jadwal Mentoring</h1>
+      <p>Semua jadwal mentoring lintas mata kuliah: hari, jam, tanggal, online/offline, mentor & peserta.</p>
     </div>
     <div class="section-head" style="border-top:none;padding-top:0">
-      <h2 id="dMeetHead">Riwayat Pertemuan</h2>
-      <button class="btn btn-primary" id="addMeetingBtn">+ Tambah Pertemuan</button>
+      <h2 id="schedHead">Jadwal</h2>
+      <button class="btn btn-primary" id="addSchedBtn">+ Tambah Jadwal</button>
     </div>
-    <div id="meetingList"></div>
-  </div>
-
-  <!-- TIM PENGAJAR (anggota) -->
-  <div id="memberSection" style="display:none">
-    <div class="section-head">
-      <h2 id="memberHead">Tim Pengajar</h2>
-      <button class="btn" id="addGroupBtn">+ Kelompok</button>
-      <button class="btn btn-primary" id="addMemberBtn">+ Anggota</button>
-    </div>
-    <div id="groupChips" class="chips" style="margin-bottom:9px"></div>
-    <div id="memberList" class="members"></div>
-  </div>
+    <div class="grid" id="schedList"></div>
+  </section>
 </div>
+
+<!-- TOMBOL MENGAMBANG: PANDUAN MENGAJUKAN MENTORING -->
+<button class="fab" id="fabBtn" style="display:none" title="Panduan Mengajukan Mentoring">💬 Panduan Mentoring</button>
 
 <!-- MODAL FORM -->
 <div class="modal-wrap" id="modalWrap"><div class="modal" id="modalCard"></div></div>
@@ -302,9 +382,11 @@ const synced    = () => useWorker() || useGist();
 /* ══════════════════════════════════════
    STATE
    ══════════════════════════════════════ */
-const emptyDb = () => ({univs:[],courses:[],meetings:[],topics:[],members:[],groups:[]});
+const emptyDb = () => ({univs:[],courses:[],meetings:[],topics:[],members:[],groups:[],schedules:[]});
 const SEM_COUNT = 8;                     /* Semester 1–8, statis (tanpa CRUD) */
+const DAYS = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
 let db = emptyDb();
+let curTab = 'univ';                     /* univ | matkul | jadwal (sesuai URL #/…) */
 let selUniv = null;
 let selSem  = null;                      /* nomor semester 1–8 */
 let selGroup = null;                     /* filter kelompok anggota */
@@ -313,6 +395,7 @@ let openCourse = null;      /* courseId */
 const uid = () => Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4);
 const esc = s => String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const touch = it => { it.updatedAt = Date.now(); return it; };
+const rupiah = v => { const n = Number(String(v).replace(/[^\d]/g,'')); return n ? 'Rp ' + n.toLocaleString('id-ID') : ''; };
 
 const liveUnivs   = () => db.univs.filter(u=>!u.deleted).sort((a,b)=>(a.ord||0)-(b.ord||0));
 const semList     = () => Array.from({length:SEM_COUNT}, (_,i)=>i+1);   /* 1..8 */
@@ -322,12 +405,16 @@ const liveMeets   = cid => db.meetings.filter(m=>!m.deleted&&m.courseId===cid).s
 const liveTopics  = mid => db.topics.filter(t=>!t.deleted&&t.meetingId===mid).sort((a,b)=>(a.ord||0)-(b.ord||0));
 const liveMembers = () => db.members.filter(m=>!m.deleted).sort((a,b)=>(a.ord||0)-(b.ord||0));
 const liveGroups  = () => db.groups.filter(g=>!g.deleted).sort((a,b)=>(a.ord||0)-(b.ord||0));
+const liveScheds  = () => db.schedules.filter(s=>!s.deleted)
+  .sort((a,b)=>(DAYS.indexOf(a.day)-DAYS.indexOf(b.day)) || String(a.date||'9999').localeCompare(String(b.date||'9999')) || String(a.time||'').localeCompare(String(b.time||'')));
+const schedsOf    = cid => liveScheds().filter(s=>s.courseId===cid);
 const getUniv = id => db.univs.find(u=>u.id===id);
 const getCourse = id => db.courses.find(c=>c.id===id);
 const getMeet = id => db.meetings.find(m=>m.id===id);
 const getTopic = id => db.topics.find(t=>t.id===id);
 const getMember = id => db.members.find(m=>m.id===id);
 const getGroup  = id => db.groups.find(g=>g.id===id);
+const getSched  = id => db.schedules.find(s=>s.id===id);
 const groupName = gid => (liveGroups().find(g=>g.id===gid)||{}).name || '';
 
 /* ══════════════════════════════════════
@@ -350,11 +437,12 @@ function mergeDb(g={}, b={}){
     topics:   mergeArr(g.topics||[], b.topics||[]),
     members:  mergeArr(g.members||[], b.members||[]),
     groups:   mergeArr(g.groups||[], b.groups||[]),
+    schedules: mergeArr(g.schedules||[], b.schedules||[]),
   };
 }
 /* Normalisasi data lama:
    - format lama punya array `sems` + course.semId → diubah jadi univId + sem (1..8)
-   - field members/groups dijamin ada */
+   - field baru (members/groups/schedules + deskripsi/harga/kode kelas) dijamin ada */
 function migrate(d){
   d = {...emptyDb(), ...(d||{})};
   if(Array.isArray(d.sems) && d.sems.length){
@@ -372,9 +460,17 @@ function migrate(d){
       }
     });
   }
-  d.courses.forEach(c=>{ if(!c.univId) c.univId = ''; if(!c.sem) c.sem = 1; });
-  d.members = Array.isArray(d.members) ? d.members : [];
-  d.groups  = Array.isArray(d.groups)  ? d.groups  : [];
+  d.courses.forEach(c=>{
+    if(!c.univId) c.univId = '';
+    if(!c.sem) c.sem = 1;
+    if(c.desc === undefined) c.desc = '';
+    if(c.price === undefined) c.price = '';
+    if(c.classCode === undefined) c.classCode = '';
+    if(!c.paid){ c.price = ''; c.classCode = ''; }   /* gratis: tanpa harga & tanpa kode */
+  });
+  d.members  = Array.isArray(d.members)  ? d.members  : [];
+  d.groups   = Array.isArray(d.groups)   ? d.groups   : [];
+  d.schedules = Array.isArray(d.schedules) ? d.schedules : [];
   delete d.sems;
   return d;
 }
@@ -468,36 +564,42 @@ function addUniv(name){
 }
 function delUniv(id){
   const u = getUniv(id); if(!u) return;
-  if(!confirm(`Hapus "${u.name}"? Semua mata kuliah dan riwayat pertemuannya ikut terhapus.`)) return;
+  if(!confirm(`Hapus "${u.name}"? Semua mata kuliah, jadwal, dan riwayat pertemuannya ikut terhapus.`)) return;
   const crsIds  = coursesOf(id).map(c=>c.id);
   const meetIds = db.meetings.filter(m=>crsIds.includes(m.courseId)).map(m=>m.id);
   markDeleted(db.topics.filter(t=>meetIds.includes(t.meetingId)));
   markDeleted(db.meetings.filter(m=>meetIds.includes(m.id)));
+  markDeleted(db.schedules.filter(s=>crsIds.includes(s.courseId)));
   markDeleted(db.courses.filter(c=>crsIds.includes(c.id)));
   markDeleted([u]);
-  if(selUniv===id){ selUniv=null; selSem=null; openCourse=null; }
+  if(selUniv===id){ selUniv=null; selSem=null; openCourse=null; go('#/univ'); return; }
   save(); render();
 }
-function addCourse(univId, semNo, name, code, lecturer, paid){
+function addCourse(univId, semNo, name, code, lecturer, paid, desc, price, classCode){
   const ord = Math.max(-1, ...liveCourses(univId, semNo).map(c=>c.ord||0)) + 1;
-  const c = touch({id:uid(), univId, sem: semNo, name, code:code||'', lecturer:lecturer||'', paid:!!paid, ord});
+  const c = touch({id:uid(), univId, sem: semNo, name, code:code||'', lecturer:lecturer||'',
+                   desc: desc||'', paid:!!paid, price: paid ? (price||'') : '', classCode: paid ? (classCode||'') : '', ord});
   db.courses.push(c);
-  openCourse = c.id;
-  save(); render();
+  save();
+  go('#/matkul/' + c.id);       /* langsung buka detail mata kuliah */
 }
-function editCourse(id, name, code, lecturer, paid){
+function editCourse(id, name, code, lecturer, paid, desc, price, classCode){
   const c = getCourse(id); if(!c) return;
-  c.name = name; c.code = code||''; c.lecturer = lecturer||''; c.paid = !!paid;
+  c.name = name; c.code = code||''; c.lecturer = lecturer||''; c.desc = desc||'';
+  c.paid = !!paid;
+  c.price = paid ? (price||'') : '';       /* gratis: harga & kode dikosongkan */
+  c.classCode = paid ? (classCode||'') : '';
   touch(c); save(); render();
 }
 function delCourse(id){
   const c = getCourse(id); if(!c) return;
-  if(!confirm(`Hapus mata kuliah "${c.name}"? Riwayat pertemuannya ikut terhapus.`)) return;
+  if(!confirm(`Hapus mata kuliah "${c.name}"? Jadwal dan riwayat pertemuannya ikut terhapus.`)) return;
   const meetIds = db.meetings.filter(m=>m.courseId===id).map(m=>m.id);
   markDeleted(db.topics.filter(t=>meetIds.includes(t.meetingId)));
   markDeleted(db.meetings.filter(m=>meetIds.includes(m.id)));
+  markDeleted(db.schedules.filter(s=>s.courseId===id));
   markDeleted([c]);
-  if(openCourse===id) openCourse = null;
+  if(openCourse===id){ openCourse = null; go('#/matkul'); return; }
   save(); render();
 }
 function addMeeting(courseId, no, date, title){
@@ -534,6 +636,38 @@ function editTopic(id, text){
 function delTopic(id){
   const t = getTopic(id); if(!t) return;
   markDeleted([t]); save(); render();
+}
+
+/* ══════════════════════════════════════
+   JADWAL MENTORING
+   ══════════════════════════════════════ */
+function addSchedule(v){
+  const ord = Math.max(-1, ...liveScheds().map(s=>s.ord||0)) + 1;
+  db.schedules.push(touch({
+    id:uid(),
+    courseId: v.courseId,
+    day: v.day || 'Senin',
+    date: v.date || '',
+    time: v.time || '',
+    mode: v.mode === 'Offline' ? 'Offline' : 'Online',
+    place: v.place || '',
+    mentor: v.mentor || '',
+    participants: v.participants || '',
+    ord,
+  }));
+  save(); render();
+}
+function editSchedule(id, v){
+  const s = getSched(id); if(!s) return;
+  s.courseId = v.courseId; s.day = v.day || s.day; s.date = v.date || '';
+  s.time = v.time || ''; s.mode = v.mode === 'Offline' ? 'Offline' : 'Online';
+  s.place = v.place || ''; s.mentor = v.mentor || ''; s.participants = v.participants || '';
+  touch(s); save(); render();
+}
+function delSchedule(id){
+  const s = getSched(id); if(!s) return;
+  if(!confirm('Hapus jadwal ini?')) return;
+  markDeleted([s]); save(); render();
 }
 
 /* ══════════════════════════════════════
@@ -614,13 +748,36 @@ function openForm(title, fields, onSave){
       cb.type = 'checkbox'; cb.name = f.key; cb.checked = !!f.value;
       const lb = document.createElement('span'); lb.className = 'flabel'; lb.textContent = f.label;
       row.append(cb, lb);
+      if(f.note){ const n = document.createElement('div'); n.className = 'fnote'; n.textContent = f.note; row.appendChild(n); }
+      if(f.showIf) row.dataset.cond = f.showIf;
       form.appendChild(row);
       return;
     }
     const row = document.createElement('label'); row.className = 'frow';
     const lb = document.createElement('span'); lb.className = 'flabel'; lb.textContent = f.label;
     row.appendChild(lb);
-    /* textarea untuk teks panjang (deskripsi/topik) */
+
+    /* dropdown (pilihan dari daftar — dipakai untuk jadwal, angkatan, jabatan) */
+    if(f.type === 'select'){
+      const sel = document.createElement('select');
+      sel.className = 'fsel'; sel.name = f.key;
+      (f.options||[]).forEach(o=>{
+        const op = document.createElement('option');
+        const val = (o && typeof o === 'object') ? o.value : o;
+        const text = (o && typeof o === 'object') ? o.label : o;
+        op.value = String(val ?? ''); op.textContent = text;
+        if(String(f.value ?? '') === String(val ?? '')) op.selected = true;
+        sel.appendChild(op);
+      });
+      if(f.required) sel.required = true;
+      row.appendChild(sel);
+      if(f.note){ const n = document.createElement('div'); n.className = 'fnote'; n.textContent = f.note; row.appendChild(n); }
+      if(f.showIf) row.dataset.cond = f.showIf;
+      form.appendChild(row);
+      return;
+    }
+
+    /* textarea untuk teks panjang (deskripsi/topik/peserta) */
     const el = (f.type === 'textarea') ? document.createElement('textarea') : document.createElement('input');
     if(f.type === 'textarea') el.rows = f.rows || 4;
     else el.type = f.type || 'text';
@@ -630,7 +787,17 @@ function openForm(title, fields, onSave){
     if(f.required) el.required = true;
     row.appendChild(el);
     if(f.note){ const n = document.createElement('div'); n.className = 'fnote'; n.textContent = f.note; row.appendChild(n); }
+    if(f.showIf) row.dataset.cond = f.showIf;
     form.appendChild(row);
+  });
+
+  /* field kondisional: tampil hanya bila checkbox pengendalinya dicentang
+     (contoh: Nominal Harga & Kode Kelas hanya untuk kelas berbayar) */
+  form.querySelectorAll('[data-cond]').forEach(row=>{
+    const cb = form.elements[row.dataset.cond];
+    const upd = ()=> row.classList.toggle('hide', !(cb && cb.checked));
+    if(cb) cb.addEventListener('change', upd);
+    upd();
   });
   const err = document.createElement('div'); err.className = 'ferr';
   form.appendChild(err);
@@ -760,12 +927,37 @@ function miniBtn(txt, cls, fn){
 }
 
 /* ══════════════════════════════════════
+   ROUTING — 3 navigasi dengan URL sendiri
+   #/univ · #/matkul · #/matkul/<id> · #/jadwal
+   ══════════════════════════════════════ */
+const TABS = ['univ','matkul','jadwal'];
+function route(){
+  const h = (location.hash || '').replace(/^#\/?/, '');
+  const [tab, id] = h.split('/');
+  curTab = TABS.includes(tab) ? tab : 'univ';
+  /* #/matkul/<id> → detail; #/matkul (tanpa id) → kembali ke daftar */
+  openCourse = (curTab === 'matkul' && id) ? (getCourse(id) ? id : null) : null;
+}
+function go(hash){
+  if(location.hash !== hash) location.hash = hash;   /* bisa dibagikan / di-bookmark */
+  route(); render();
+}
+window.addEventListener('hashchange', ()=>{ route(); render(); });
+
+/* ══════════════════════════════════════
    RENDER
    ══════════════════════════════════════ */
 function render(){
+  const on = (id, show)=>{ const el = document.getElementById(id); if(el) el.style.display = show ? '' : 'none'; };
+  on('tabUniv',   curTab === 'univ');
+  on('tabMatkul', curTab === 'matkul');
+  on('tabJadwal', curTab === 'jadwal');
+  document.querySelectorAll('#tabs .tab').forEach(a=>a.classList.toggle('active', a.dataset.tab === curTab));
+
   renderUnivs();
   renderSems();
   renderMembers();
+  renderSchedules();
   if(openCourse && getCourse(openCourse)) renderDetail(openCourse);
   else { openCourse = null; renderCourses(); }
 }
@@ -805,7 +997,14 @@ function renderSems(){
   const box = document.getElementById('semChips');
   box.innerHTML = '';
   if(!selUniv){
-    box.innerHTML = '<div class="empty">Pilih universitas dulu di atas.</div>';
+    const e = document.createElement('div');
+    e.className = 'empty';
+    e.textContent = 'Pilih universitas dulu di tab Universitas. ';
+    const b = document.createElement('button');
+    b.className = 'btn btn-sm'; b.textContent = 'Buka tab Universitas';
+    b.onclick = ()=>go('#/univ');
+    e.appendChild(b);
+    box.appendChild(e);
     return;
   }
   /* Semester 1–8: statis, tanpa tombol tambah/hapus */
@@ -820,10 +1019,27 @@ function renderSems(){
   });
 }
 
+/* Field form mata kuliah — dipakai Tambah & Ubah.
+   Nominal harga & kode kelas hanya muncul saat "Program berbayar" dicentang. */
+function courseFormFields(c){
+  c = c || {};
+  return [
+    {key:'name',label:'Nama Mata Kuliah',value:c.name,placeholder:'Contoh: Basis Data',required:true},
+    {key:'code',label:'Kode',value:c.code,placeholder:'Contoh: IF201'},
+    {key:'desc',label:'Deskripsi',type:'textarea',rows:3,value:c.desc,placeholder:'Ringkasan singkat isi mata kuliah… (boleh panjang)'},
+    {key:'lecturer',label:'Pengajar',value:c.lecturer,placeholder:'Nama pengajar'},
+    {key:'paid',label:'Program berbayar',type:'checkbox',value:!!c.paid,
+     note:'Centang bila kelas ini berbayar. Nominal harga & kode kelas hanya muncul untuk kelas berbayar — tanpa centang = gratis.'},
+    {key:'price',label:'Nominal Harga (Rp)',type:'number',value:c.price,placeholder:'Contoh: 150000',showIf:'paid',
+     note:'Angka rupiah tanpa titik — 150000 tampil jadi Rp 150.000.'},
+    {key:'classCode',label:'Kode Kelas',value:c.classCode,placeholder:'Contoh: BD-2026',showIf:'paid',
+     note:'Otomatis tampil di card & detail. Bagikan kode ini hanya ke peserta kelas berbayar.'},
+  ];
+}
+
 function renderCourses(){
   document.getElementById('courseSection').style.display = '';
   document.getElementById('detailSection').style.display = 'none';
-  document.getElementById('memberSection').style.display = '';
   document.getElementById('meetingList').innerHTML = '';
   const grid = document.getElementById('courseGrid');
   const head = document.getElementById('courseHead');
@@ -831,7 +1047,16 @@ function renderCourses(){
 
   if(!selUniv || !selSem){
     head.textContent = 'Mata Kuliah';
-    grid.innerHTML = `<div class="empty">${selUniv ? 'Pilih semester di atas.' : 'Pilih universitas di atas.'}</div>`;
+    const e = document.createElement('div');
+    e.className = 'empty';
+    e.textContent = selUniv ? 'Pilih semester di atas.' : 'Pilih universitas dulu di tab Universitas. ';
+    if(!selUniv){
+      const b = document.createElement('button');
+      b.className = 'btn btn-sm'; b.textContent = 'Buka tab Universitas';
+      b.onclick = ()=>go('#/univ');
+      e.appendChild(b);
+    }
+    grid.appendChild(e);
     return;
   }
   const u = getUniv(selUniv);
@@ -848,26 +1073,30 @@ function renderCourses(){
     const done = topics.filter(t=>t.done).length;
     const pct = topics.length ? Math.round(done/topics.length*100) : 0;
 
+    /* baris harga + kode kelas: hanya untuk kelas berbayar */
+    const payBits = [];
+    if(c.paid && c.price) payBits.push('💰 ' + esc(rupiah(c.price)));
+    if(c.paid && c.classCode) payBits.push(`<span class="pill kcode">🔑 Kode: ${esc(c.classCode)}</span>`);
+    const payRow = payBits.length ? `<div class="price">${payBits.join(' ')}</div>` : '';
+
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
       <h3>${esc(c.name)}<span class="tag ${c.paid?'paid':'free'}">${c.paid?'Berbayar':'Gratis'}</span></h3>
+      ${c.desc ? `<div class="desc">${esc(c.desc)}</div>` : ''}
       <div class="sub">${[c.code, c.lecturer].filter(Boolean).map(esc).join(' · ') || '—'}</div>
+      ${payRow}
       <div class="card-foot">
         <span class="pill">${meets.length} pertemuan</span>
         <span class="pill">Topik <b>${done}/${topics.length}</b></span>
         <span class="bar"><i style="width:${pct}%"></i></span>
       </div>`;
     const ed = document.createElement('div'); ed.className = 'card-edit';
-    ed.appendChild(miniBtn('✎','', ()=> openForm('Ubah Mata Kuliah', [
-      {key:'name',label:'Nama Mata Kuliah',value:c.name,required:true},
-      {key:'code',label:'Kode',value:c.code,placeholder:'Contoh: IF201'},
-      {key:'lecturer',label:'Pengajar',value:c.lecturer,placeholder:'Nama pengajar'},
-      {key:'paid',label:'Program berbayar',type:'checkbox',value:!!c.paid,note:'Centang bila kelas ini kelas berbayar. Tanpa centang = gratis.'},
-    ], v=>editCourse(c.id,v.name,v.code,v.lecturer,v.paid))));
+    ed.appendChild(miniBtn('✎','', ()=> openForm('Ubah Mata Kuliah', courseFormFields(c),
+      v=>editCourse(c.id, v.name, v.code, v.lecturer, v.paid, v.desc, v.price, v.classCode))));
     ed.appendChild(miniBtn('🗑','danger', ()=>delCourse(c.id)));
     card.appendChild(ed);
-    card.onclick = ()=>{ openCourse = c.id; render(); window.scrollTo({top:0,behavior:'smooth'}); };
+    card.onclick = ()=>{ go('#/matkul/' + c.id); window.scrollTo({top:0,behavior:'smooth'}); };
     grid.appendChild(card);
   });
 }
@@ -875,7 +1104,6 @@ function renderCourses(){
 function renderDetail(courseId){
   document.getElementById('courseSection').style.display = 'none';
   document.getElementById('detailSection').style.display = '';
-  document.getElementById('memberSection').style.display = 'none';
 
   const c = getCourse(courseId);
   const u = getUniv(c.univId);
@@ -883,6 +1111,29 @@ function renderDetail(courseId){
   document.getElementById('dMeta').innerHTML =
     `<span>🏛 ${esc(u?u.name:'—')}</span><span>📅 Semester ${esc(c.sem||1)}</span>` +
     `${c.code?`<span>🔖 ${esc(c.code)}</span>`:''}${c.lecturer?`<span>👤 ${esc(c.lecturer)}</span>`:''}`;
+
+  /* deskripsi mata kuliah */
+  document.getElementById('dDescWrap').innerHTML =
+    c.desc ? `<div class="d-desc">${esc(c.desc)}</div>` : '';
+
+  /* harga & kode kelas: hanya tampil untuk kelas berbayar */
+  document.getElementById('dPayWrap').innerHTML = c.paid
+    ? `<div class="d-pay">` +
+      (c.price ? `<span>💰 Harga: <b>${esc(rupiah(c.price))}</b></span>` : '') +
+      (c.classCode ? `<span>🔑 Kode Kelas: <b>${esc(c.classCode)}</b></span>` : '<span>Belum ada kode kelas.</span>') +
+      `</div>`
+    : '';
+
+  /* jadwal mata kuliah ini */
+  const scheds = schedsOf(courseId);
+  document.getElementById('dSchedHead').textContent = `Jadwal (${scheds.length})`;
+  const sbox = document.getElementById('dSchedList');
+  sbox.innerHTML = '';
+  if(!scheds.length){
+    sbox.innerHTML = '<div class="empty">Belum ada jadwal. Klik "+ Tambah Jadwal".</div>';
+  } else {
+    scheds.forEach(s=>sbox.appendChild(schedCard(s)));
+  }
 
   const list = document.getElementById('meetingList');
   list.innerHTML = '';
@@ -894,6 +1145,79 @@ function renderDetail(courseId){
     return;
   }
   meets.forEach(m=>list.appendChild(renderMeeting(m)));
+}
+
+/* ══════════════════════════════════════
+   JADWAL — render & form
+   ══════════════════════════════════════ */
+function schedCard(s){
+  const c = getCourse(s.courseId);
+  const u = c ? getUniv(c.univId) : null;
+  const online = s.mode !== 'Offline';
+
+  const when = [esc(s.day || '—')];
+  if(s.date){
+    const d = new Date(s.date + 'T00:00:00');
+    when.push(isNaN(d) ? esc(s.date) : d.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'}));
+  } else {
+    when.push('berkelanjutan');
+  }
+  const people = [];
+  if(s.mentor) people.push('👤 Mentor: ' + esc(s.mentor));
+  if(s.participants) people.push('👥 Peserta:\n' + esc(s.participants));
+
+  const el = document.createElement('div');
+  el.className = 'sched';
+  el.dataset.sid = s.id;
+  el.innerHTML = `
+    <h3>${esc(c ? c.name : 'Mata kuliah terhapus')}${u?` <span style="font-weight:400;font-size:.68rem;color:var(--muted)">· ${esc(u.name)} · Sem ${c.sem||1}</span>`:''}<span class="tag ${online?'on':'off'}">${online?'Online':'Offline'}</span></h3>
+    <div class="s-when"><span>🗓 ${when.join(' · ')}</span>${s.time?`<span>🕐 ${esc(s.time)}</span>`:''}</div>
+    ${s.place?`<div class="s-where">${online?'🔗':'📍'} ${esc(s.place)}</div>`:''}
+    ${people.length?`<div class="s-people">${people.join('\n')}</div>`:''}`;
+  const ed = document.createElement('div'); ed.className = 'card-edit';
+  ed.appendChild(miniBtn('✎','', ()=>openScheduleForm(s)));
+  ed.appendChild(miniBtn('🗑','danger', ()=>delSchedule(s.id)));
+  el.appendChild(ed);
+  return el;
+}
+
+function renderSchedules(){
+  const list = document.getElementById('schedList');
+  const head = document.getElementById('schedHead');
+  if(!list) return;
+  list.innerHTML = '';
+  const all = liveScheds();
+  head.textContent = `Semua Jadwal (${all.length})`;
+  if(!all.length){
+    list.innerHTML = '<div class="empty">Belum ada jadwal. Klik "+ Tambah Jadwal" untuk mengusulkan jadwal mentoring.</div>';
+    return;
+  }
+  all.forEach(s=>list.appendChild(schedCard(s)));
+}
+
+function openScheduleForm(s, courseIdPrefill){
+  s = s || {};
+  const courseOpts = db.courses.filter(c=>!c.deleted).map(c=>{
+    const u = getUniv(c.univId);
+    return {value:c.id, label:`${c.name} — ${u?u.name:''} · Sem ${c.sem||1}`};
+  });
+  const memberOpts = [{value:'', label:'— Belum ditentukan —'}]
+    .concat(liveMembers().map(m=>({value:m.shortName, label: m.shortName + (m.role ? ` (${m.role})` : '')})));
+
+  openForm(s.id ? 'Ubah Jadwal' : 'Tambah Jadwal', [
+    {key:'courseId', label:'Mata Kuliah', type:'select', options:courseOpts,
+     value: s.courseId || courseIdPrefill || (courseOpts[0]||{}).value || '', required:true,
+     note:'Pilih mata kuliah yang jadwalnya diusulkan.'},
+    {key:'day', label:'Hari', type:'select', options:DAYS, value: s.day || 'Senin', required:true},
+    {key:'date', label:'Tanggal', type:'date', value: s.date, note:'Isi tanggal pelaksanaan. Kosongkan bila jadwal berkelanjutan (tiap minggu).'},
+    {key:'time', label:'Jam', value: s.time, placeholder:'Contoh: 13.00–15.00 WIB', required:true, note:'Waktu pelaksana mentoring.'},
+    {key:'mode', label:'Pelaksanaan', type:'select', options:['Online','Offline'], value: s.mode || 'Online'},
+    {key:'place', label:'Tempat / Tautan', value: s.place, placeholder:'Tautan Zoom/Gmeet (online) atau nama ruangan (offline)'},
+    {key:'mentor', label:'Mentor (siapa yang mentoring)', type:'select', options:memberOpts, value: s.mentor || '',
+     note:'Pilih dari daftar anggota tim pengajar — tidak perlu ketik manual.'},
+    {key:'participants', label:'Peserta', type:'textarea', rows:3, value: s.participants,
+     placeholder:'Daftar nama peserta… (boleh banyak baris)'},
+  ], v=>{ if(s.id) editSchedule(s.id, v); else addSchedule(v); });
 }
 
 function renderMeeting(m){
@@ -1037,6 +1361,37 @@ function openMemberForm(single){
     lab.appendChild(i);
     return { lab, input: i };
   };
+  /* Dropdown: pilih dari daftar yang sudah ada (tidak perlu ketik manual),
+     plus opsi "＋ Tulis sendiri…" bila nilai baru memang diperlukan. */
+  const mkPick = (cls, opts, val, placeholder)=>{
+    const lab = document.createElement('label'); lab.className = 'frow';
+    const uniq = [...new Set([...(opts||[]), val].filter(v=>v!==undefined && v!==null && String(v)!==''))].map(String);
+    const mkSel = ()=>{
+      const sel = document.createElement('select'); sel.className = cls + ' fsel';
+      const o0 = document.createElement('option'); o0.value = ''; o0.textContent = placeholder;
+      sel.appendChild(o0);
+      uniq.forEach(v=>{
+        const o = document.createElement('option'); o.value = v; o.textContent = v;
+        if(val != null && String(val) === v) o.selected = true;
+        sel.appendChild(o);
+      });
+      const oN = document.createElement('option'); oN.value = '__baru__'; oN.textContent = '＋ Tulis sendiri…';
+      sel.appendChild(oN);
+      sel.onchange = ()=>{ if(sel.value === '__baru__'){ const i = mkInp(); lab.replaceChild(i, sel); i.focus(); } };
+      return sel;
+    };
+    const mkInp = ()=>{
+      const i = document.createElement('input');
+      i.type = 'text'; i.className = cls; i.autocomplete = 'off';
+      i.placeholder = placeholder.replace(/^—\s*/, '').replace(/\s*—$/, '');
+      i.onblur = ()=>{ if(!i.value.trim()){ const s = mkSel(); lab.replaceChild(s, i); } };
+      return i;
+    };
+    lab.appendChild(mkSel());
+    return lab;
+  };
+  const batches = [...new Set(liveMembers().map(m=>m.batch).filter(Boolean))].sort((a,b)=>String(b).localeCompare(String(a)));
+  const roles   = [...new Set(liveMembers().map(m=>m.role).filter(Boolean))].sort();
   const mkRow = (v = {})=>{
     const row = document.createElement('div'); row.className = 'mrow';
 
@@ -1055,8 +1410,8 @@ function openMemberForm(single){
     row.appendChild(top);
 
     row.appendChild(mkField('f-full',  'Nama lengkap (opsional)', v.fullName).lab);
-    row.appendChild(mkField('f-batch', 'Angkatan (opsional, cth: 2023)', v.batch).lab);
-    row.appendChild(mkField('f-role',  'Jabatan / Role (opsional)', v.role).lab);
+    row.appendChild(mkPick('f-batch', batches, v.batch, '— Pilih angkatan —'));
+    row.appendChild(mkPick('f-role',  roles,   v.role,   '— Pilih jabatan —'));
 
     const glab = document.createElement('label'); glab.className = 'frow';
     const sel = document.createElement('select'); sel.className = 'f-group fsel';
@@ -1123,6 +1478,47 @@ function openMemberForm(single){
 }
 
 /* ══════════════════════════════════════
+   PANDUAN MENGAJUKAN MENTORING (tombol mengambang)
+   ══════════════════════════════════════ */
+const PANDUAN = [
+  ['1. Siapkan datanya',
+   'Pastikan universitas & mata kuliah sudah ada (tab Universitas & Mata Kuliah). Untuk kelas baru, tambahkan dulu lewat "+ Tambah Mata Kuliah".'],
+  ['2. Isi jadwal mentoring',
+   'Buka tab Jadwal → "+ Tambah Jadwal". Isi hari, jam, tanggal, pelaksanaan (Online/Offline), tempat atau tautan, mentor, dan daftar peserta.'],
+  ['3. Kelas berbayar',
+   'Centang "Program berbayar" di form mata kuliah, lalu isi nominal harga + kode kelas. Kode kelas hanya muncul untuk kelas berbayar — bagikan kode ini ke peserta yang sudah bayar.'],
+  ['4. Ajukan ke koordinator',
+   'Kirim ringkasan usulan (universitas, mata kuliah, jadwal, mentor, peserta) ke koordinator Aliria Tech Community lewat grup WhatsApp tim pengajar.'],
+  ['5. Tunggu konfirmasi',
+   'Setelah disetujui, jadwal tampil di tab Jadwal dan siap dibagikan ke peserta. Catat pertemuan & topik yang dibahas di halaman detail mata kuliah.'],
+];
+
+function openPanduan(){
+  const wrap = document.getElementById('modalWrap');
+  const card = document.getElementById('modalCard');
+  card.innerHTML = '';
+  const t = document.createElement('div');
+  t.className = 'modal-title'; t.textContent = 'Panduan Mengajukan Mentoring';
+  card.appendChild(t);
+
+  const ol = document.createElement('ol'); ol.className = 'panduan';
+  PANDUAN.forEach(([h, b])=>{
+    const li = document.createElement('li');
+    const hb = document.createElement('b'); hb.textContent = h;
+    const sp = document.createElement('span'); sp.textContent = b;
+    li.append(hb, sp); ol.appendChild(li);
+  });
+  card.appendChild(ol);
+
+  const bar = document.createElement('div'); bar.className = 'modal-bar'; bar.style.marginTop = '14px';
+  const ok = document.createElement('button'); ok.className = 'btn btn-primary'; ok.textContent = 'Mengerti'; ok.onclick = closeForm;
+  bar.appendChild(ok); card.appendChild(bar);
+
+  wrap.style.display = 'flex';
+  wrap.onclick = e => { if(e.target === wrap) closeForm(); };
+}
+
+/* ══════════════════════════════════════
    GATE
    ══════════════════════════════════════ */
 function login(code){
@@ -1132,6 +1528,7 @@ function login(code){
     sessionStorage.setItem('aliria_in', '1');
     document.getElementById('gate').style.display = 'none';
     document.getElementById('logoutBtn').style.display = '';
+    document.getElementById('fabBtn').style.display = '';
     render();
     return true;
   }
@@ -1184,7 +1581,8 @@ function login(code){
   if(sessionStorage.getItem('ajar_in') === '1'){
     gate.style.display = 'none';
     document.getElementById('logoutBtn').style.display = '';
-    render();
+    document.getElementById('fabBtn').style.display = '';
+    route(); render();
   } else {
     gate.style.display = 'flex';
     setTimeout(()=>inp.focus(), 100);
@@ -1195,22 +1593,25 @@ function login(code){
     sessionStorage.removeItem('aliria_in');
     location.reload();
   };
-  document.getElementById('backBtn').onclick = ()=>{ openCourse = null; render(); };
+  document.getElementById('fabBtn').onclick = openPanduan;
+  document.getElementById('backBtn').onclick = ()=>go('#/matkul');
   document.getElementById('gistBtn').onclick = openGistPanel;
   document.getElementById('addMemberBtn').onclick = ()=>openMemberForm();
   document.getElementById('addGroupBtn').onclick = ()=> openForm('Tambah Kelompok',
     [{key:'name',label:'Nama Kelompok',placeholder:'Contoh: Pengajar / Koordinator',required:true}],
     v=>addGroup(v.name.trim()));
   document.getElementById('addCourseBtn').onclick = ()=>{
-    if(!selUniv){ alert('Pilih universitas dulu.'); return; }
+    if(!selUniv){ alert('Pilih universitas dulu di tab Universitas.'); return; }
     if(!selSem){ alert('Pilih semester di atas.'); return; }
-    openForm('Tambah Mata Kuliah', [
-      {key:'name',label:'Nama Mata Kuliah',placeholder:'Contoh: Basis Data',required:true},
-      {key:'code',label:'Kode',placeholder:'Contoh: IF201'},
-      {key:'lecturer',label:'Pengajar',placeholder:'Nama pengajar'},
-      {key:'paid',label:'Program berbayar',type:'checkbox',note:'Centang bila kelas ini kelas berbayar. Tanpa centang = gratis.'},
-    ], v=>addCourse(selUniv, selSem, v.name, v.code, v.lecturer, v.paid));
+    openForm('Tambah Mata Kuliah', courseFormFields(),
+      v=>addCourse(selUniv, selSem, v.name, v.code, v.lecturer, v.paid, v.desc, v.price, v.classCode));
   };
+  const needCourse = ()=>{
+    if(!db.courses.some(c=>!c.deleted)){ alert('Belum ada mata kuliah. Tambahkan dulu di tab Mata Kuliah.'); return false; }
+    return true;
+  };
+  document.getElementById('addSchedBtn').onclick  = ()=>{ if(needCourse()) openScheduleForm(); };
+  document.getElementById('addSchedBtn2').onclick = ()=>{ if(needCourse()) openScheduleForm(null, openCourse); };
   document.getElementById('addMeetingBtn').onclick = ()=>{
     const next = Math.max(0, ...liveMeets(openCourse).map(m=>m.no||0)) + 1;
     openForm('Tambah Pertemuan', [

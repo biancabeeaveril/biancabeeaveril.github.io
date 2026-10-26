@@ -52,7 +52,7 @@ Tombol **Masuk** membuka modal kode akses (punya tombol mata untuk tampil/sembun
 
 ## Log Pengajaran (Tim Pengajar)
 
-App terpisah untuk mencatat riwayat mengajar: **universitas → semester (statis 1–8) → mata kuliah (card) → pertemuan → topik**, plus daftar **anggota tim pengajar**.
+App terpisah untuk mencatat riwayat mengajar: **universitas → semester (statis 1–8) → mata kuliah (card) → jadwal & pertemuan → topik**, plus daftar **anggota tim pengajar**.
 
 | Komponen | Isi |
 |----------|-----|
@@ -63,12 +63,16 @@ App terpisah untuk mencatat riwayat mengajar: **universitas → semester (statis
 
 Fitur yang dipakai tim pengajar:
 
+- **3 navigasi dengan URL sendiri** — `#/univ` (Universitas & tim pengajar), `#/matkul` (daftar + detail `#/matkul/<id>`), `#/jadwal` (jadwal mentoring) — bisa di-bookmark / dibagikan ke sesama tim
 - Hierarki **Universitas → Semester → Mata Kuliah → Pertemuan → Topik**
 - **Semester 1–8 statis** — bukan CRUD: tidak ada tombol tambah/hapus, langsung tersedia di tiap universitas
+- **Mata kuliah punya deskripsi** (long text); kelas **berbayar** punya **nominal harga** (Rp) + **kode kelas** yang hanya muncul untuk kelas berbayar — kelas gratis otomatis tanpa harga & kode
+- **Jadwal mentoring** per mata kuliah: **hari, jam, tanggal, Online/Offline, tempat/tautan, mentor (dropdown anggota), peserta** — tampil di tab Jadwal & di detail mata kuliah
 - **Deskripsi** (topik & pertemuan) berupa **long text** — textarea multi-baris tanpa batas panjang
 - Centang **sudah dibahas** per topik + progres persentase per mata kuliah
 - Flag **Berbayar / Gratis** per mata kuliah (checkbox di form, tampil sebagai badge di card & detail)
-- **Tambah Anggota** (modal multi-baris, `+ Tambah baris`): nama pendek, nama lengkap, angkatan, jabatan/role, kelompok — plus **+ Kelompok** (chip bisa difilter, ✎ ubah, 🗑 hapus)
+- **Tambah Anggota** (modal multi-baris, `+ Tambah baris`): nama pendek, nama lengkap, **angkatan & jabatan berupa dropdown** (pilih dari data yang ada, atau "＋ Tulis sendiri…" bila baru), kelompok — plus **+ Kelompok** (chip bisa difilter, ✎ ubah, 🗑 hapus)
+- **Tombol mengambang 💬 Panduan Mentoring** (kanan bawah) — panduan langkah mengajukan mentoring
 - Sinkron ke Gist: klik **⚙** di nav → isi Gist ID + PAT (scope `gist`) → **Hubungkan** (file dibuat otomatis bila belum ada)
 - Status sinkron di nav: hijau "Sinkron Gist" / "Lokal saja" kalau belum tersambung
 

@@ -115,15 +115,24 @@ Nilai sudah terpasang di kedua file. Ganti di **dua** file supaya sinkron.
 
 ## Langkah 5 — Mulai pakai
 
-1. Masuk dengan kode tim pengajar → full akses tambah/edit/hapus
-2. **+ Tambah** di baris **Universitas** → jadi chip label
-3. Pilih universitas → pilih **Semester 1–8** (statis, tidak perlu dibuat — tidak ada tombol tambah/hapus)
-4. **+ Tambah Mata Kuliah** → isi nama/kode/pengajar + centang **Program berbayar** bila kelas berbayar (tanpa centang = **Gratis**)
-5. Klik card → halaman detail: daftar **pertemuan**
-6. Di tiap pertemuan: `+ Topik` untuk menambah **deskripsi topik** (teks panjang, boleh banyak baris — `Enter` simpan, `Shift+Enter` baris baru), centang checkbox kalau **sudah dibahas**; **Deskripsi Pertemuan** juga berupa textarea panjang
-7. **+ Kelompok** lalu **+ Anggota** untuk mengisi tim pengajar — modal mendukung **+ Tambah baris** (bisa isi banyak anggota sekaligus), ✕ menghapus baris, dan tombol Simpan menyimpan semua baris yang terisi
+Aplikasi punya **3 navigasi** (masing-masing punya URL sendiri, bisa dibagikan):
 
-> Label universitas bersifat tetap: tambah sekali, hapus kalau memang dibatalkan (menghapus label ikut menghapus isinya). Semester 1–8 selalu tersedia untuk setiap universitas.
+| Tab | URL | Isi |
+|-----|-----|-----|
+| Universitas | `…/logpengajar/#/univ` | Label universitas + Tim Pengajar (kelompok & anggota) |
+| Mata Kuliah | `…/logpengajar/#/matkul` (detail: `#/matkul/<id>`) | Semester 1–8, daftar mata kuliah, jadwal & pertemuan per mata kuliah |
+| Jadwal | `…/logpengajar/#/jadwal` | Semua jadwal mentoring lintas mata kuliah |
+
+1. Masuk dengan kode tim pengajar → full akses tambah/edit/hapus
+2. Tab **Universitas**: **+ Tambah** untuk label universitas, lalu **+ Kelompok** & **+ Anggota** untuk tim pengajar — **Angkatan & Jabatan berupa dropdown** (pilih dari data yang ada; ada opsi "＋ Tulis sendiri…" bila nilai baru), **+ Tambah baris** bisa isi banyak anggota sekaligus
+3. Tab **Mata Kuliah**: pilih universitas → pilih **Semester 1–8** (statis, tidak perlu dibuat) → **+ Tambah Mata Kuliah**
+4. Form mata kuliah: isi nama/kode/**deskripsi (long text)**/pengajar. Centang **Program berbayar** → muncul **Nominal Harga (Rp)** + **Kode Kelas** — hanya kelas berbayar yang punya harga & kode; tanpa centang = **Gratis** (kedua field itu disembunyikan)
+5. Klik card → detail (`#/matkul/<id>`): deskripsi, blok harga + kode kelas (berbayar saja), daftar **jadwal**, dan daftar **pertemuan**
+6. **+ Tambah Jadwal** (di tab Jadwal atau di detail mata kuliah): **Hari** (dropdown), **Tanggal**, **Jam** (waktu pelaksana), **Pelaksanaan** Online/Offline, **Tempat/Tautan**, **Mentor** (dropdown anggota tim pengajar), **Peserta** (long text)
+7. Di tiap pertemuan: `+ Topik` untuk menambah **deskripsi topik** (teks panjang, boleh banyak baris — `Enter` simpan, `Shift+Enter` baris baru), centang checkbox kalau **sudah dibahas**; **Deskripsi Pertemuan** juga berupa textarea panjang
+8. Tombol mengambang **💬 Panduan Mentoring** (kanan bawah) berisi langkah mengajukan mentoring untuk tim
+
+> Label universitas bersifat tetap: tambah sekali, hapus kalau memang dibatalkan (menghapus label ikut menghapus isinya — termasuk jadwal & pertemuannya). Semester 1–8 selalu tersedia untuk setiap universitas.
 
 ---
 
@@ -133,21 +142,27 @@ Nilai sudah terpasang di kedua file. Ganti di **dua** file supaya sinkron.
 {
   "univs":    [{ "id":"u1", "name":"Universitas Astrindo", "ord":0, "updatedAt":0 }],
   "courses":  [{ "id":"c1", "univId":"u1", "sem":1, "name":"Basis Data", "code":"IF201",
-                 "lecturer":"Budi", "paid":false, "ord":0, "updatedAt":0 }],
+                 "desc":"Ringkasan mata kuliah (long text)", "lecturer":"Budi",
+                 "paid":true, "price":"150000", "classCode":"BD-2026", "ord":0, "updatedAt":0 }],
   "meetings": [{ "id":"m1", "courseId":"c1", "no":1, "date":"2026-09-05",
                  "title":"Deskripsi pertemuan (long text, boleh multi-baris)", "updatedAt":0 }],
   "topics":   [{ "id":"t1", "meetingId":"m1", "text":"Deskripsi topik (long text)",
                  "done":true, "ord":0, "updatedAt":0 }],
   "members":  [{ "id":"a1", "shortName":"Dion", "fullName":"Dionisius Nur P", "batch":"2023",
                  "role":"Koordinator", "groupId":"g1", "ord":0, "updatedAt":0 }],
-  "groups":   [{ "id":"g1", "name":"Pengajar", "ord":0, "updatedAt":0 }]
+  "groups":   [{ "id":"g1", "name":"Pengajar", "ord":0, "updatedAt":0 }],
+  "schedules":[{ "id":"j1", "courseId":"c1", "day":"Sabtu", "date":"2026-11-07",
+                 "time":"13.00–15.00 WIB", "mode":"Online",
+                 "place":"https://zoom.us/j/…", "mentor":"Dion", "participants":"Ahmad\nBella",
+                 "ord":0, "updatedAt":0 }]
 }
 ```
 
 - Semua array **flat** (relasi pakai `id`) → merge cukup satu aturan untuk semua tabel.
 - **Tidak ada array `sems`** — semester adalah angka `sem: 1..8` di setiap mata kuliah (statis). Data lama format `sems` + `semId` otomatis dimigrasikan saat aplikasi dibuka (`migrate()`).
-- `paid: true` = kelas **berbayar**; tidak ada / `false` = **gratis**.
-- `title` (pertemuan) dan `text` (topik) adalah **long text** — tidak dibatasi panjangnya.
+- `paid: true` = kelas **berbayar**; tidak ada / `false` = **gratis**. Hanya kelas berbayar yang memakai `price` (angka rupiah sebagai string, tanpa titik) dan `classCode` (kode kelas) — saat diubah ke gratis, kedua field itu dikosongkan otomatis.
+- `title` (pertemuan), `text` (topik), `desc` (mata kuliah) dan `participants` (jadwal) adalah **long text** — tidak dibatasi panjangnya.
+- `schedules`: `day` = Senin–Minggu, `date` (opsional; kosong = berkelanjutan), `time` (teks jam), `mode` = `Online`/`Offline`, `place` = tautan (online) atau ruangan (offline), `mentor` = nama pendek anggota, `participants` = daftar peserta.
 - `groupId: ""` = anggota tanpa kelompok. Menghapus kelompok mengosongkan `groupId` anggotanya (anggota tidak ikut terhapus).
 
 ---
@@ -158,7 +173,7 @@ Baik Worker maupun Mode A memakai **read-merge-write** — tidak pernah menimpa 
 
 | Tipe | Strategi |
 |------|----------|
-| Semua array (`univs`, `courses`, `meetings`, `topics`, `members`, `groups`) | Merge by `id` — item dengan `updatedAt` lebih baru menang |
+| Semua array (`univs`, `courses`, `meetings`, `topics`, `members`, `groups`, `schedules`) | Merge by `id` — item dengan `updatedAt` lebih baru menang |
 
 Dua orang edit data berbeda bersamaan → keduanya tetap tersimpan.
 

@@ -28,7 +28,7 @@ function corsHeaders(request) {
   };
 }
 
-const EMPTY = { univs: [], courses: [], meetings: [], topics: [], members: [], groups: [] };
+const EMPTY = { univs: [], courses: [], meetings: [], topics: [], members: [], groups: [], schedules: [] };
 
 /** Merge dua array by id — item dengan updatedAt lebih baru menang. */
 function mergeArr(g = [], b = []) {
@@ -49,6 +49,7 @@ function mergeDb(g = {}, b = {}) {
     topics: mergeArr(g.topics || [], b.topics || []),
     members: mergeArr(g.members || [], b.members || []),
     groups: mergeArr(g.groups || [], b.groups || []),
+    schedules: mergeArr(g.schedules || [], b.schedules || []),
   };
 }
 
