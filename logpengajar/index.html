@@ -123,7 +123,7 @@ button{font-family:inherit}
 .frow-check{display:flex;align-items:center;gap:8px}
 .frow-check input[type=checkbox]{width:auto;accent-color:var(--accent);cursor:pointer}
 .frow-check .flabel{margin:0;color:var(--text);font-size:.76rem;font-weight:500}
-.fnote{font-size:.65rem;color:var(--muted);line-height:1.55;margin-top:5px}
+.fnote,.form-note{font-size:.65rem;color:var(--muted);line-height:1.55;margin-top:5px}
 .ferr{font-size:.7rem;color:var(--red);margin-bottom:8px}
 .modal-bar{display:flex;gap:8px;justify-content:flex-end;margin-top:4px}
 
@@ -164,6 +164,10 @@ button{font-family:inherit}
 .mrow-top .frow{flex:1;margin-bottom:0}
 .mrow-x{border:1px solid var(--bd);background:var(--card2);color:var(--muted);border-radius:6px;width:30px;height:30px;cursor:pointer;font-size:.85rem;line-height:1;flex-shrink:0;transition:color .15s,border-color .15s}
 .mrow-x:hover{color:var(--red);border-color:var(--red)}
+.mrow-bot{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:8px}
+.mrow-bot .frow{flex:1;min-width:150px;margin-bottom:0}
+.join-lab{display:flex;gap:6px;align-items:center;font-size:.74rem;color:var(--muted);cursor:pointer;white-space:nowrap}
+.join-lab input{width:auto}
 .mrow-add{margin-top:11px}
 select.fsel{width:100%;background:var(--bg);border:1px solid var(--bd);color:var(--text);font-size:.8rem;padding:9px 11px;border-radius:6px;outline:none;font-family:inherit}
 select.fsel:focus{border-color:var(--accent)}
@@ -202,6 +206,28 @@ select.fsel:focus{border-color:var(--accent)}
 .sched:hover .card-edit{opacity:1}
 @media(hover:none){.sched .card-edit{opacity:1}}
 
+/* ── BLOK NOTULENSI (peserta / catatan / keputusan) ── */
+.m-block{margin-top:9px;font-size:.76rem}
+.m-block b{display:block;font-size:.64rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-bottom:3px}
+.m-block span{white-space:pre-line;word-break:break-word;line-height:1.6}
+
+/* ── INVENTARIS ASET ── */
+.inv-bar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.inv-search{background:var(--bg);border:1px solid var(--bd);color:var(--text);font-size:.74rem;padding:7px 11px;border-radius:6px;outline:none;font-family:inherit;width:190px;transition:border-color .15s}
+.inv-search:focus{border-color:var(--accent)}
+.inv-cat{width:auto;min-width:150px;font-size:.72rem;padding:7px 9px}
+.inv-wrap{overflow-x:auto;border:1px solid var(--bd);border-radius:9px}
+table.inv-table{width:100%;border-collapse:collapse;font-size:.76rem}
+table.inv-table th{font-size:.62rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);text-align:left;padding:9px 12px;border-bottom:1px solid var(--bd);white-space:nowrap;background:var(--card2)}
+table.inv-table td{padding:9px 12px;border-bottom:1px dashed var(--bd);vertical-align:top;word-break:break-word}
+table.inv-table tr:last-child td{border-bottom:none}
+table.inv-table tr:hover td{background:var(--card2)}
+table.inv-table a{color:var(--accent);text-decoration:underline}
+table.inv-table .num{color:var(--muted);width:34px}
+table.inv-table .acts{white-space:nowrap;width:64px}
+table.inv-table .inv-empty{padding:22px 12px;text-align:center;color:var(--muted)}
+@media(max-width:640px){.inv-search{width:100%}}
+
 /* ── GATE ── */
 .gate{position:fixed;inset:0;background:var(--bg);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
 .gate-card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:28px;width:100%;max-width:340px;text-align:center}
@@ -235,19 +261,21 @@ select.fsel:focus{border-color:var(--accent)}
 <body>
 
 <nav class="nav">
-  <a href="../index.html" class="nav-back">← Rak</a>
+  <a href="../index.html" class="nav-back" data-i18n="back">← Kembali</a>
   <span class="nav-title">Log Pengajaran</span>
   <span class="nav-spacer"></span>
   <span class="nav-meta"><span class="dot-sync" id="syncDot"></span><span id="syncTxt" style="display:none">Tersimpan</span></span>
-  <button class="icon-btn" id="gistBtn" title="Koneksi Gist">⚙</button>
-  <button class="icon-btn" id="logoutBtn" style="display:none" title="Keluar">⎋</button>
-  <button class="theme-btn" id="themeBtn">🌙</button>
+  <button class="icon-btn" id="langBtn" title="Switch to English (US)">EN</button>
+  <button class="icon-btn" id="gistBtn" title="Koneksi Gist" data-i18n-title="navGist">⚙</button>
+  <button class="icon-btn" id="logoutBtn" style="display:none" title="Keluar" data-i18n-title="navLogout">⎋</button>
+  <button class="theme-btn" id="themeBtn" data-i18n-title="navTheme">🌙</button>
 </nav>
 
 <nav class="tabs" id="tabs">
-  <a href="#/univ"   class="tab" data-tab="univ">🏛 Universitas</a>
-  <a href="#/matkul" class="tab" data-tab="matkul">📚 Mata Kuliah</a>
-  <a href="#/jadwal" class="tab" data-tab="jadwal">🗓 Jadwal</a>
+  <a href="#/univ"   class="tab" data-tab="univ">🏛 <span data-i18n="tabUniv">Universitas</span></a>
+  <a href="#/matkul" class="tab" data-tab="matkul">📚 <span data-i18n="tabMatkul">Mata Kuliah</span></a>
+  <a href="#/jadwal" class="tab" data-tab="jadwal">🗓 <span data-i18n="tabJadwal">Jadwal</span></a>
+  <a href="#/inventaris" class="tab" data-tab="inv">📦 <span data-i18n="tabInv">Inventaris</span></a>
 </nav>
 
 <div class="page">
@@ -255,21 +283,21 @@ select.fsel:focus{border-color:var(--accent)}
   <!-- ══ TAB 1: UNIVERSITAS ══ -->
   <section id="tabUniv" class="tabpane">
     <div class="header">
-      <h1>Universitas</h1>
-      <p>Kelola daftar universitas mitra mentoring, lalu lengkapi data tim pengajar di bawah.</p>
+      <h1 data-i18n="univTitle">Universitas</h1>
+      <p data-i18n="univDesc">Kelola daftar universitas mitra mentoring, lalu lengkapi data tim pengajar di bawah.</p>
     </div>
 
     <div class="filter-block">
-      <div class="filter-label">Universitas</div>
+      <div class="filter-label" data-i18n="filterUniv">Universitas</div>
       <div class="chips" id="univChips"></div>
     </div>
 
     <!-- TIM PENGAJAR (anggota) -->
     <div id="memberSection">
       <div class="section-head">
-        <h2 id="memberHead">Tim Pengajar</h2>
-        <button class="btn" id="addGroupBtn">+ Kelompok</button>
-        <button class="btn btn-primary" id="addMemberBtn">+ Anggota</button>
+        <h2 id="memberHead" data-i18n="teamHead">Tim Pengajar</h2>
+        <button class="btn" id="addGroupBtn" data-i18n="btnGroup">+ Kelompok</button>
+        <button class="btn btn-primary" id="addMemberBtn" data-i18n="btnMember">+ Anggota</button>
       </div>
       <div id="groupChips" class="chips" style="margin-bottom:9px"></div>
       <div id="memberList" class="members"></div>
@@ -279,21 +307,21 @@ select.fsel:focus{border-color:var(--accent)}
   <!-- ══ TAB 2: MATA KULIAH ══ -->
   <section id="tabMatkul" class="tabpane" style="display:none">
     <div class="header">
-      <h1>Mata Kuliah</h1>
-      <p>Pilih universitas & semester, lalu klik mata kuliah untuk melihat jadwal dan topik tiap pertemuan.</p>
+      <h1 data-i18n="matkulTitle">Mata Kuliah</h1>
+      <p data-i18n="matkulDesc">Pilih universitas & semester, lalu klik mata kuliah untuk melihat jadwal dan topik tiap pertemuan.</p>
     </div>
 
     <!-- LABEL: SEMESTER (statis 1–8) -->
     <div class="filter-block">
-      <div class="filter-label">Semester</div>
+      <div class="filter-label" data-i18n="filterSem">Semester</div>
       <div class="chips" id="semChips"></div>
     </div>
 
     <!-- DAFTAR MATA KULIAH -->
     <div id="courseSection">
       <div class="section-head">
-        <h2 id="courseHead">Mata Kuliah</h2>
-        <button class="btn btn-primary" id="addCourseBtn">+ Tambah Mata Kuliah</button>
+        <h2 id="courseHead" data-i18n="courseListHead">Mata Kuliah</h2>
+        <button class="btn btn-primary" id="addCourseBtn" data-i18n="btnAddCourse">+ Tambah Mata Kuliah</button>
       </div>
       <div class="grid" id="courseGrid"></div>
     </div>
@@ -301,20 +329,20 @@ select.fsel:focus{border-color:var(--accent)}
     <!-- DETAIL MATA KULIAH -->
     <div id="detailSection" style="display:none">
       <div class="detail-head">
-        <button class="back-link" id="backBtn">← Kembali ke daftar mata kuliah</button>
+        <button class="back-link" id="backBtn" data-i18n="backCourse">← Kembali ke daftar mata kuliah</button>
         <h2 id="dTitle"></h2>
         <div class="detail-meta" id="dMeta"></div>
         <div id="dDescWrap"></div>
         <div id="dPayWrap"></div>
       </div>
       <div class="section-head">
-        <h2 id="dSchedHead">Jadwal</h2>
-        <button class="btn" id="addSchedBtn2">+ Tambah Jadwal</button>
+        <h2 id="dSchedHead" data-i18n="secSched">Jadwal</h2>
+        <button class="btn" id="addSchedBtn2" data-i18n="btnAddSched">+ Tambah Jadwal</button>
       </div>
       <div class="grid" id="dSchedList"></div>
       <div class="section-head">
-        <h2 id="dMeetHead">Riwayat Pertemuan</h2>
-        <button class="btn btn-primary" id="addMeetingBtn">+ Tambah Pertemuan</button>
+        <h2 id="dMeetHead" data-i18n="secMeet">Riwayat Pertemuan</h2>
+        <button class="btn btn-primary" id="addMeetingBtn" data-i18n="btnAddMeeting">+ Tambah Pertemuan</button>
       </div>
       <div id="meetingList"></div>
     </div>
@@ -323,19 +351,36 @@ select.fsel:focus{border-color:var(--accent)}
   <!-- ══ TAB 3: JADWAL ══ -->
   <section id="tabJadwal" class="tabpane" style="display:none">
     <div class="header">
-      <h1>Jadwal Mentoring</h1>
-      <p>Semua jadwal mentoring lintas mata kuliah: hari, jam, tanggal, online/offline, mentor & peserta.</p>
+      <h1 data-i18n="jadwalTitle">Jadwal Mentoring</h1>
+      <p data-i18n="jadwalDesc">Semua jadwal mentoring lintas mata kuliah: hari, jam, tanggal, online/offline, mentor & peserta.</p>
     </div>
     <div class="section-head" style="border-top:none;padding-top:0">
-      <h2 id="schedHead">Jadwal</h2>
-      <button class="btn btn-primary" id="addSchedBtn">+ Tambah Jadwal</button>
+      <h2 id="schedHead" data-i18n="schedListHead">Jadwal</h2>
+      <button class="btn btn-primary" id="addSchedBtn" data-i18n="btnAddSched">+ Tambah Jadwal</button>
     </div>
     <div class="grid" id="schedList"></div>
+  </section>
+
+  <!-- ══ TAB 4: INVENTARIS ASET ══ -->
+  <section id="tabInv" class="tabpane" style="display:none">
+    <div class="header">
+      <h1 data-i18n="invTitle">Inventaris Aset</h1>
+      <p data-i18n="invDesc">Daftar aset tim pengajar: akun, perangkat, ruangan, dan lainnya.</p>
+    </div>
+    <div class="section-head" style="border-top:none;padding-top:0">
+      <h2 id="invHead" data-i18n="invHead">Aset</h2>
+      <span class="inv-bar">
+        <input id="invSearch" class="inv-search" placeholder="Cari nama aset…" data-i18n-ph="invSearch" autocomplete="off"/>
+        <select id="invCat" class="fsel inv-cat"></select>
+      </span>
+      <button class="btn btn-primary" id="addAssetBtn" data-i18n="btnAddAsset">+ Tambah Aset</button>
+    </div>
+    <div id="invList" class="inv-wrap"></div>
   </section>
 </div>
 
 <!-- TOMBOL MENGAMBANG: PANDUAN MENGAJUKAN MENTORING -->
-<button class="fab" id="fabBtn" style="display:none" title="Panduan Mengajukan Mentoring">💬 Panduan Mentoring</button>
+<button class="fab" id="fabBtn" style="display:none" title="Panduan Mengajukan Mentoring" data-i18n-title="fabTitle">💬 <span data-i18n="fabText">Panduan Mentoring</span></button>
 
 <!-- MODAL FORM -->
 <div class="modal-wrap" id="modalWrap"><div class="modal" id="modalCard"></div></div>
@@ -343,17 +388,17 @@ select.fsel:focus{border-color:var(--accent)}
 <!-- GATE -->
 <div class="gate" id="gate">
   <div class="gate-card">
-    <h2>Log Pengajaran</h2>
-    <p>Masukkan kode akses tim pengajar</p>
+    <h2 data-i18n="gateTitle">Log Pengajaran</h2>
+    <p data-i18n="gateSub">Masukkan kode akses tim pengajar</p>
     <div class="gate-pass">
       <input type="password" id="gateInput" placeholder="••••••" autocomplete="off"/>
-      <button type="button" class="gate-eye" id="gateToggle" title="Tampilkan / sembunyikan kode">
+      <button type="button" class="gate-eye" id="gateToggle" title="Tampilkan / sembunyikan kode" data-i18n-title="gateEye">
         <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
       </button>
     </div>
     <div class="gate-err" id="gateErr"></div>
-    <button class="btn btn-primary" id="gateBtn" style="width:100%">Masuk</button>
-    <div class="gate-hint" id="gateHint">Kode diberikan oleh koordinator tim pengajar.</div>
+    <button class="btn btn-primary" id="gateBtn" style="width:100%" data-i18n="gateBtn">Masuk</button>
+    <div class="gate-hint" id="gateHint" data-i18n="gateHint">Kode diberikan oleh koordinator tim pengajar.</div>
   </div>
 </div>
 
@@ -380,17 +425,313 @@ const useGist   = () => !useWorker() && !!cfgGistId() && !!cfgPat();
 const synced    = () => useWorker() || useGist();
 
 /* ══════════════════════════════════════
+   BAHASA — Indonesia (default) & English (US)
+   ══════════════════════════════════════ */
+const LS_LANG = 'ajar_lang';
+let lang = localStorage.getItem(LS_LANG) === 'en' ? 'en' : 'id';
+
+const L = {
+  id: {
+    back:'← Kembali', navGist:'Koneksi Gist', navLogout:'Keluar', navTheme:'Ganti tema',
+    syncSaved:'Tersimpan', syncWorker:'Sinkron', syncGist:'Sinkron Gist',
+    syncSaving:'Menyimpan…', syncLocal:'Lokal saja',
+    tabUniv:'Universitas', tabMatkul:'Mata Kuliah', tabJadwal:'Jadwal', tabInv:'Inventaris',
+    univTitle:'Universitas',
+    univDesc:'Kelola daftar universitas mitra mentoring, lalu lengkapi data tim pengajar di bawah.',
+    filterUniv:'Universitas', filterSem:'Semester',
+    teamHead:'Tim Pengajar', btnGroup:'+ Kelompok', btnMember:'+ Anggota',
+    matkulTitle:'Mata Kuliah',
+    matkulDesc:'Pilih universitas & semester, lalu klik mata kuliah untuk melihat jadwal dan topik tiap pertemuan.',
+    courseListHead:'Mata Kuliah', btnAddCourse:'+ Tambah Mata Kuliah',
+    backCourse:'← Kembali ke daftar mata kuliah',
+    secSched:'Jadwal', btnAddSched:'+ Tambah Jadwal',
+    secMeet:'Riwayat Pertemuan', btnAddMeeting:'+ Tambah Pertemuan',
+    jadwalTitle:'Jadwal Mentoring',
+    jadwalDesc:'Semua jadwal mentoring lintas mata kuliah: hari, jam, tanggal, online/offline, mentor & peserta.',
+    schedListHead:'Jadwal',
+    invTitle:'Inventaris Aset',
+    invDesc:'Daftar aset tim pengajar: akun, perangkat, ruangan, dan lainnya.',
+    invHead:'Aset', btnAddAsset:'+ Tambah Aset',
+    invSearch:'Cari nama aset…', invAllCat:'Semua Kategori',
+    thName:'Nama Aset', thCat:'Kategori', thQty:'Jml', thUnit:'Satuan',
+    thUrl:'URL', thDate:'Tgl Pengadaan', thNotes:'Keterangan',
+    fabText:'Panduan Mentoring', fabTitle:'Panduan Mengajukan Mentoring',
+    gateTitle:'Log Pengajaran', gateSub:'Masukkan kode akses tim pengajar',
+    gateEye:'Tampilkan / sembunyikan kode', gateEyeHide:'Sembunyikan kode', gateBtn:'Masuk',
+    gateHint:'Kode diberikan oleh koordinator tim pengajar.',
+    gateErr:'Kode tidak dikenali. Coba lagi.',
+    addChip:'+ Tambah', delTitle:'Hapus',
+    emptyUniv:'Belum ada universitas. Klik "+ Tambah" untuk mulai.',
+    pickUnivFirst:'Pilih universitas dulu di tab Universitas.',
+    btnGoUniv:'Buka tab Universitas',
+    pickSemHint:'Pilih semester di atas.',
+    emptyCourse:'Belum ada mata kuliah. Klik "+ Tambah Mata Kuliah" untuk menambahkan.',
+    headCourse:'Mata Kuliah',
+    lblPaid:'Berbayar', lblFree:'Gratis',
+    lblSemester:'Semester', lblClassCode:'Kode Kelas', lblPrice:'Harga',
+    lblTopics:'Topik', lblMeetings:'pertemuan',
+    classCodeEmpty:'Belum ada kode kelas.',
+    emptySchedShort:'Belum ada jadwal. Klik "+ Tambah Jadwal".',
+    emptyMeetShort:'Belum ada pertemuan. Klik "+ Tambah Pertemuan".',
+    btnAddTopicSm:'+ Topik', editTopicTitle:'Ubah Topik',
+    fTopicText:'Deskripsi Topik',
+    phAddTopic:'Tambah topik yang dibahas… (Enter simpan, Shift+Enter baris baru)',
+    lblPertemuan:'Pertemuan',
+    noteLongText:'Teks panjang diperbolehkan — Enter di textarea membuat baris baru.',
+    noteTimeMeet:'Kosongkan bila jam belum pasti.',
+    lblPeserta:'Peserta',
+    lblCatatan:'Catatan / Isi Notulensi', lblDecision:'Keputusan / Tindak Lanjut',
+    lblMentor:'Mentor',
+    lblBerkelanjutan:'tanpa tanggal (berkelanjutan)',
+    courseDeleted:'Mata kuliah terhapus', semShort:'Sem',
+    noteDateSched:'Isi tanggal pelaksanaan. Kosongkan bila jadwal berkelanjutan (tiap minggu).',
+    emptySched:'Belum ada jadwal. Klik "+ Tambah Jadwal" untuk mengusulkan jadwal mentoring.',
+    emptyTeam:'Belum ada anggota. Klik "+ Anggota" untuk menambah tim pengajar.',
+    emptyTeamFilter:'Tidak ada anggota di kelompok ini. Klik chip kelompok lagi untuk menampilkan semua.',
+    tanpaKelompok:'Tanpa Kelompok', angkatanLbl:'Angkatan',
+    emptyInv:'Belum ada aset. Klik "+ Tambah Aset" untuk mulai.',
+    invNoMatch:'Tidak ada aset yang cocok dengan pencarian / filter.',
+    delUnivQ:'Hapus "{n}"? Semua mata kuliah, jadwal, dan riwayat pertemuannya ikut terhapus.',
+    delCourseQ:'Hapus mata kuliah "{n}"? Jadwal dan riwayat pertemuannya ikut terhapus.',
+    delMeetQ:'Hapus pertemuan {n} beserta topik-topiknya?',
+    delSchedQ:'Hapus jadwal ini?',
+    delMemberQ:'Hapus anggota "{n}"?',
+    delGroupQ:'Hapus kelompok "{n}"? Anggota di dalamnya tetap ada, hanya jadi tanpa kelompok.',
+    delAssetQ:'Hapus aset "{n}"?',
+    errRequired:'"{n}" wajib diisi.',
+    alertPickUniv:'Pilih universitas dulu di tab Universitas.',
+    alertPickSem:'Pilih semester di atas.',
+    alertNoCourse:'Belum ada mata kuliah. Tambahkan dulu di tab Mata Kuliah.',
+    errShortOne:'Nama pendek wajib diisi minimal satu baris.',
+    errGroupOne:'Nama kelompok wajib diisi minimal satu baris.',
+    btnBatal:'Batal', btnSimpan:'Simpan', btnMengerti:'Mengerti', btnAddRow:'+ Tambah baris',
+    fUnivName:'Nama Universitas', phUniv:'Contoh: Universitas Astrindo',
+    phGroup:'Contoh: Pengajar / Koordinator',
+    phShort:'Nama pendek (akses proyek)',
+    fMemberFull:'Nama lengkap (opsional)',
+    phBatchPick:'— Pilih angkatan —', phBatchNew:'Angkatan',
+    phRolePick:'— Pilih jabatan —', phRoleNew:'Jabatan / Role',
+    optNoGroup:'— Tanpa Kelompok —', optNew:'＋ Tulis sendiri…',
+    optNoParent:'— Tanpa Induk —',
+    fJoinable:'Joinable (boleh dipilih untuk anggota)',
+    noteJoinable:'Non-joinable: untuk struktur/induk saja — tidak muncul di dropdown anggota.',
+    fCourseName:'Nama Mata Kuliah', phCourse:'Contoh: Basis Data',
+    fCode:'Kode', phCode:'Contoh: IF201',
+    fDesc:'Deskripsi', phDesc:'Isi singkat mata kuliah… (boleh panjang)',
+    fLecturer:'Pengajar', phLecturer:'Nama pengajar',
+    fPaid:'Program berbayar',
+    notePaid:'Kalau dicentang, isilah Nominal Harga dan Kode Kelas (kode ini dikirim ke peserta setelah bayar).',
+    fPrice:'Nominal Harga (Rp)', phPrice:'Contoh: 150000',
+    fClassCode:'Kode Kelas', phClassCode:'Contoh: BD-2026',
+    fMeetNo:'Nomor Pertemuan', fDate:'Tanggal', fTime:'Jam',
+    fAgenda:'Agenda Pertemuan', phAgenda:'Topik yang dibahas di pertemuan ini… (boleh panjang)',
+    fPlace:'Tempat', phPlace:'Contoh: Ruang 301 / Zoom',
+    fPeserta:'Peserta', phPeserta:'Daftar nama peserta (boleh banyak baris)',
+    fNotes:'Catatan / Isi Notulensi', phNotes:'Catatan lengkap hasil pertemuan… (boleh panjang)',
+    fDecision:'Keputusan / Tindak Lanjut', phDecision:'Keputusan yang diambil, siapa mengerjakan apa…',
+    fDay:'Hari', fStart:'Jam Mulai', fEnd:'Jam Selesai',
+    fModeSched:'Pelaksanaan', fSchedPlace:'Tempat / Tautan',
+    phSchedPlace:'Tautan Zoom/Gmeet (online) atau nama ruangan (offline)',
+    fMentor:'Mentor (siapa yang mentoring)', noteMentor:'Silakan tulis langsung nama mentor bila bukan anggota tim pengajar.',
+    optNoMentor:'— Belum ditentukan —',
+    fCourseSched:'Mata Kuliah', noteSchedCourse:'Kosongkan hanya bila jadwal ini belum terikat mata kuliah tertentu.',
+    fAssetName:'Nama Aset', phAsset:'Contoh: Akses Canva',
+    fAssetCat:'Kategori', phCat:'Contoh: Software / Elektronik',
+    fAssetQty:'Jumlah', fAssetUnit:'Satuan', phUnit:'Contoh: akun / buah / tautan',
+    fAssetUrl:'URL (opsional)', fAssetBought:'Tanggal Pengadaan',
+    fAssetNotes:'Keterangan', phAssetNotes:'Kegunaan aset ini, siapa pemegangnya… (boleh panjang)',
+    titleAddUniv:'Tambah Universitas', titleAddGroup:'Tambah Kelompok', titleEditGroup:'Ubah Kelompok',
+    titleAddMember:'Tambah Anggota', titleEditMember:'Ubah Anggota',
+    titleAddCourse:'Tambah Mata Kuliah', titleEditCourse:'Ubah Mata Kuliah',
+    titleAddMeet:'Tambah Pertemuan', titleEditMeet:'Ubah Pertemuan',
+    titleAddSched:'Tambah Jadwal', titleEditSched:'Ubah Jadwal',
+    titleAddAsset:'Tambah Aset', titleEditAsset:'Ubah Aset',
+    gistTitle:'Koneksi Gist', gistStatusWorker:'Mode: Cloudflare Worker', gistStatusLocal:'Mode: Gist dari browser', gistStatusDirect:'Mode: Gist langsung dari kode',
+    gistGistId:'Gist ID', gistPat:'Token GitHub (PAT, scope: gist)',
+    gistBtnConnect:'Hubungkan', gistBtnDisconnect:'Putuskan',
+    gistCheck:'Mengecek…',
+    gistHttpErr:'HTTP {s}',
+    errGistId:'Gist ID wajib diisi.', errGistPat:'Token wajib diisi.',
+    errGist401:'Token tidak valid / sudah kedaluwarsa.',
+    errGist404:'Gist tidak ditemukan, atau token tidak punya akses ke gist itu.',
+    gistCreateFail:'Gagal membuat file',
+    gistHelpHtml:'Buat gist secret di <b>gist.github.com</b>, lalu tempel <b>Gist ID</b> + token PAT (scope <b>gist</b>) di atas.',
+    gistHelpTail:'dibuat otomatis bila belum ada. Token disimpan di browser admin (localStorage), tidak pernah masuk ke repository.',
+    rowDel:'Hapus baris',
+    panduanTitle:'Panduan Mengajukan Mentoring',
+    panduanP1:'Langkah mengajukan mentoring untuk tim pengajar Aliria Tech Community:',
+    panduanFoot:'Semua data tersimpan otomatis (lokal, atau Gist bila sudah terhubung).',
+    langSwitch:'Switch to English (US)',
+  },
+  en: {
+    back:'← Back', navGist:'Gist connection', navLogout:'Log out', navTheme:'Toggle theme',
+    syncSaved:'Saved', syncWorker:'Synced', syncGist:'Gist synced',
+    syncSaving:'Saving…', syncLocal:'Local only',
+    tabUniv:'Universities', tabMatkul:'Courses', tabJadwal:'Schedule', tabInv:'Inventory',
+    univTitle:'Universities',
+    univDesc:'Manage the list of mentoring partner universities, then fill in the teaching team data below.',
+    filterUniv:'University', filterSem:'Semester',
+    teamHead:'Teaching Team', btnGroup:'+ Group', btnMember:'+ Member',
+    matkulTitle:'Courses',
+    matkulDesc:'Pick a university & semester, then click a course to see its schedule and topics per meeting.',
+    courseListHead:'Courses', btnAddCourse:'+ Add Course',
+    backCourse:'← Back to course list',
+    secSched:'Schedule', btnAddSched:'+ Add Schedule',
+    secMeet:'Meeting History', btnAddMeeting:'+ Add Meeting',
+    jadwalTitle:'Mentoring Schedule',
+    jadwalDesc:'All mentoring schedules across courses: day, time, date, online/offline, mentor & participants.',
+    schedListHead:'Schedules',
+    invTitle:'Asset Inventory',
+    invDesc:'Teaching team asset list: accounts, equipment, rooms, and more.',
+    invHead:'Assets', btnAddAsset:'+ Add Asset',
+    invSearch:'Search asset name…', invAllCat:'All Categories',
+    thName:'Asset Name', thCat:'Category', thQty:'Qty', thUnit:'Unit',
+    thUrl:'URL', thDate:'Acquired', thNotes:'Notes',
+    fabText:'Mentoring Guide', fabTitle:'Guide to proposing mentoring',
+    gateTitle:'Log Pengajaran', gateSub:'Enter the teaching team access code',
+    gateEye:'Show / hide the code', gateEyeHide:'Hide the code', gateBtn:'Enter',
+    gateHint:'The code is provided by the teaching team coordinator.',
+    gateErr:'Code not recognized. Please try again.',
+    addChip:'+ Add', delTitle:'Delete',
+    emptyUniv:'No universities yet. Click "+ Add" to start.',
+    pickUnivFirst:'Select a university first in the Universities tab.',
+    btnGoUniv:'Open Universities tab',
+    pickSemHint:'Select a semester above.',
+    emptyCourse:'No courses yet. Click "+ Add Course" to create one.',
+    headCourse:'Courses',
+    lblPaid:'Paid', lblFree:'Free',
+    lblSemester:'Semester', lblClassCode:'Class Code', lblPrice:'Price',
+    lblTopics:'Topics', lblMeetings:'meetings',
+    classCodeEmpty:'No class code yet.',
+    emptySchedShort:'No schedules yet. Click "+ Add Schedule".',
+    emptyMeetShort:'No meetings yet. Click "+ Add Meeting".',
+    btnAddTopicSm:'+ Topic', editTopicTitle:'Edit Topic',
+    fTopicText:'Topic Description',
+    phAddTopic:'Add a topic discussed… (Enter saves, Shift+Enter for a new line)',
+    lblPertemuan:'Meeting',
+    noteLongText:'Long text is allowed — Enter in a textarea creates a new line.',
+    noteTimeMeet:'Leave empty if the time is not confirmed yet.',
+    lblPeserta:'Participants',
+    lblCatatan:'Notes / Minutes', lblDecision:'Decisions / Follow-up',
+    lblMentor:'Mentor',
+    lblBerkelanjutan:'no date (recurring)',
+    courseDeleted:'Deleted course', semShort:'Sem',
+    noteDateSched:'Fill in the execution date. Leave empty for a recurring schedule (weekly).',
+    emptySched:'No schedules yet. Click "+ Add Schedule" to propose one.',
+    emptyTeam:'No members yet. Click "+ Add Member" to build the teaching team.',
+    emptyTeamFilter:'No members in this group. Click the group chip again to show all.',
+    tanpaKelompok:'No Group', angkatanLbl:'Batch',
+    emptyInv:'No assets yet. Click "+ Add Asset" to start.',
+    invNoMatch:'No assets match the search / filter.',
+    delUnivQ:'Delete "{n}"? All of its courses, schedules and meeting history will be removed too.',
+    delCourseQ:'Delete course "{n}"? Its schedules and meeting history will be removed too.',
+    delMeetQ:'Delete meeting {n} along with all its topics?',
+    delSchedQ:'Delete this schedule?',
+    delMemberQ:'Delete member "{n}"?',
+    delGroupQ:'Delete group "{n}"? Its members will stay and simply become ungrouped.',
+    delAssetQ:'Delete asset "{n}"?',
+    errRequired:'"{n}" is required.',
+    alertPickUniv:'Select a university first in the Universities tab.',
+    alertPickSem:'Select a semester above.',
+    alertNoCourse:'No courses yet. Add one first in the Courses tab.',
+    errShortOne:'Short name is required in at least one row.',
+    errGroupOne:'Group name is required in at least one row.',
+    btnBatal:'Cancel', btnSimpan:'Save', btnMengerti:'Got it', btnAddRow:'+ Add row',
+    fUnivName:'University Name', phUniv:'e.g. University of Astrindo',
+    phGroup:'e.g. Instructor / Coordinator',
+    phShort:'Short name (project access)',
+    fMemberFull:'Full name (optional)',
+    phBatchPick:'— Pick batch —', phBatchNew:'Batch',
+    phRolePick:'— Pick role —', phRoleNew:'Role',
+    optNoGroup:'— No Group —', optNew:'＋ Type a new one…',
+    optNoParent:'— No Parent —',
+    fJoinable:'Joinable (selectable for members)',
+    noteJoinable:'Non-joinable: structure/parent groups only — hidden from the member dropdown.',
+    fCourseName:'Course Name', phCourse:'e.g. Database Systems',
+    fCode:'Code', phCode:'e.g. IF201',
+    fDesc:'Description', phDesc:'Short summary of the course… (long text allowed)',
+    fLecturer:'Instructor', phLecturer:'Instructor name',
+    fPaid:'Paid program',
+    notePaid:'When checked, fill in the price and class code (the code is sent to participants after payment).',
+    fPrice:'Price (Rp)', phPrice:'e.g. 150000',
+    fClassCode:'Class Code', phClassCode:'e.g. BD-2026',
+    fMeetNo:'Meeting No.', fDate:'Date', fTime:'Time',
+    fAgenda:'Meeting Agenda', phAgenda:'Topics discussed in this meeting… (long text allowed)',
+    fPlace:'Location', phPlace:'e.g. Room 301 / Zoom',
+    fPeserta:'Participants', phPeserta:'List of participants (multiple lines allowed)',
+    fNotes:'Notes / Minutes', phNotes:'Full meeting notes… (long text allowed)',
+    fDecision:'Decisions / Follow-up', phDecision:'Decisions made, who does what next…',
+    fDay:'Day', fStart:'Start Time', fEnd:'End Time',
+    fModeSched:'Mode', fSchedPlace:'Location / Link',
+    phSchedPlace:'Zoom/Gmeet link (online) or room name (offline)',
+    fMentor:'Mentor (who is mentoring)', noteMentor:'Type the mentor name directly if not a team member.',
+    optNoMentor:'— Not determined yet —',
+    fCourseSched:'Course', noteSchedCourse:'Leave empty only if this schedule is not tied to a specific course.',
+    fAssetName:'Asset Name', phAsset:'e.g. Canva Account',
+    fAssetCat:'Category', phCat:'e.g. Software / Electronics',
+    fAssetQty:'Quantity', fAssetUnit:'Unit', phUnit:'e.g. account / item / link',
+    fAssetUrl:'URL (optional)', fAssetBought:'Acquired On',
+    fAssetNotes:'Notes', phAssetNotes:'What this asset is used for, who holds it… (long text allowed)',
+    titleAddUniv:'Add University', titleAddGroup:'Add Group', titleEditGroup:'Edit Group',
+    titleAddMember:'Add Member', titleEditMember:'Edit Member',
+    titleAddCourse:'Add Course', titleEditCourse:'Edit Course',
+    titleAddMeet:'Add Meeting', titleEditMeet:'Edit Meeting',
+    titleAddSched:'Add Schedule', titleEditSched:'Edit Schedule',
+    titleAddAsset:'Add Asset', titleEditAsset:'Edit Asset',
+    gistTitle:'Gist Connection', gistStatusWorker:'Mode: Cloudflare Worker', gistStatusLocal:'Mode: Gist from browser', gistStatusDirect:'Mode: Gist directly from code',
+    gistGistId:'Gist ID', gistPat:'GitHub Token (PAT, scope: gist)',
+    gistBtnConnect:'Connect', gistBtnDisconnect:'Disconnect',
+    gistCheck:'Checking…',
+    gistHttpErr:'HTTP {s}',
+    errGistId:'Gist ID is required.', errGistPat:'Token is required.',
+    errGist401:'Token is invalid / expired.',
+    errGist404:'Gist not found, or the token has no access to it.',
+    gistCreateFail:'Failed to create file',
+    gistHelpHtml:'Create a secret gist at <b>gist.github.com</b>, then paste the <b>Gist ID</b> + PAT token (scope <b>gist</b>) above.',
+    gistHelpTail:'is created automatically if missing. The token is stored in the admin browser (localStorage) and never enters the repository.',
+    rowDel:'Remove row',
+    panduanTitle:'Guide to Proposing Mentoring',
+    panduanP1:'Steps to propose a mentoring session for the Aliria Tech Community teaching team:',
+    panduanFoot:'All data is saved automatically (locally, or to Gist once connected).',
+    langSwitch:'Ganti ke Bahasa Indonesia',
+  },
+};
+const t = k => (L[lang][k] !== undefined ? L[lang][k] : (L.id[k] !== undefined ? L.id[k] : k));
+/* nama hari: nilai tersimpan Indonesia, ditampilkan sesuai bahasa */
+const DAY_EN = {Senin:'Monday',Selasa:'Tuesday',Rabu:'Wednesday',Kamis:'Thursday',Jumat:'Friday',Sabtu:'Saturday',Minggu:'Sunday'};
+const dayName = d => (lang === 'en' ? (DAY_EN[d] || d) : d);
+const dateFmt = s => {
+  if(!s) return '';
+  const d = new Date(s + 'T00:00:00');
+  if(isNaN(d)) return s;
+  return d.toLocaleDateString(lang === 'id' ? 'id-ID' : 'en-US', {day:'numeric', month:'short', year:'numeric'});
+};
+const fmtTpl = (s, v) => String(s).replace('{s}', v);
+function applyLang(){
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
+  const lb = document.getElementById('langBtn');
+  if(lb){ lb.textContent = lang === 'id' ? 'EN' : 'ID'; lb.title = t('langSwitch'); }
+  paintSync();
+}
+function setLang(v){ lang = v === 'en' ? 'en' : 'id'; localStorage.setItem(LS_LANG, lang); render(); }
+
+/* ══════════════════════════════════════
    STATE
    ══════════════════════════════════════ */
-const emptyDb = () => ({univs:[],courses:[],meetings:[],topics:[],members:[],groups:[],schedules:[]});
+const emptyDb = () => ({univs:[],courses:[],meetings:[],topics:[],members:[],groups:[],schedules:[],assets:[]});
 const SEM_COUNT = 8;                     /* Semester 1–8, statis (tanpa CRUD) */
 const DAYS = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
 let db = emptyDb();
-let curTab = 'univ';                     /* univ | matkul | jadwal (sesuai URL #/…) */
+let curTab = 'univ';                     /* univ | matkul | jadwal | inv (sesuai URL #/…) */
 let selUniv = null;
 let selSem  = null;                      /* nomor semester 1–8 */
 let selGroup = null;                     /* filter kelompok anggota */
 let openCourse = null;      /* courseId */
+let invSearch = '';                      /* pencarian aset (inventaris) */
+let invCat    = '';                      /* filter kategori aset */
 
 const uid = () => Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4);
 const esc = s => String(s??'').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -408,6 +749,8 @@ const liveGroups  = () => db.groups.filter(g=>!g.deleted).sort((a,b)=>(a.ord||0)
 const liveScheds  = () => db.schedules.filter(s=>!s.deleted)
   .sort((a,b)=>(DAYS.indexOf(a.day)-DAYS.indexOf(b.day)) || String(a.date||'9999').localeCompare(String(b.date||'9999')) || String(a.time||'').localeCompare(String(b.time||'')));
 const schedsOf    = cid => liveScheds().filter(s=>s.courseId===cid);
+const liveAssets  = () => db.assets.filter(a=>!a.deleted).sort((a,b)=>(a.ord||0)-(b.ord||0));
+const assetCats   = () => [...new Set(liveAssets().map(a=>a.category).filter(Boolean))].sort();
 const getUniv = id => db.univs.find(u=>u.id===id);
 const getCourse = id => db.courses.find(c=>c.id===id);
 const getMeet = id => db.meetings.find(m=>m.id===id);
@@ -415,7 +758,23 @@ const getTopic = id => db.topics.find(t=>t.id===id);
 const getMember = id => db.members.find(m=>m.id===id);
 const getGroup  = id => db.groups.find(g=>g.id===id);
 const getSched  = id => db.schedules.find(s=>s.id===id);
-const groupName = gid => (liveGroups().find(g=>g.id===gid)||{}).name || '';
+const getAsset  = id => db.assets.find(a=>a.id===id);
+/* tampilan nama kelompok: "Induk › Anak", 🔒 bila non-joinable */
+function groupPath(g, depth){
+  depth = depth || 0;
+  const p = (g.parentId && depth < 3) ? liveGroups().find(x=>x.id===g.parentId) : null;
+  return (p ? groupPath(p, depth+1) + ' › ' : '') + g.name;
+}
+const groupLabel = g => groupPath(g) + (g.joinable === false ? ' 🔒' : '');
+/* jam jadwal: turunan timeStart–timeEnd; fallback ke nilai lama (time) */
+const fmtRange = (a,b) => (a && b) ? a+'–'+b : (a || b || '');
+const schedTime = s => (s.timeStart || s.timeEnd) ? fmtRange(s.timeStart, s.timeEnd) : (s.time || '');
+/* "13.00–15.00 WIB" → ['13:00','15:00'] untuk prefill form edit */
+const legacyTimes = s => {
+  const m = String(s||'').match(/\d{1,2}[.:]\d{2}/g) || [];
+  const norm = x => { const p = x.replace('.',':'); return p.length<5 ? '0'+p : p; };
+  return [m[0]?norm(m[0]):'', m[1]?norm(m[1]):''];
+};
 
 /* ══════════════════════════════════════
    PERSISTENCE
@@ -438,11 +797,13 @@ function mergeDb(g={}, b={}){
     members:  mergeArr(g.members||[], b.members||[]),
     groups:   mergeArr(g.groups||[], b.groups||[]),
     schedules: mergeArr(g.schedules||[], b.schedules||[]),
+    assets:   mergeArr(g.assets||[], b.assets||[]),
   };
 }
 /* Normalisasi data lama:
    - format lama punya array `sems` + course.semId → diubah jadi univId + sem (1..8)
-   - field baru (members/groups/schedules + deskripsi/harga/kode kelas) dijamin ada */
+   - field baru (members/groups/schedules/assets + deskripsi/harga/kode kelas
+     + jam/tempat/peserta/catatan notulensi + induk & joinable kelompok) dijamin ada */
 function migrate(d){
   d = {...emptyDb(), ...(d||{})};
   if(Array.isArray(d.sems) && d.sems.length){
@@ -468,9 +829,25 @@ function migrate(d){
     if(c.classCode === undefined) c.classCode = '';
     if(!c.paid){ c.price = ''; c.classCode = ''; }   /* gratis: tanpa harga & tanpa kode */
   });
+  d.meetings.forEach(m=>{
+    if(m.time === undefined) m.time = '';
+    if(m.place === undefined) m.place = '';
+    if(m.peserta === undefined) m.peserta = '';
+    if(m.catatan === undefined) m.catatan = '';
+    if(m.decisions === undefined) m.decisions = '';
+  });
+  d.groups.forEach(g=>{
+    if(g.parentId === undefined) g.parentId = '';
+    if(g.joinable === undefined) g.joinable = true;
+  });
+  d.schedules.forEach(s=>{
+    if(s.timeStart === undefined) s.timeStart = '';
+    if(s.timeEnd === undefined) s.timeEnd = '';
+  });
   d.members  = Array.isArray(d.members)  ? d.members  : [];
   d.groups   = Array.isArray(d.groups)   ? d.groups   : [];
   d.schedules = Array.isArray(d.schedules) ? d.schedules : [];
+  d.assets   = Array.isArray(d.assets)   ? d.assets   : [];
   delete d.sems;
   return d;
 }
@@ -540,14 +917,19 @@ window.addEventListener('beforeunload', ()=>{
   clearTimeout(_timer);
   navigator.sendBeacon(WORKER_URL, new Blob([JSON.stringify(db)], {type:'application/json'}));
 });
+let SYNC_OK = false;
 function setSync(ok){
-  const d = document.getElementById('syncDot'), t = document.getElementById('syncTxt');
+  SYNC_OK = !!ok;
+  paintSync();
+}
+function paintSync(){
+  const d = document.getElementById('syncDot'), tx = document.getElementById('syncTxt');
   if(!d) return;
-  d.classList.toggle('on', !!ok);
-  if(ok)              t.textContent = useWorker() ? 'Sinkron' : 'Sinkron Gist';
-  else if(synced())   t.textContent = 'Menyimpan…';
-  else                t.textContent = 'Lokal saja';
-  t.style.display = 'inline';
+  d.classList.toggle('on', SYNC_OK);
+  if(SYNC_OK)        tx.textContent = useWorker() ? t('syncWorker') : t('syncGist');
+  else if(synced())  tx.textContent = t('syncSaving');
+  else               tx.textContent = t('syncLocal');
+  tx.style.display = 'inline';
 }
 
 /* ══════════════════════════════════════
@@ -564,7 +946,7 @@ function addUniv(name){
 }
 function delUniv(id){
   const u = getUniv(id); if(!u) return;
-  if(!confirm(`Hapus "${u.name}"? Semua mata kuliah, jadwal, dan riwayat pertemuannya ikut terhapus.`)) return;
+  if(!confirm(t('delUnivQ').replace('{n}', u.name))) return;
   const crsIds  = coursesOf(id).map(c=>c.id);
   const meetIds = db.meetings.filter(m=>crsIds.includes(m.courseId)).map(m=>m.id);
   markDeleted(db.topics.filter(t=>meetIds.includes(t.meetingId)));
@@ -593,7 +975,7 @@ function editCourse(id, name, code, lecturer, paid, desc, price, classCode){
 }
 function delCourse(id){
   const c = getCourse(id); if(!c) return;
-  if(!confirm(`Hapus mata kuliah "${c.name}"? Jadwal dan riwayat pertemuannya ikut terhapus.`)) return;
+  if(!confirm(t('delCourseQ').replace('{n}', c.name))) return;
   const meetIds = db.meetings.filter(m=>m.courseId===id).map(m=>m.id);
   markDeleted(db.topics.filter(t=>meetIds.includes(t.meetingId)));
   markDeleted(db.meetings.filter(m=>meetIds.includes(m.id)));
@@ -602,20 +984,24 @@ function delCourse(id){
   if(openCourse===id){ openCourse = null; go('#/matkul'); return; }
   save(); render();
 }
-function addMeeting(courseId, no, date, title){
+function addMeeting(courseId, v){
   const ord = Math.max(-1, ...liveMeets(courseId).map(m=>m.no||0)) + 1;
-  const m = touch({id:uid(), courseId, no: no||ord, date: date||'', title: title||''});
+  const m = touch({id:uid(), courseId, no: v.no||ord, date: v.date||'', title: v.title||'',
+    time: v.time||'', place: v.place||'', peserta: v.peserta||'',
+    catatan: v.catatan||'', decisions: v.decisions||''});
   db.meetings.push(m);
   save(); render();
 }
-function editMeeting(id, no, date, title){
+function editMeeting(id, v){
   const m = getMeet(id); if(!m) return;
-  m.no = no||m.no; m.date = date||''; m.title = title||'';
+  m.no = v.no||m.no; m.date = v.date||''; m.title = v.title||'';
+  m.time = v.time||''; m.place = v.place||''; m.peserta = v.peserta||'';
+  m.catatan = v.catatan||''; m.decisions = v.decisions||'';
   touch(m); save(); render();
 }
 function delMeeting(id){
   const m = getMeet(id); if(!m) return;
-  if(!confirm(`Hapus pertemuan ${m.no} beserta topik-topiknya?`)) return;
+  if(!confirm(t('delMeetQ').replace('{n}', m.no))) return;
   markDeleted(db.topics.filter(t=>t.meetingId===id));
   markDeleted([m]);
   save(); render();
@@ -648,7 +1034,9 @@ function addSchedule(v){
     courseId: v.courseId,
     day: v.day || 'Senin',
     date: v.date || '',
-    time: v.time || '',
+    timeStart: v.timeStart || '',
+    timeEnd: v.timeEnd || '',
+    time: fmtRange(v.timeStart, v.timeEnd),   /* turunan, untuk tampilan & data lama */
     mode: v.mode === 'Offline' ? 'Offline' : 'Online',
     place: v.place || '',
     mentor: v.mentor || '',
@@ -660,34 +1048,73 @@ function addSchedule(v){
 function editSchedule(id, v){
   const s = getSched(id); if(!s) return;
   s.courseId = v.courseId; s.day = v.day || s.day; s.date = v.date || '';
-  s.time = v.time || ''; s.mode = v.mode === 'Offline' ? 'Offline' : 'Online';
+  s.timeStart = v.timeStart || ''; s.timeEnd = v.timeEnd || '';
+  s.time = fmtRange(v.timeStart, v.timeEnd);
+  s.mode = v.mode === 'Offline' ? 'Offline' : 'Online';
   s.place = v.place || ''; s.mentor = v.mentor || ''; s.participants = v.participants || '';
   touch(s); save(); render();
 }
 function delSchedule(id){
   const s = getSched(id); if(!s) return;
-  if(!confirm('Hapus jadwal ini?')) return;
+  if(!confirm(t('delSchedQ'))) return;
   markDeleted([s]); save(); render();
+}
+
+/* ══════════════════════════════════════
+   INVENTARIS ASET
+   ══════════════════════════════════════ */
+function addAsset(v){
+  const ord = Math.max(-1, ...liveAssets().map(a=>a.ord||0)) + 1;
+  db.assets.push(touch({
+    id:uid(), name: v.name, category: v.category||'', qty: v.qty||'',
+    unit: v.unit||'', url: v.url||'', boughtAt: v.boughtAt||'', notes: v.notes||'',
+    ord,
+  }));
+  save(); render();
+}
+function editAsset(id, v){
+  const a = getAsset(id); if(!a) return;
+  a.name = v.name; a.category = v.category||''; a.qty = v.qty||'';
+  a.unit = v.unit||''; a.url = v.url||''; a.boughtAt = v.boughtAt||''; a.notes = v.notes||'';
+  touch(a); save(); render();
+}
+function delAsset(id){
+  const a = getAsset(id); if(!a) return;
+  if(!confirm(t('delAssetQ').replace('{n}', a.name))) return;
+  markDeleted([a]); save(); render();
 }
 
 /* ══════════════════════════════════════
    TIM PENGAJAR — anggota & kelompok
    ══════════════════════════════════════ */
-function addGroup(name){
+function addGroup(name, parentId, joinable){
   const ord = Math.max(-1, ...liveGroups().map(g=>g.ord||0)) + 1;
-  const g = touch({id:uid(), name, ord});
+  const g = touch({id:uid(), name, parentId: parentId||'', joinable: joinable !== false, ord});
   db.groups.push(g);
   save(); render();
   return g;
 }
-function editGroup(id, name){
+function addGroups(list){              /* simpan banyak baris sekaligus (multi-row) */
+  let ord = Math.max(-1, ...liveGroups().map(g=>g.ord||0));
+  list.forEach(v=>{
+    if(!v.name) return;
+    ord += 1;
+    db.groups.push(touch({
+      id:uid(), name: v.name, parentId: v.parentId||'', joinable: v.joinable !== false, ord,
+    }));
+  });
+  save(); render();
+}
+function editGroup(id, name, parentId, joinable){
   const g = getGroup(id); if(!g) return;
-  g.name = name; touch(g); save(); render();
+  g.name = name; g.parentId = parentId||''; g.joinable = joinable !== false;
+  touch(g); save(); render();
 }
 function delGroup(id){
   const g = getGroup(id); if(!g) return;
-  if(!confirm(`Hapus kelompok "${g.name}"? Anggota di dalamnya tetap ada, hanya jadi tanpa kelompok.`)) return;
+  if(!confirm(t('delGroupQ').replace('{n}', g.name))) return;
   db.members.filter(m=>m.groupId===id).forEach(m=>{ m.groupId = ''; touch(m); });
+  db.groups.filter(x=>x.parentId===id).forEach(x=>{ x.parentId = ''; touch(x); });
   markDeleted([g]); save(); render();
 }
 function addMember(v){
@@ -724,7 +1151,7 @@ function editMember(id, v){
 }
 function delMember(id){
   const m = getMember(id); if(!m) return;
-  if(!confirm(`Hapus anggota "${m.shortName}"?`)) return;
+  if(!confirm(t('delMemberQ').replace('{n}', m.shortName))) return;
   markDeleted([m]); save(); render();
 }
 
@@ -735,9 +1162,9 @@ function openForm(title, fields, onSave){
   const wrap = document.getElementById('modalWrap');
   const card = document.getElementById('modalCard');
   card.innerHTML = '';
-  const t = document.createElement('div');
-  t.className = 'modal-title'; t.textContent = title;
-  card.appendChild(t);
+  const titleEl = document.createElement('div');
+  titleEl.className = 'modal-title'; titleEl.textContent = title;
+  card.appendChild(titleEl);
 
   const form = document.createElement('form');
   fields.forEach(f=>{
@@ -803,8 +1230,8 @@ function openForm(title, fields, onSave){
   form.appendChild(err);
 
   const bar = document.createElement('div'); bar.className = 'modal-bar';
-  const cancel = document.createElement('button'); cancel.type = 'button'; cancel.className = 'btn'; cancel.textContent = 'Batal';
-  const ok = document.createElement('button'); ok.type = 'submit'; ok.className = 'btn btn-primary'; ok.textContent = 'Simpan';
+  const cancel = document.createElement('button'); cancel.type = 'button'; cancel.className = 'btn'; cancel.textContent = t('btnBatal');
+  const ok = document.createElement('button'); ok.type = 'submit'; ok.className = 'btn btn-primary'; ok.textContent = t('btnSimpan');
   bar.append(cancel, ok);
   form.appendChild(bar);
 
@@ -816,7 +1243,7 @@ function openForm(title, fields, onSave){
       ? !!form.elements[f.key].checked
       : ((form.elements[f.key].value || '').trim()));
     const miss = fields.find(f => f.required && f.type !== 'checkbox' && !vals[f.key]);
-    if(miss){ err.textContent = `"${miss.label}" wajib diisi.`; return; }
+    if(miss){ err.textContent = t('errRequired').replace('{n}', miss.label); return; }
     closeForm();
     onSave(vals);
   };
@@ -838,46 +1265,44 @@ function openGistPanel(){
   const card = document.getElementById('modalCard');
   card.innerHTML = '';
 
-  const t = document.createElement('div');
-  t.className = 'modal-title'; t.textContent = 'Koneksi Gist';
-  card.appendChild(t);
+  const tEl = document.createElement('div');
+  tEl.className = 'modal-title'; tEl.textContent = t('gistTitle');
+  card.appendChild(tEl);
 
   const st = document.createElement('div');
   st.className = 'gist-status';
-  st.textContent = useWorker()
-    ? 'Mode aktif: lewat Worker (WORKER_URL terisi di kode).'
-    : (synced() ? 'Mode aktif: Gist langsung dari browser.'
-                : 'Mode aktif: lokal saja — data baru tersimpan di browser ini.');
+  st.textContent = useWorker() ? t('gistStatusWorker')
+                : (synced() ? t('gistStatusLocal') : t('gistStatusDirect'));
   card.appendChild(st);
 
   const form = document.createElement('form');
 
   const r1 = document.createElement('label'); r1.className = 'frow';
-  const l1 = document.createElement('span'); l1.className = 'flabel'; l1.textContent = 'Gist ID';
+  const l1 = document.createElement('span'); l1.className = 'flabel'; l1.textContent = t('gistGistId');
   const gi = document.createElement('input');
-  gi.name = 'gid'; gi.placeholder = 'id gist, contoh: a1b2c3d4e5f6…'; gi.autocomplete = 'off';
+  gi.name = 'gid'; gi.placeholder = 'a1b2c3d4e5f6…'; gi.autocomplete = 'off';
   gi.value = isSet(GIST_ID) ? GIST_ID : (localStorage.getItem(LS_GIST_ID) || '');
   if(isSet(GIST_ID)) gi.readOnly = true;
   r1.append(l1, gi); form.appendChild(r1);
 
   const r2 = document.createElement('label'); r2.className = 'frow';
-  const l2 = document.createElement('span'); l2.className = 'flabel'; l2.textContent = 'Token GitHub (PAT, scope: gist)';
+  const l2 = document.createElement('span'); l2.className = 'flabel'; l2.textContent = t('gistPat');
   const pw = document.createElement('div'); pw.className = 'gist-pass';
   const pt = document.createElement('input');
   pt.name = 'pat'; pt.type = 'password'; pt.placeholder = 'ghp_…'; pt.autocomplete = 'off';
   pt.value = localStorage.getItem(LS_GIST_PAT) || '';
   const eye = document.createElement('button');
   eye.type = 'button'; eye.className = 'gate-eye'; eye.innerHTML = ICON_EYE;
-  eye.title = 'Tampilkan / sembunyikan token';
+  eye.title = t('gateEye');
   eye.onclick = ()=>{ const show = pt.type === 'password'; pt.type = show ? 'text' : 'password'; eye.innerHTML = show ? ICON_OFF : ICON_EYE; pt.focus(); };
   pw.append(pt, eye); r2.append(l2, pw); form.appendChild(r2);
 
   const err = document.createElement('div'); err.className = 'ferr'; form.appendChild(err);
 
   const bar = document.createElement('div'); bar.className = 'modal-bar';
-  const del = document.createElement('button'); del.type = 'button'; del.className = 'btn'; del.textContent = 'Putuskan';
-  const cancel = document.createElement('button'); cancel.type = 'button'; cancel.className = 'btn'; cancel.textContent = 'Batal';
-  const ok = document.createElement('button'); ok.type = 'submit'; ok.className = 'btn btn-primary'; ok.textContent = 'Hubungkan';
+  const del = document.createElement('button'); del.type = 'button'; del.className = 'btn'; del.textContent = t('gistBtnDisconnect');
+  const cancel = document.createElement('button'); cancel.type = 'button'; cancel.className = 'btn'; cancel.textContent = t('btnBatal');
+  const ok = document.createElement('button'); ok.type = 'submit'; ok.className = 'btn btn-primary'; ok.textContent = t('gistBtnConnect');
   bar.append(del, cancel, ok); form.appendChild(bar);
 
   del.onclick = ()=>{ localStorage.removeItem(LS_GIST_ID); localStorage.removeItem(LS_GIST_PAT); location.reload(); };
@@ -885,35 +1310,34 @@ function openGistPanel(){
   form.onsubmit = async e => {
     e.preventDefault();
     const id = gi.value.trim(), pat = pt.value.trim();
-    if(!id){ err.textContent = 'Gist ID wajib diisi.'; return; }
-    if(!pat){ err.textContent = 'Token wajib diisi.'; return; }
-    ok.disabled = true; ok.textContent = 'Mengecek…'; err.textContent = '';
+    if(!id){ err.textContent = t('errGistId'); return; }
+    if(!pat){ err.textContent = t('errGistPat'); return; }
+    ok.disabled = true; ok.textContent = t('gistCheck'); err.textContent = '';
     try{
       const url = `https://api.github.com/gists/${id}`;
       const h = {'Accept':'application/vnd.github+json','Authorization':`Bearer ${pat}`};
       const r = await fetch(url, {headers:h});
-      if(r.status === 401) throw new Error('Token tidak valid / sudah kedaluwarsa.');
-      if(r.status === 404) throw new Error('Gist tidak ditemukan, atau token tidak punya akses ke gist itu.');
-      if(!r.ok) throw new Error('GitHub balas HTTP ' + r.status + '.');
+      if(r.status === 401) throw new Error(t('errGist401'));
+      if(r.status === 404) throw new Error(t('errGist404'));
+      if(!r.ok) throw new Error(fmtTpl(t('gistHttpErr'), r.status) + '.');
       const g = await r.json();
       if(!g.files?.[GIST_FILE]){
         const p = await fetch(url, {method:'PATCH', headers:{...h, 'Content-Type':'application/json'},
           body:JSON.stringify({files:{[GIST_FILE]:{content:JSON.stringify(emptyDb(), null, 2)}}})});
-        if(!p.ok) throw new Error('Gagal membuat file ' + GIST_FILE + ' (HTTP ' + p.status + ').');
+        if(!p.ok) throw new Error(t('gistCreateFail') + ' (HTTP ' + p.status + ').');
       }
       localStorage.setItem(LS_GIST_ID, id);
       localStorage.setItem(LS_GIST_PAT, pat);
       location.reload();
     }catch(ex){
       err.textContent = ex.message;
-      ok.disabled = false; ok.textContent = 'Hubungkan';
+      ok.disabled = false; ok.textContent = t('gistBtnConnect');
     }
   };
   card.appendChild(form);
 
   const help = document.createElement('div'); help.className = 'gist-help';
-  help.innerHTML = 'Buat gist secret di <b>gist.github.com</b>, lalu tempel <b>Gist ID</b> + token PAT (scope <b>gist</b>) di atas. ' +
-    `File <code>${GIST_FILE}</code> dibuat otomatis bila belum ada. Token disimpan di browser admin (localStorage), tidak pernah masuk ke repository.`;
+  help.innerHTML = t('gistHelpHtml') + ` <code>${GIST_FILE}</code> ` + t('gistHelpTail');
   card.appendChild(help);
 
   wrap.style.display = 'flex';
@@ -927,14 +1351,16 @@ function miniBtn(txt, cls, fn){
 }
 
 /* ══════════════════════════════════════
-   ROUTING — 3 navigasi dengan URL sendiri
-   #/univ · #/matkul · #/matkul/<id> · #/jadwal
+   ROUTING — 4 navigasi dengan URL sendiri
+   #/univ · #/matkul · #/matkul/<id> · #/jadwal · #/inventaris
    ══════════════════════════════════════ */
-const TABS = ['univ','matkul','jadwal'];
+const TABS = ['univ','matkul','jadwal','inv'];
+const TAB_ALIAS = {inventaris:'inv'};          /* URL ramah: #/inventaris */
 function route(){
   const h = (location.hash || '').replace(/^#\/?/, '');
   const [tab, id] = h.split('/');
-  curTab = TABS.includes(tab) ? tab : 'univ';
+  const key = TAB_ALIAS[tab] || tab;
+  curTab = TABS.includes(key) ? key : 'univ';
   /* #/matkul/<id> → detail; #/matkul (tanpa id) → kembali ke daftar */
   openCourse = (curTab === 'matkul' && id) ? (getCourse(id) ? id : null) : null;
 }
@@ -948,16 +1374,19 @@ window.addEventListener('hashchange', ()=>{ route(); render(); });
    RENDER
    ══════════════════════════════════════ */
 function render(){
+  applyLang();
   const on = (id, show)=>{ const el = document.getElementById(id); if(el) el.style.display = show ? '' : 'none'; };
   on('tabUniv',   curTab === 'univ');
   on('tabMatkul', curTab === 'matkul');
   on('tabJadwal', curTab === 'jadwal');
+  on('tabInv',    curTab === 'inv');
   document.querySelectorAll('#tabs .tab').forEach(a=>a.classList.toggle('active', a.dataset.tab === curTab));
 
   renderUnivs();
   renderSems();
   renderMembers();
   renderSchedules();
+  renderAssets();
   if(openCourse && getCourse(openCourse)) renderDetail(openCourse);
   else { openCourse = null; renderCourses(); }
 }
@@ -968,7 +1397,7 @@ function renderUnivs(){
   const list = liveUnivs();
   if(!list.length){
     const e = document.createElement('div');
-    e.className = 'empty'; e.textContent = 'Belum ada universitas. Klik "+ Tambah" untuk mulai.';
+    e.className = 'empty'; e.textContent = t('emptyUniv');
     box.appendChild(e);
   }
   list.forEach(u=>{
@@ -979,7 +1408,7 @@ function renderUnivs(){
     btn.onclick = ()=>{ selUniv = u.id; selSem = null; openCourse = null; render(); };
     chip.appendChild(btn);
     const del = document.createElement('button');
-    del.className = 'chip-del'; del.textContent = '🗑'; del.title = 'Hapus universitas';
+    del.className = 'chip-del'; del.textContent = '🗑'; del.title = t('delTitle');
     del.onclick = ()=>delUniv(u.id);
     chip.appendChild(del);
     box.appendChild(chip);
@@ -987,8 +1416,10 @@ function renderUnivs(){
   const add = document.createElement('div');
   add.className = 'chip add';
   const addBtn = document.createElement('button');
-  addBtn.className = 'chip-btn'; addBtn.textContent = '+ Tambah';
-  addBtn.onclick = ()=> openForm('Tambah Universitas', [{key:'name',label:'Nama Universitas',placeholder:'Contoh: Universitas Astrindo',required:true}], v=>addUniv(v.name));
+  addBtn.className = 'chip-btn'; addBtn.textContent = t('addChip');
+  addBtn.onclick = ()=> openForm(t('titleAddUniv'),
+    [{key:'name',label:t('fUnivName'),placeholder:t('phUniv'),required:true}],
+    v=>addUniv(v.name));
   add.appendChild(addBtn);
   box.appendChild(add);
 }
@@ -999,9 +1430,9 @@ function renderSems(){
   if(!selUniv){
     const e = document.createElement('div');
     e.className = 'empty';
-    e.textContent = 'Pilih universitas dulu di tab Universitas. ';
+    e.textContent = t('pickUnivFirst');
     const b = document.createElement('button');
-    b.className = 'btn btn-sm'; b.textContent = 'Buka tab Universitas';
+    b.className = 'btn btn-sm'; b.textContent = t('btnGoUniv');
     b.onclick = ()=>go('#/univ');
     e.appendChild(b);
     box.appendChild(e);
@@ -1012,7 +1443,7 @@ function renderSems(){
     const chip = document.createElement('div');
     chip.className = 'chip' + (selSem === n ? ' active' : '');
     const btn = document.createElement('button');
-    btn.className = 'chip-btn'; btn.textContent = `Semester ${n}`;
+    btn.className = 'chip-btn'; btn.textContent = `${t('lblSemester')} ${n}`;
     btn.onclick = ()=>{ selSem = n; openCourse = null; render(); };
     chip.appendChild(btn);
     box.appendChild(chip);
@@ -1024,16 +1455,14 @@ function renderSems(){
 function courseFormFields(c){
   c = c || {};
   return [
-    {key:'name',label:'Nama Mata Kuliah',value:c.name,placeholder:'Contoh: Basis Data',required:true},
-    {key:'code',label:'Kode',value:c.code,placeholder:'Contoh: IF201'},
-    {key:'desc',label:'Deskripsi',type:'textarea',rows:3,value:c.desc,placeholder:'Ringkasan singkat isi mata kuliah… (boleh panjang)'},
-    {key:'lecturer',label:'Pengajar',value:c.lecturer,placeholder:'Nama pengajar'},
-    {key:'paid',label:'Program berbayar',type:'checkbox',value:!!c.paid,
-     note:'Centang bila kelas ini berbayar. Nominal harga & kode kelas hanya muncul untuk kelas berbayar — tanpa centang = gratis.'},
-    {key:'price',label:'Nominal Harga (Rp)',type:'number',value:c.price,placeholder:'Contoh: 150000',showIf:'paid',
-     note:'Angka rupiah tanpa titik — 150000 tampil jadi Rp 150.000.'},
-    {key:'classCode',label:'Kode Kelas',value:c.classCode,placeholder:'Contoh: BD-2026',showIf:'paid',
-     note:'Otomatis tampil di card & detail. Bagikan kode ini hanya ke peserta kelas berbayar.'},
+    {key:'name',label:t('fCourseName'),value:c.name,placeholder:t('phCourse'),required:true},
+    {key:'code',label:t('fCode'),value:c.code,placeholder:t('phCode')},
+    {key:'desc',label:t('fDesc'),type:'textarea',rows:3,value:c.desc,placeholder:t('phDesc')},
+    {key:'lecturer',label:t('fLecturer'),value:c.lecturer,placeholder:t('phLecturer')},
+    {key:'paid',label:t('fPaid'),type:'checkbox',value:!!c.paid, note:t('notePaid')},
+    {key:'price',label:t('fPrice'),type:'number',value:c.price,placeholder:t('phPrice'),showIf:'paid',
+     note:'150000 → Rp 150.000.'},
+    {key:'classCode',label:t('fClassCode'),value:c.classCode,placeholder:t('phClassCode'),showIf:'paid'},
   ];
 }
 
@@ -1046,13 +1475,13 @@ function renderCourses(){
   grid.innerHTML = '';
 
   if(!selUniv || !selSem){
-    head.textContent = 'Mata Kuliah';
+    head.textContent = t('courseListHead');
     const e = document.createElement('div');
     e.className = 'empty';
-    e.textContent = selUniv ? 'Pilih semester di atas.' : 'Pilih universitas dulu di tab Universitas. ';
+    e.textContent = selUniv ? t('pickSemHint') : t('pickUnivFirst');
     if(!selUniv){
       const b = document.createElement('button');
-      b.className = 'btn btn-sm'; b.textContent = 'Buka tab Universitas';
+      b.className = 'btn btn-sm'; b.textContent = t('btnGoUniv');
       b.onclick = ()=>go('#/univ');
       e.appendChild(b);
     }
@@ -1060,11 +1489,11 @@ function renderCourses(){
     return;
   }
   const u = getUniv(selUniv);
-  head.textContent = `Mata Kuliah — ${u.name} · Semester ${selSem}`;
+  head.textContent = `${t('headCourse')} — ${u.name} · ${t('lblSemester')} ${selSem}`;
 
   const list = liveCourses(selUniv, selSem);
   if(!list.length){
-    grid.innerHTML = '<div class="empty">Belum ada mata kuliah. Klik "+ Tambah Mata Kuliah".</div>';
+    grid.innerHTML = `<div class="empty">${esc(t('emptyCourse'))}</div>`;
     return;
   }
   list.forEach(c=>{
@@ -1076,23 +1505,23 @@ function renderCourses(){
     /* baris harga + kode kelas: hanya untuk kelas berbayar */
     const payBits = [];
     if(c.paid && c.price) payBits.push('💰 ' + esc(rupiah(c.price)));
-    if(c.paid && c.classCode) payBits.push(`<span class="pill kcode">🔑 Kode: ${esc(c.classCode)}</span>`);
+    if(c.paid && c.classCode) payBits.push(`<span class="pill kcode">🔑 ${esc(t('lblClassCode'))}: ${esc(c.classCode)}</span>`);
     const payRow = payBits.length ? `<div class="price">${payBits.join(' ')}</div>` : '';
 
     const card = document.createElement('div');
     card.className = 'card';
     card.innerHTML = `
-      <h3>${esc(c.name)}<span class="tag ${c.paid?'paid':'free'}">${c.paid?'Berbayar':'Gratis'}</span></h3>
+      <h3>${esc(c.name)}<span class="tag ${c.paid?'paid':'free'}">${c.paid?t('lblPaid'):t('lblFree')}</span></h3>
       ${c.desc ? `<div class="desc">${esc(c.desc)}</div>` : ''}
       <div class="sub">${[c.code, c.lecturer].filter(Boolean).map(esc).join(' · ') || '—'}</div>
       ${payRow}
       <div class="card-foot">
-        <span class="pill">${meets.length} pertemuan</span>
-        <span class="pill">Topik <b>${done}/${topics.length}</b></span>
+        <span class="pill">${meets.length} ${esc(t('lblMeetings'))}</span>
+        <span class="pill">${esc(t('lblTopics'))} <b>${done}/${topics.length}</b></span>
         <span class="bar"><i style="width:${pct}%"></i></span>
       </div>`;
     const ed = document.createElement('div'); ed.className = 'card-edit';
-    ed.appendChild(miniBtn('✎','', ()=> openForm('Ubah Mata Kuliah', courseFormFields(c),
+    ed.appendChild(miniBtn('✎','', ()=> openForm(t('titleEditCourse'), courseFormFields(c),
       v=>editCourse(c.id, v.name, v.code, v.lecturer, v.paid, v.desc, v.price, v.classCode))));
     ed.appendChild(miniBtn('🗑','danger', ()=>delCourse(c.id)));
     card.appendChild(ed);
@@ -1107,9 +1536,9 @@ function renderDetail(courseId){
 
   const c = getCourse(courseId);
   const u = getUniv(c.univId);
-  document.getElementById('dTitle').innerHTML = `${esc(c.name)}<span class="tag ${c.paid?'paid':'free'}">${c.paid?'Berbayar':'Gratis'}</span>`;
+  document.getElementById('dTitle').innerHTML = `${esc(c.name)}<span class="tag ${c.paid?'paid':'free'}">${c.paid?t('lblPaid'):t('lblFree')}</span>`;
   document.getElementById('dMeta').innerHTML =
-    `<span>🏛 ${esc(u?u.name:'—')}</span><span>📅 Semester ${esc(c.sem||1)}</span>` +
+    `<span>🏛 ${esc(u?u.name:'—')}</span><span>📅 ${esc(t('lblSemester'))} ${esc(c.sem||1)}</span>` +
     `${c.code?`<span>🔖 ${esc(c.code)}</span>`:''}${c.lecturer?`<span>👤 ${esc(c.lecturer)}</span>`:''}`;
 
   /* deskripsi mata kuliah */
@@ -1119,18 +1548,18 @@ function renderDetail(courseId){
   /* harga & kode kelas: hanya tampil untuk kelas berbayar */
   document.getElementById('dPayWrap').innerHTML = c.paid
     ? `<div class="d-pay">` +
-      (c.price ? `<span>💰 Harga: <b>${esc(rupiah(c.price))}</b></span>` : '') +
-      (c.classCode ? `<span>🔑 Kode Kelas: <b>${esc(c.classCode)}</b></span>` : '<span>Belum ada kode kelas.</span>') +
+      (c.price ? `<span>💰 ${esc(t('lblPrice'))}: <b>${esc(rupiah(c.price))}</b></span>` : '') +
+      (c.classCode ? `<span>🔑 ${esc(t('lblClassCode'))}: <b>${esc(c.classCode)}</b></span>` : `<span>${esc(t('classCodeEmpty'))}</span>`) +
       `</div>`
     : '';
 
   /* jadwal mata kuliah ini */
   const scheds = schedsOf(courseId);
-  document.getElementById('dSchedHead').textContent = `Jadwal (${scheds.length})`;
+  document.getElementById('dSchedHead').textContent = `${t('secSched')} (${scheds.length})`;
   const sbox = document.getElementById('dSchedList');
   sbox.innerHTML = '';
   if(!scheds.length){
-    sbox.innerHTML = '<div class="empty">Belum ada jadwal. Klik "+ Tambah Jadwal".</div>';
+    sbox.innerHTML = `<div class="empty">${esc(t('emptySchedShort'))}</div>`;
   } else {
     scheds.forEach(s=>sbox.appendChild(schedCard(s)));
   }
@@ -1138,10 +1567,10 @@ function renderDetail(courseId){
   const list = document.getElementById('meetingList');
   list.innerHTML = '';
   const meets = liveMeets(courseId);
-  document.getElementById('dMeetHead').textContent = `Riwayat Pertemuan (${meets.length})`;
+  document.getElementById('dMeetHead').textContent = `${t('secMeet')} (${meets.length})`;
 
   if(!meets.length){
-    list.innerHTML = '<div class="empty">Belum ada pertemuan. Klik "+ Tambah Pertemuan".</div>';
+    list.innerHTML = `<div class="empty">${esc(t('emptyMeetShort'))}</div>`;
     return;
   }
   meets.forEach(m=>list.appendChild(renderMeeting(m)));
@@ -1155,23 +1584,22 @@ function schedCard(s){
   const u = c ? getUniv(c.univId) : null;
   const online = s.mode !== 'Offline';
 
-  const when = [esc(s.day || '—')];
+  const when = [esc(dayName(s.day) || '—')];
   if(s.date){
-    const d = new Date(s.date + 'T00:00:00');
-    when.push(isNaN(d) ? esc(s.date) : d.toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'}));
+    when.push(esc(dateFmt(s.date)));
   } else {
-    when.push('berkelanjutan');
+    when.push(esc(t('lblBerkelanjutan')));
   }
   const people = [];
-  if(s.mentor) people.push('👤 Mentor: ' + esc(s.mentor));
-  if(s.participants) people.push('👥 Peserta:\n' + esc(s.participants));
+  if(s.mentor) people.push('👤 ' + esc(t('lblMentor')) + ': ' + esc(s.mentor));
+  if(s.participants) people.push('👥 ' + esc(t('lblPeserta')) + ':\n' + esc(s.participants));
 
   const el = document.createElement('div');
   el.className = 'sched';
   el.dataset.sid = s.id;
   el.innerHTML = `
-    <h3>${esc(c ? c.name : 'Mata kuliah terhapus')}${u?` <span style="font-weight:400;font-size:.68rem;color:var(--muted)">· ${esc(u.name)} · Sem ${c.sem||1}</span>`:''}<span class="tag ${online?'on':'off'}">${online?'Online':'Offline'}</span></h3>
-    <div class="s-when"><span>🗓 ${when.join(' · ')}</span>${s.time?`<span>🕐 ${esc(s.time)}</span>`:''}</div>
+    <h3>${esc(c ? c.name : t('courseDeleted'))}${u?` <span style="font-weight:400;font-size:.68rem;color:var(--muted)">· ${esc(u.name)} · ${esc(t('semShort'))} ${c.sem||1}</span>`:''}<span class="tag ${online?'on':'off'}">${online?'Online':'Offline'}</span></h3>
+    <div class="s-when"><span>🗓 ${when.join(' · ')}</span>${schedTime(s)?`<span>🕐 ${esc(schedTime(s))}</span>`:''}</div>
     ${s.place?`<div class="s-where">${online?'🔗':'📍'} ${esc(s.place)}</div>`:''}
     ${people.length?`<div class="s-people">${people.join('\n')}</div>`:''}`;
   const ed = document.createElement('div'); ed.className = 'card-edit';
@@ -1187,9 +1615,9 @@ function renderSchedules(){
   if(!list) return;
   list.innerHTML = '';
   const all = liveScheds();
-  head.textContent = `Semua Jadwal (${all.length})`;
+  head.textContent = `${t('schedListHead')} (${all.length})`;
   if(!all.length){
-    list.innerHTML = '<div class="empty">Belum ada jadwal. Klik "+ Tambah Jadwal" untuk mengusulkan jadwal mentoring.</div>';
+    list.innerHTML = `<div class="empty">${esc(t('emptySched'))}</div>`;
     return;
   }
   all.forEach(s=>list.appendChild(schedCard(s)));
@@ -1201,23 +1629,120 @@ function openScheduleForm(s, courseIdPrefill){
     const u = getUniv(c.univId);
     return {value:c.id, label:`${c.name} — ${u?u.name:''} · Sem ${c.sem||1}`};
   });
-  const memberOpts = [{value:'', label:'— Belum ditentukan —'}]
+  const memberOpts = [{value:'', label:t('optNoMentor')}]
     .concat(liveMembers().map(m=>({value:m.shortName, label: m.shortName + (m.role ? ` (${m.role})` : '')})));
+  const [legStart, legEnd] = legacyTimes(s.time);
 
-  openForm(s.id ? 'Ubah Jadwal' : 'Tambah Jadwal', [
-    {key:'courseId', label:'Mata Kuliah', type:'select', options:courseOpts,
+  openForm(s.id ? t('titleEditSched') : t('titleAddSched'), [
+    {key:'courseId', label:t('fCourseSched'), type:'select', options:courseOpts,
      value: s.courseId || courseIdPrefill || (courseOpts[0]||{}).value || '', required:true,
-     note:'Pilih mata kuliah yang jadwalnya diusulkan.'},
-    {key:'day', label:'Hari', type:'select', options:DAYS, value: s.day || 'Senin', required:true},
-    {key:'date', label:'Tanggal', type:'date', value: s.date, note:'Isi tanggal pelaksanaan. Kosongkan bila jadwal berkelanjutan (tiap minggu).'},
-    {key:'time', label:'Jam', value: s.time, placeholder:'Contoh: 13.00–15.00 WIB', required:true, note:'Waktu pelaksana mentoring.'},
-    {key:'mode', label:'Pelaksanaan', type:'select', options:['Online','Offline'], value: s.mode || 'Online'},
-    {key:'place', label:'Tempat / Tautan', value: s.place, placeholder:'Tautan Zoom/Gmeet (online) atau nama ruangan (offline)'},
-    {key:'mentor', label:'Mentor (siapa yang mentoring)', type:'select', options:memberOpts, value: s.mentor || '',
-     note:'Pilih dari daftar anggota tim pengajar — tidak perlu ketik manual.'},
-    {key:'participants', label:'Peserta', type:'textarea', rows:3, value: s.participants,
-     placeholder:'Daftar nama peserta… (boleh banyak baris)'},
+     note:t('noteSchedCourse')},
+    {key:'day', label:t('fDay'), type:'select', options:DAYS.map(d=>({value:d, label:dayName(d)})), value: s.day || 'Senin', required:true},
+    {key:'date', label:t('fDate'), type:'date', value: s.date, note:t('noteDateSched')},
+    {key:'timeStart', label:t('fStart'), type:'time', value: s.timeStart || legStart},
+    {key:'timeEnd', label:t('fEnd'), type:'time', value: s.timeEnd || legEnd},
+    {key:'mode', label:t('fModeSched'), type:'select', options:['Online','Offline'], value: s.mode || 'Online'},
+    {key:'place', label:t('fSchedPlace'), value: s.place, placeholder:t('phSchedPlace')},
+    {key:'mentor', label:t('fMentor'), type:'select', options:memberOpts, value: s.mentor || '', note:t('noteMentor')},
+    {key:'participants', label:t('lblPeserta'), type:'textarea', rows:3, value: s.participants,
+     placeholder:t('phPeserta')},
   ], v=>{ if(s.id) editSchedule(s.id, v); else addSchedule(v); });
+}
+
+/* ══════════════════════════════════════
+   INVENTARIS ASET — render & form
+   ══════════════════════════════════════ */
+function assetFormFields(a){
+  a = a || {};
+  return [
+    {key:'name', label:t('fAssetName'), value:a.name, placeholder:t('phAsset'), required:true},
+    {key:'category', label:t('fAssetCat'), value:a.category, placeholder:t('phCat')},
+    {key:'qty', label:t('fAssetQty'), type:'number', value:a.qty},
+    {key:'unit', label:t('fAssetUnit'), value:a.unit, placeholder:t('phUnit')},
+    {key:'url', label:t('fAssetUrl'), value:a.url, placeholder:'https://…'},
+    {key:'boughtAt', label:t('fAssetBought'), type:'date', value:a.boughtAt},
+    {key:'notes', label:t('fAssetNotes'), type:'textarea', rows:3, value:a.notes, placeholder:t('phAssetNotes'), note:t('noteLongText')},
+  ];
+}
+
+function renderAssets(){
+  const list = document.getElementById('invList');
+  const head = document.getElementById('invHead');
+  const catSel = document.getElementById('invCat');
+  if(!list) return;
+  const all = liveAssets();
+  if(head) head.textContent = `${t('invHead')} (${all.length})`;
+
+  /* filter kategori (opsi unik dari data) */
+  const cats = assetCats();
+  if(catSel && catSel.dataset.n !== String(cats.length) + '|' + invCat){
+    catSel.dataset.n = cats.length + '|' + invCat;
+    catSel.innerHTML = '';
+    const o0 = document.createElement('option'); o0.value = ''; o0.textContent = t('invAllCat');
+    catSel.appendChild(o0);
+    cats.forEach(c=>{
+      const o = document.createElement('option'); o.value = c; o.textContent = c;
+      if(invCat === c) o.selected = true;
+      catSel.appendChild(o);
+    });
+    if(invCat && !cats.includes(invCat)) invCat = '';   /* kategori sudah tidak ada → reset */
+  }
+
+  const q = (invSearch || '').trim().toLowerCase();
+  const rows = all.filter(a =>
+    (!invCat || a.category === invCat) &&
+    (!q || a.name.toLowerCase().includes(q) ||
+     String(a.notes||'').toLowerCase().includes(q) ||
+     String(a.category||'').toLowerCase().includes(q)));
+
+  const urlCell = v => v ? `<a href="${esc(v)}" target="_blank" rel="noopener">${esc(v.replace(/^https?:\/\//,'').slice(0,28))}${v.length>35?'…':''}</a>` : '—';
+  const table = document.createElement('table');
+  table.className = 'inv-table';
+  table.innerHTML =
+    `<thead><tr><th>#</th><th>${esc(t('thName'))}</th><th>${esc(t('thCat'))}</th><th>${esc(t('thQty'))}</th>` +
+    `<th>${esc(t('thUnit'))}</th><th>${esc(t('thUrl'))}</th><th>${esc(t('thDate'))}</th><th>${esc(t('thNotes'))}</th><th></th></tr></thead>`;
+  const tb = document.createElement('tbody');
+  if(!rows.length){
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td colspan="9" class="inv-empty">${esc(all.length ? t('invNoMatch') : t('emptyInv'))}</td>`;
+    tb.appendChild(tr);
+  }
+  rows.forEach((a, i)=>{
+    const tr = document.createElement('tr');
+    tr.innerHTML =
+      `<td class="num">${i+1}</td>` +
+      `<td><b>${esc(a.name)}</b></td>` +
+      `<td>${esc(a.category || '—')}</td>` +
+      `<td>${esc(a.qty || '—')}</td>` +
+      `<td>${esc(a.unit || '—')}</td>` +
+      `<td>${urlCell(a.url)}</td>` +
+      `<td>${a.boughtAt ? esc(dateFmt(a.boughtAt)) : '—'}</td>` +
+      `<td>${esc(a.notes || '—')}</td>`;
+    const td = document.createElement('td'); td.className = 'acts';
+    td.appendChild(miniBtn('✎','', ()=> openForm(t('titleEditAsset'), assetFormFields(a), v=>editAsset(a.id, v))));
+    td.appendChild(miniBtn('🗑','danger', ()=>delAsset(a.id)));
+    tr.appendChild(td);
+    tb.appendChild(tr);
+  });
+  table.appendChild(tb);
+  list.innerHTML = '';
+  list.appendChild(table);
+}
+
+/* Field form pertemuan — ala notulensi rapat:
+   tanggal, jam, tempat, peserta, agenda, catatan & keputusan/tindak lanjut */
+function meetingFormFields(m, nextNo){
+  m = m || {};
+  return [
+    {key:'no', label:t('fMeetNo'), type:'number', value: m.no !== undefined ? m.no : nextNo},
+    {key:'date', label:t('fDate'), type:'date', value:m.date},
+    {key:'time', label:t('fTime'), type:'time', value:m.time, note:t('noteTimeMeet')},
+    {key:'place', label:t('fPlace'), value:m.place, placeholder:t('phPlace')},
+    {key:'peserta', label:t('fPeserta'), type:'textarea', rows:2, value:m.peserta, placeholder:t('phPeserta')},
+    {key:'title', label:t('fAgenda'), type:'textarea', rows:2, value:m.title, placeholder:t('phAgenda'), note:t('noteLongText')},
+    {key:'catatan', label:t('fNotes'), type:'textarea', rows:4, value:m.catatan, placeholder:t('phNotes'), note:t('noteLongText')},
+    {key:'decisions', label:t('fDecision'), type:'textarea', rows:3, value:m.decisions, placeholder:t('phDecision')},
+  ];
 }
 
 function renderMeeting(m){
@@ -1225,47 +1750,60 @@ function renderMeeting(m){
   el.className = 'meeting';
   el.dataset.mid = m.id;
 
+  const headBits = [`<span class="m-no">${esc(t('lblPertemuan'))} ${esc(m.no)}</span>`];
+  if(m.date) headBits.push(`<span class="m-date">🗓 ${esc(dateFmt(m.date))}</span>`);
+  if(m.time) headBits.push(`<span class="m-date">🕐 ${esc(m.time)}</span>`);
+  if(m.place) headBits.push(`<span class="m-date">📍 ${esc(m.place)}</span>`);
   const head = document.createElement('div');
   head.className = 'm-head';
-  head.innerHTML = `<span class="m-no">PERTEMUAN ${esc(m.no)}</span><span class="m-date">${esc(m.date||'tanpa tanggal')}</span>`;
+  head.innerHTML = headBits.join('');
   const act = document.createElement('div'); act.className = 'm-actions';
-  act.appendChild(miniBtn('✎','', ()=> openForm('Ubah Pertemuan', [
-    {key:'no',label:'Nomor Pertemuan',type:'number',value:m.no},
-    {key:'date',label:'Tanggal',type:'date',value:m.date},
-    {key:'title',label:'Deskripsi Pertemuan',type:'textarea',value:m.title,note:'Teks panjang diperbolehkan.'},
-  ], v=>editMeeting(m.id, Number(v.no), v.date, v.title))));
+  act.appendChild(miniBtn('✎','', ()=> openForm(t('titleEditMeet'),
+    meetingFormFields(m), v=>editMeeting(m.id, {...v, no:Number(v.no)}))));
   act.appendChild(miniBtn('🗑','danger', ()=>delMeeting(m.id)));
   head.appendChild(act);
   el.appendChild(head);
 
   if(m.title){
-    const t = document.createElement('div'); t.className = 'm-title'; t.textContent = m.title;
-    el.appendChild(t);
+    const tEl = document.createElement('div'); tEl.className = 'm-title'; tEl.textContent = m.title;
+    el.appendChild(tEl);
   }
+  /* blok notulensi: peserta / catatan / keputusan */
+  const block = (label, val)=>{
+    if(!val) return;
+    const b = document.createElement('div'); b.className = 'm-block';
+    const lb = document.createElement('b'); lb.textContent = label;
+    const sp = document.createElement('span'); sp.textContent = val;
+    b.append(lb, sp);
+    el.appendChild(b);
+  };
+  block(t('lblPeserta'), m.peserta);
+  block(t('lblCatatan'), m.catatan);
+  block(t('lblDecision'), m.decisions);
 
   const ul = document.createElement('ul'); ul.className = 'topics';
-  liveTopics(m.id).forEach(t=>{
+  liveTopics(m.id).forEach(tp=>{
     const li = document.createElement('li');
-    li.className = 'topic' + (t.done ? ' done' : '');
+    li.className = 'topic' + (tp.done ? ' done' : '');
     const cb = document.createElement('input');
-    cb.type = 'checkbox'; cb.checked = !!t.done;
-    cb.onchange = ()=>{ toggleTopic(t.id, cb.checked); li.classList.toggle('done', cb.checked); };
-    const sp = document.createElement('span'); sp.className = 'txt'; sp.textContent = t.text;
+    cb.type = 'checkbox'; cb.checked = !!tp.done;
+    cb.onchange = ()=>{ toggleTopic(tp.id, cb.checked); li.classList.toggle('done', cb.checked); };
+    const sp = document.createElement('span'); sp.className = 'txt'; sp.textContent = tp.text;
     li.append(cb, sp);
-    li.appendChild(miniBtn('✎','', ()=> openForm('Ubah Topik', [
-      {key:'text',label:'Deskripsi Topik',type:'textarea',value:t.text,required:true,note:'Teks panjang diperbolehkan — Enter di textarea membuat baris baru.'},
-    ], v=>editTopic(t.id,v.text))));
-    li.appendChild(miniBtn('🗑','danger', ()=>delTopic(t.id)));
+    li.appendChild(miniBtn('✎','', ()=> openForm(t('editTopicTitle'), [
+      {key:'text',label:t('fTopicText'),type:'textarea',value:tp.text,required:true,note:t('noteLongText')},
+    ], v=>editTopic(tp.id,v.text))));
+    li.appendChild(miniBtn('🗑','danger', ()=>delTopic(tp.id)));
     ul.appendChild(li);
   });
   el.appendChild(ul);
 
   const form = document.createElement('div'); form.className = 'add-topic';
   const inp = document.createElement('textarea');
-  inp.rows = 1; inp.placeholder = 'Tambah topik yang dibahas… (Enter simpan, Shift+Enter baris baru)';
+  inp.rows = 1; inp.placeholder = t('phAddTopic');
   const autoGrow = ()=>{ inp.style.height = 'auto'; inp.style.height = Math.min(200, inp.scrollHeight) + 'px'; };
   inp.addEventListener('input', autoGrow);
-  const btn = document.createElement('button'); btn.className = 'btn btn-sm btn-primary'; btn.textContent = '+ Topik';
+  const btn = document.createElement('button'); btn.className = 'btn btn-sm btn-primary'; btn.textContent = t('btnAddTopicSm');
   const submit = ()=>{
     const v = inp.value.trim();
     if(!v) return;
@@ -1293,7 +1831,7 @@ function renderMembers(){
 
   const groups = liveGroups();
   const all = liveMembers();
-  head.textContent = `Tim Pengajar (${all.length})`;
+  head.textContent = `${t('teamHead')} (${all.length})`;
 
   /* chip kelompok: klik = filter, ✎ = ubah, 🗑 = hapus */
   groups.forEach(g=>{
@@ -1301,12 +1839,10 @@ function renderMembers(){
     chip.className = 'chip' + (selGroup === g.id ? ' active' : '');
     const btn = document.createElement('button');
     btn.className = 'chip-btn';
-    btn.textContent = `${g.name} (${all.filter(m=>m.groupId===g.id).length})`;
+    btn.textContent = `${groupLabel(g)} (${all.filter(m=>m.groupId===g.id).length})`;
     btn.onclick = ()=>{ selGroup = (selGroup === g.id) ? null : g.id; render(); };
     chip.appendChild(btn);
-    chip.appendChild(miniBtn('✎','chip-edit', ()=> openForm('Ubah Kelompok',
-      [{key:'name',label:'Nama Kelompok',value:g.name,required:true}],
-      v=>editGroup(g.id, v.name))));
+    chip.appendChild(miniBtn('✎','chip-edit', ()=> openGroupForm(g)));
     chip.appendChild(miniBtn('🗑','chip-del', ()=>delGroup(g.id)));
     chips.appendChild(chip);
   });
@@ -1315,9 +1851,7 @@ function renderMembers(){
   if(!list2.length){
     const e = document.createElement('div');
     e.className = 'members-empty';
-    e.textContent = all.length
-      ? 'Tidak ada anggota di kelompok ini. Klik chip kelompok lagi untuk menampilkan semua.'
-      : 'Belum ada anggota. Klik "+ Anggota" untuk menambah tim pengajar.';
+    e.textContent = all.length ? t('emptyTeamFilter') : t('emptyTeam');
     list.appendChild(e);
     return;
   }
@@ -1325,11 +1859,12 @@ function renderMembers(){
     const el = document.createElement('div');
     el.className = 'member';
     el.dataset.id = m.id;
-    const meta = [m.fullName, m.batch ? `Angkatan ${m.batch}` : '', m.role].filter(Boolean).map(esc).join(' · ');
+    const g = m.groupId ? getGroup(m.groupId) : null;
+    const meta = [m.fullName, m.batch ? `${t('angkatanLbl')} ${m.batch}` : '', m.role].filter(Boolean).map(esc).join(' · ');
     el.innerHTML =
       `<div class="m-short">${esc(m.shortName)}</div>` +
       (meta ? `<div class="m-meta">${meta}</div>` : '') +
-      `<span class="m-badge ${m.groupId ? 'grp' : ''}">${m.groupId ? esc(groupName(m.groupId)) : 'Tanpa Kelompok'}</span>`;
+      `<span class="m-badge ${g ? 'grp' : ''}">${g ? esc(groupLabel(g)) : esc(t('tanpaKelompok'))}</span>`;
     const act = document.createElement('div'); act.className = 'm-actions';
     act.appendChild(miniBtn('✎','', ()=>openMemberForm(m)));
     act.appendChild(miniBtn('🗑','danger', ()=>delMember(m.id)));
@@ -1338,22 +1873,131 @@ function renderMembers(){
   });
 }
 
+/* Modal "Tambah Kelompok" — beberapa baris: nama + induk + joinable (+ Tambah baris) */
+function openGroupForm(single){
+  const wrap = document.getElementById('modalWrap');
+  const card = document.getElementById('modalCard');
+  card.innerHTML = '';
+
+  const tEl = document.createElement('div');
+  tEl.className = 'modal-title';
+  tEl.textContent = single ? t('titleEditGroup') : t('titleAddGroup');
+  card.appendChild(tEl);
+
+  const form = document.createElement('form');
+  const rows = document.createElement('div');
+  rows.className = 'member-rows';
+
+  const parentOpts = (excludeId)=>{
+    /* induk = kelompok lain (kecuali dirinya sendiri & anak-anaknya) */
+    const kids = new Set();
+    const collect = pid => liveGroups().filter(g=>g.parentId===pid).forEach(g=>{ kids.add(g.id); collect(g.id); });
+    if(excludeId) collect(excludeId);
+    return liveGroups().filter(g=>g.id!==excludeId && !kids.has(g.id));
+  };
+
+  const mkRow = (v = {}, excludeId)=>{
+    const row = document.createElement('div'); row.className = 'mrow';
+
+    const top = document.createElement('div'); top.className = 'mrow-top';
+    const nameLab = document.createElement('label'); nameLab.className = 'frow';
+    const nameIn = document.createElement('input');
+    nameIn.type = 'text'; nameIn.className = 'f-gname'; nameIn.placeholder = t('phGroup');
+    nameIn.value = v.name || ''; nameIn.autocomplete = 'off';
+    nameLab.appendChild(nameIn);
+    top.appendChild(nameLab);
+    const x = document.createElement('button');
+    x.type = 'button'; x.className = 'mrow-x'; x.textContent = '✕';
+    x.title = t('rowDel'); x.onclick = ()=>{ if(rows.children.length > 1) row.remove(); };
+    top.appendChild(x);
+    row.appendChild(top);
+
+    const bot = document.createElement('div'); bot.className = 'mrow-bot';
+    const parLab = document.createElement('label'); parLab.className = 'frow';
+    const parSel = document.createElement('select'); parSel.className = 'f-gparent fsel';
+    const p0 = document.createElement('option'); p0.value = ''; p0.textContent = t('optNoParent');
+    parSel.appendChild(p0);
+    parentOpts(excludeId).forEach(g=>{
+      const o = document.createElement('option'); o.value = g.id; o.textContent = groupLabel(g);
+      if(v.parentId === g.id) o.selected = true;
+      parSel.appendChild(o);
+    });
+    parLab.appendChild(parSel);
+    const joinLab = document.createElement('label'); joinLab.className = 'join-lab';
+    const joinIn = document.createElement('input');
+    joinIn.type = 'checkbox'; joinIn.className = 'f-gjoin';
+    joinIn.checked = v.joinable !== false;
+    joinLab.append(joinIn, document.createTextNode(' ' + t('fJoinable')));
+    bot.append(parLab, joinLab);
+    row.appendChild(bot);
+    return row;
+  };
+
+  if(single) rows.appendChild(mkRow(single, single.id));
+  else rows.appendChild(mkRow());
+  form.appendChild(rows);
+
+  const hint = document.createElement('div'); hint.className = 'form-note';
+  hint.textContent = t('noteJoinable');
+  form.appendChild(hint);
+
+  const addRow = document.createElement('button');
+  addRow.type = 'button'; addRow.className = 'btn btn-sm mrow-add';
+  addRow.textContent = t('btnAddRow');
+  addRow.onclick = ()=> rows.appendChild(mkRow({}, single ? single.id : undefined));
+  form.appendChild(addRow);
+
+  const foot = document.createElement('div'); foot.className = 'modal-bar';
+  const cancel = document.createElement('button');
+  cancel.type = 'button'; cancel.className = 'btn'; cancel.textContent = t('btnBatal');
+  cancel.onclick = closeForm;
+  const save = document.createElement('button');
+  save.type = 'submit'; save.className = 'btn btn-primary'; save.textContent = t('btnSimpan');
+  foot.append(cancel, save);
+  form.appendChild(foot);
+
+  form.onsubmit = e=>{
+    e.preventDefault();
+    if(single){
+      editGroup(single.id,
+        rows.querySelector('.f-gname').value.trim(),
+        rows.querySelector('.f-gparent').value,
+        rows.querySelector('.f-gjoin').checked);
+      closeForm(); return;
+    }
+    const list = [...rows.querySelectorAll('.mrow')].map(r=>({
+      name: r.querySelector('.f-gname').value.trim(),
+      parentId: r.querySelector('.f-gparent').value,
+      joinable: r.querySelector('.f-gjoin').checked,
+    })).filter(v=>v.name);
+    if(!list.length){ alert(t('errGroupOne')); return; }
+    addGroups(list);
+    closeForm();
+  };
+
+  card.appendChild(form);
+  wrap.style.display = 'flex';
+  wrap.onclick = e => { if(e.target === wrap) closeForm(); };
+  setTimeout(()=>{ const i = card.querySelector('.f-gname'); i && i.focus(); }, 60);
+}
+
 /* Modal "Tambah Anggota" — beberapa baris dalam satu modal (+ Tambah baris) */
 function openMemberForm(single){
   const wrap = document.getElementById('modalWrap');
   const card = document.getElementById('modalCard');
   card.innerHTML = '';
 
-  const t = document.createElement('div');
-  t.className = 'modal-title';
-  t.textContent = single ? 'Ubah Anggota' : 'Tambah Anggota';
-  card.appendChild(t);
+  const tEl = document.createElement('div');
+  tEl.className = 'modal-title';
+  tEl.textContent = single ? t('titleEditMember') : t('titleAddMember');
+  card.appendChild(tEl);
 
   const form = document.createElement('form');
   const rows = document.createElement('div');
   rows.className = 'member-rows';
 
-  const groups = liveGroups();
+  /* hanya kelompok "joinable" yang bisa dipilih untuk anggota */
+  const groups = liveGroups().filter(g=>g.joinable !== false);
   const mkField = (cls, ph, val)=>{
     const lab = document.createElement('label'); lab.className = 'frow';
     const i = document.createElement('input');
@@ -1363,7 +2007,7 @@ function openMemberForm(single){
   };
   /* Dropdown: pilih dari daftar yang sudah ada (tidak perlu ketik manual),
      plus opsi "＋ Tulis sendiri…" bila nilai baru memang diperlukan. */
-  const mkPick = (cls, opts, val, placeholder)=>{
+  const mkPick = (cls, opts, val, placeholder, placeholderNew)=>{
     const lab = document.createElement('label'); lab.className = 'frow';
     const uniq = [...new Set([...(opts||[]), val].filter(v=>v!==undefined && v!==null && String(v)!==''))].map(String);
     const mkSel = ()=>{
@@ -1375,7 +2019,7 @@ function openMemberForm(single){
         if(val != null && String(val) === v) o.selected = true;
         sel.appendChild(o);
       });
-      const oN = document.createElement('option'); oN.value = '__baru__'; oN.textContent = '＋ Tulis sendiri…';
+      const oN = document.createElement('option'); oN.value = '__baru__'; oN.textContent = t('optNew');
       sel.appendChild(oN);
       sel.onchange = ()=>{ if(sel.value === '__baru__'){ const i = mkInp(); lab.replaceChild(i, sel); i.focus(); } };
       return sel;
@@ -1383,7 +2027,7 @@ function openMemberForm(single){
     const mkInp = ()=>{
       const i = document.createElement('input');
       i.type = 'text'; i.className = cls; i.autocomplete = 'off';
-      i.placeholder = placeholder.replace(/^—\s*/, '').replace(/\s*—$/, '');
+      i.placeholder = placeholderNew || placeholder;
       i.onblur = ()=>{ if(!i.value.trim()){ const s = mkSel(); lab.replaceChild(s, i); } };
       return i;
     };
@@ -1396,11 +2040,11 @@ function openMemberForm(single){
     const row = document.createElement('div'); row.className = 'mrow';
 
     const top = document.createElement('div'); top.className = 'mrow-top';
-    const short = mkField('f-short', 'Nama pendek (akses proyek)', v.shortName);
+    const short = mkField('f-short', t('phShort'), v.shortName);
     top.appendChild(short.lab);
     if(!single){
       const x = document.createElement('button');
-      x.type = 'button'; x.className = 'mrow-x'; x.textContent = '✕'; x.title = 'Hapus baris';
+      x.type = 'button'; x.className = 'mrow-x'; x.textContent = '✕'; x.title = t('rowDel');
       x.onclick = ()=>{
         if(rows.querySelectorAll('.mrow').length > 1) row.remove();
         else { short.input.value = ''; short.input.focus(); }
@@ -1409,21 +2053,28 @@ function openMemberForm(single){
     }
     row.appendChild(top);
 
-    row.appendChild(mkField('f-full',  'Nama lengkap (opsional)', v.fullName).lab);
-    row.appendChild(mkPick('f-batch', batches, v.batch, '— Pilih angkatan —'));
-    row.appendChild(mkPick('f-role',  roles,   v.role,   '— Pilih jabatan —'));
+    row.appendChild(mkField('f-full',  t('fMemberFull'), v.fullName).lab);
+    row.appendChild(mkPick('f-batch', batches, v.batch, t('phBatchPick'), t('phBatchNew')));
+    row.appendChild(mkPick('f-role',  roles,   v.role,   t('phRolePick'), t('phRoleNew')));
 
     const glab = document.createElement('label'); glab.className = 'frow';
     const sel = document.createElement('select'); sel.className = 'f-group fsel';
     const opt0 = document.createElement('option');
-    opt0.value = ''; opt0.textContent = '— Tanpa Kelompok —';
+    opt0.value = ''; opt0.textContent = t('optNoGroup');
     sel.appendChild(opt0);
     groups.forEach(g=>{
       const o = document.createElement('option');
-      o.value = g.id; o.textContent = g.name;
+      o.value = g.id; o.textContent = groupLabel(g);
       if(v.groupId === g.id) o.selected = true;
       sel.appendChild(o);
     });
+    /* kelompok lama non-joinable tetap ditampilkan agar tidak hilang saat edit */
+    if(v.groupId && !groups.some(g=>g.id===v.groupId)){
+      const o = document.createElement('option');
+      o.value = v.groupId; o.textContent = groupLabel(getGroup(v.groupId) || {name:'?'});
+      o.selected = true;
+      sel.appendChild(o);
+    }
     glab.appendChild(sel);
     row.appendChild(glab);
 
@@ -1438,7 +2089,7 @@ function openMemberForm(single){
   let addBtn = null;
   if(!single){
     addBtn = document.createElement('button');
-    addBtn.type = 'button'; addBtn.className = 'btn mrow-add'; addBtn.textContent = '+ Tambah baris';
+    addBtn.type = 'button'; addBtn.className = 'btn mrow-add'; addBtn.textContent = t('btnAddRow');
     addBtn.onclick = ()=>{
       mkRow();
       const last = rows.querySelectorAll('.f-short');
@@ -1449,8 +2100,8 @@ function openMemberForm(single){
 
   const err = document.createElement('div'); err.className = 'ferr'; form.appendChild(err);
   const bar = document.createElement('div'); bar.className = 'modal-bar';
-  const cancel = document.createElement('button'); cancel.type = 'button'; cancel.className = 'btn'; cancel.textContent = 'Batal';
-  const ok = document.createElement('button'); ok.type = 'submit'; ok.className = 'btn btn-primary'; ok.textContent = 'Simpan';
+  const cancel = document.createElement('button'); cancel.type = 'button'; cancel.className = 'btn'; cancel.textContent = t('btnBatal');
+  const ok = document.createElement('button'); ok.type = 'submit'; ok.className = 'btn btn-primary'; ok.textContent = t('btnSimpan');
   bar.append(cancel, ok);
   form.appendChild(bar);
 
@@ -1465,7 +2116,7 @@ function openMemberForm(single){
       groupId:   row.querySelector('.f-group').value,
     });
     const filled = [...rows.querySelectorAll('.mrow')].map(read).filter(v=>v.shortName);
-    if(!filled.length){ err.textContent = 'Nama pendek wajib diisi minimal satu baris.'; return; }
+    if(!filled.length){ err.textContent = t('errShortOne'); return; }
     if(single) editMember(single.id, filled[0]);
     else addMembers(filled);
     closeForm();
@@ -1480,29 +2131,47 @@ function openMemberForm(single){
 /* ══════════════════════════════════════
    PANDUAN MENGAJUKAN MENTORING (tombol mengambang)
    ══════════════════════════════════════ */
-const PANDUAN = [
-  ['1. Siapkan datanya',
-   'Pastikan universitas & mata kuliah sudah ada (tab Universitas & Mata Kuliah). Untuk kelas baru, tambahkan dulu lewat "+ Tambah Mata Kuliah".'],
-  ['2. Isi jadwal mentoring',
-   'Buka tab Jadwal → "+ Tambah Jadwal". Isi hari, jam, tanggal, pelaksanaan (Online/Offline), tempat atau tautan, mentor, dan daftar peserta.'],
-  ['3. Kelas berbayar',
-   'Centang "Program berbayar" di form mata kuliah, lalu isi nominal harga + kode kelas. Kode kelas hanya muncul untuk kelas berbayar — bagikan kode ini ke peserta yang sudah bayar.'],
-  ['4. Ajukan ke koordinator',
-   'Kirim ringkasan usulan (universitas, mata kuliah, jadwal, mentor, peserta) ke koordinator Aliria Tech Community lewat grup WhatsApp tim pengajar.'],
-  ['5. Tunggu konfirmasi',
-   'Setelah disetujui, jadwal tampil di tab Jadwal dan siap dibagikan ke peserta. Catat pertemuan & topik yang dibahas di halaman detail mata kuliah.'],
-];
+const PANDUAN = {
+  id: [
+    ['1. Siapkan datanya',
+     'Pastikan universitas & mata kuliah sudah ada (tab Universitas & Mata Kuliah). Untuk kelas baru, tambahkan dulu lewat "+ Tambah Mata Kuliah".'],
+    ['2. Isi jadwal mentoring',
+     'Buka tab Jadwal → "+ Tambah Jadwal". Isi hari, tanggal, jam mulai & selesai, pelaksanaan (Online/Offline), tempat atau tautan, mentor, dan daftar peserta.'],
+    ['3. Kelas berbayar',
+     'Centang "Program berbayar" di form mata kuliah, lalu isi nominal harga + kode kelas. Kode kelas hanya muncul untuk kelas berbayar — bagikan kode ini ke peserta yang sudah bayar.'],
+    ['4. Ajukan ke koordinator',
+     'Kirim ringkasan usulan (universitas, mata kuliah, jadwal, mentor, peserta) ke koordinator Aliria Tech Community lewat grup WhatsApp tim pengajar.'],
+    ['5. Tunggu konfirmasi',
+     'Setelah disetujui, jadwal tampil di tab Jadwal dan siap dibagikan ke peserta. Catat notulensi pertemuan (agenda, catatan, keputusan) di halaman detail mata kuliah.'],
+  ],
+  en: [
+    ['1. Prepare the data',
+     'Make sure the university & course already exist (Universities & Courses tabs). For a new class, add it first via "+ Add Course".'],
+    ['2. Fill in the mentoring schedule',
+     'Open the Schedule tab → "+ Add Schedule". Fill in the day, date, start & end time, mode (Online/Offline), place or link, mentor, and the participant list.'],
+    ['3. Paid classes',
+     'Check "Paid program" in the course form, then fill in the price + class code. The class code only appears for paid classes — share it with participants who have paid.'],
+    ['4. Submit to the coordinator',
+     'Send the proposal summary (university, course, schedule, mentor, participants) to the Aliria Tech Community coordinator through the teaching team WhatsApp group.'],
+    ['5. Wait for confirmation',
+     'Once approved, the schedule appears in the Schedule tab and is ready to share with participants. Record the meeting minutes (agenda, notes, decisions) on the course detail page.'],
+  ],
+};
 
 function openPanduan(){
   const wrap = document.getElementById('modalWrap');
   const card = document.getElementById('modalCard');
   card.innerHTML = '';
-  const t = document.createElement('div');
-  t.className = 'modal-title'; t.textContent = 'Panduan Mengajukan Mentoring';
-  card.appendChild(t);
+  const tEl = document.createElement('div');
+  tEl.className = 'modal-title'; tEl.textContent = t('panduanTitle');
+  card.appendChild(tEl);
+
+  const intro = document.createElement('div');
+  intro.className = 'form-note'; intro.textContent = t('panduanP1');
+  card.appendChild(intro);
 
   const ol = document.createElement('ol'); ol.className = 'panduan';
-  PANDUAN.forEach(([h, b])=>{
+  (PANDUAN[lang] || PANDUAN.id).forEach(([h, b])=>{
     const li = document.createElement('li');
     const hb = document.createElement('b'); hb.textContent = h;
     const sp = document.createElement('span'); sp.textContent = b;
@@ -1510,9 +2179,13 @@ function openPanduan(){
   });
   card.appendChild(ol);
 
-  const bar = document.createElement('div'); bar.className = 'modal-bar'; bar.style.marginTop = '14px';
-  const ok = document.createElement('button'); ok.className = 'btn btn-primary'; ok.textContent = 'Mengerti'; ok.onclick = closeForm;
-  bar.appendChild(ok); card.appendChild(bar);
+  const foot = document.createElement('div'); foot.className = 'modal-bar'; foot.style.marginTop = '14px';
+  const ok = document.createElement('button'); ok.className = 'btn btn-primary'; ok.textContent = t('btnMengerti'); ok.onclick = closeForm;
+  foot.appendChild(ok); card.appendChild(foot);
+
+  const note = document.createElement('div'); note.className = 'form-note';
+  note.textContent = t('panduanFoot');
+  card.appendChild(note);
 
   wrap.style.display = 'flex';
   wrap.onclick = e => { if(e.target === wrap) closeForm(); };
@@ -1532,7 +2205,7 @@ function login(code){
     render();
     return true;
   }
-  document.getElementById('gateErr').textContent = 'Kode tidak dikenali.';
+  document.getElementById('gateErr').textContent = t('gateErr');
   return false;
 }
 
@@ -1574,9 +2247,14 @@ function login(code){
     const show = inp.type === 'password';
     inp.type = show ? 'text' : 'password';
     eye.innerHTML = show ? ICON_OFF : ICON_EYE;
-    eye.title = show ? 'Sembunyikan kode' : 'Tampilkan kode';
+    eye.title = show ? t('gateEyeHide') : t('gateEye');
     inp.focus();
   };
+
+  /* Ganti bahasa: ID ⇄ EN */
+  document.getElementById('langBtn').onclick = ()=> setLang(lang === 'id' ? 'en' : 'id');
+
+  applyLang();                      /* terapkan bahasa tersimpan (juga untuk layar gerbang) */
 
   if(sessionStorage.getItem('ajar_in') === '1'){
     gate.style.display = 'none';
@@ -1597,29 +2275,32 @@ function login(code){
   document.getElementById('backBtn').onclick = ()=>go('#/matkul');
   document.getElementById('gistBtn').onclick = openGistPanel;
   document.getElementById('addMemberBtn').onclick = ()=>openMemberForm();
-  document.getElementById('addGroupBtn').onclick = ()=> openForm('Tambah Kelompok',
-    [{key:'name',label:'Nama Kelompok',placeholder:'Contoh: Pengajar / Koordinator',required:true}],
-    v=>addGroup(v.name.trim()));
+  document.getElementById('addGroupBtn').onclick = ()=> openGroupForm();
   document.getElementById('addCourseBtn').onclick = ()=>{
-    if(!selUniv){ alert('Pilih universitas dulu di tab Universitas.'); return; }
-    if(!selSem){ alert('Pilih semester di atas.'); return; }
-    openForm('Tambah Mata Kuliah', courseFormFields(),
+    if(!selUniv){ alert(t('alertPickUniv')); return; }
+    if(!selSem){ alert(t('alertPickSem')); return; }
+    openForm(t('titleAddCourse'), courseFormFields(),
       v=>addCourse(selUniv, selSem, v.name, v.code, v.lecturer, v.paid, v.desc, v.price, v.classCode));
   };
   const needCourse = ()=>{
-    if(!db.courses.some(c=>!c.deleted)){ alert('Belum ada mata kuliah. Tambahkan dulu di tab Mata Kuliah.'); return false; }
+    if(!db.courses.some(c=>!c.deleted)){ alert(t('alertNoCourse')); return false; }
     return true;
   };
   document.getElementById('addSchedBtn').onclick  = ()=>{ if(needCourse()) openScheduleForm(); };
   document.getElementById('addSchedBtn2').onclick = ()=>{ if(needCourse()) openScheduleForm(null, openCourse); };
   document.getElementById('addMeetingBtn').onclick = ()=>{
     const next = Math.max(0, ...liveMeets(openCourse).map(m=>m.no||0)) + 1;
-    openForm('Tambah Pertemuan', [
-      {key:'no',label:'Nomor Pertemuan',type:'number',value:next},
-      {key:'date',label:'Tanggal',type:'date',value:new Date().toISOString().slice(0,10)},
-      {key:'title',label:'Deskripsi Pertemuan',type:'textarea',placeholder:'Ceritakan apa yang dibahas di pertemuan ini… (boleh panjang, multi-baris)'},
-    ], v=>addMeeting(openCourse, Number(v.no), v.date, v.title));
+    openForm(t('titleAddMeet'), meetingFormFields(null, next),
+      v=>addMeeting(openCourse, {...v, no:Number(v.no)}));
   };
+
+  /* INVENTARIS: tombol tambah + pencarian + filter kategori */
+  document.getElementById('addAssetBtn').onclick = ()=> openForm(t('titleAddAsset'), assetFormFields(),
+    v=>addAsset(v));
+  const invS = document.getElementById('invSearch');
+  const invC = document.getElementById('invCat');
+  if(invS) invS.oninput = ()=>{ invSearch = invS.value; renderAssets(); };
+  if(invC) invC.onchange = ()=>{ invCat = invC.value; renderAssets(); };
 })();
 </script>
 </body>

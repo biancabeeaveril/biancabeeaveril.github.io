@@ -52,7 +52,7 @@ Tombol **Masuk** membuka modal kode akses (punya tombol mata untuk tampil/sembun
 
 ## Log Pengajaran (Tim Pengajar)
 
-App terpisah untuk mencatat riwayat mengajar: **universitas → semester (statis 1–8) → mata kuliah (card) → jadwal & pertemuan → topik**, plus daftar **anggota tim pengajar**.
+App terpisah untuk mencatat riwayat mengajar: **universitas → semester (statis 1–8) → mata kuliah (card) → jadwal & pertemuan (notulensi) → topik**, plus daftar **anggota tim pengajar** dan **inventaris aset**. Tampilan **dwibahasa: Indonesia & English (US)**.
 
 | Komponen | Isi |
 |----------|-----|
@@ -63,16 +63,21 @@ App terpisah untuk mencatat riwayat mengajar: **universitas → semester (statis
 
 Fitur yang dipakai tim pengajar:
 
-- **3 navigasi dengan URL sendiri** — `#/univ` (Universitas & tim pengajar), `#/matkul` (daftar + detail `#/matkul/<id>`), `#/jadwal` (jadwal mentoring) — bisa di-bookmark / dibagikan ke sesama tim
+- **4 navigasi dengan URL sendiri** — `#/univ` (Universitas & tim pengajar), `#/matkul` (daftar + detail `#/matkul/<id>`), `#/jadwal` (jadwal mentoring), `#/inventaris` (inventaris aset) — bisa di-bookmark / dibagikan ke sesama tim
+- **2 bahasa (ID & EN)** — tombol **EN/ID** di nav mengganti seluruh label UI; preferensi tersimpan di browser. Data tidak diterjemahkan; nama hari & tanggal ditampilkan sesuai bahasa
+- **Tautan kembali "← Kembali"** di nav (bukan lagi "← Rak")
 - Hierarki **Universitas → Semester → Mata Kuliah → Pertemuan → Topik**
 - **Semester 1–8 statis** — bukan CRUD: tidak ada tombol tambah/hapus, langsung tersedia di tiap universitas
 - **Mata kuliah punya deskripsi** (long text); kelas **berbayar** punya **nominal harga** (Rp) + **kode kelas** yang hanya muncul untuk kelas berbayar — kelas gratis otomatis tanpa harga & kode
-- **Jadwal mentoring** per mata kuliah: **hari, jam, tanggal, Online/Offline, tempat/tautan, mentor (dropdown anggota), peserta** — tampil di tab Jadwal & di detail mata kuliah
-- **Deskripsi** (topik & pertemuan) berupa **long text** — textarea multi-baris tanpa batas panjang
+- **Jadwal mentoring** per mata kuliah: **hari, tanggal, jam mulai & selesai (time picker), Online/Offline, tempat/tautan, mentor (dropdown anggota), peserta** — tampil di tab Jadwal & di detail mata kuliah
+- **Pertemuan ala notulensi rapat**: **tanggal, jam, tempat, peserta, agenda (long text), catatan/isi notulensi (long text), keputusan/tindak lanjut (long text)** — catatan & keputusan tampil sebagai blok di card pertemuan
+- **Deskripsi** (topik & agenda) berupa **long text** — textarea multi-baris tanpa batas panjang
 - Centang **sudah dibahas** per topik + progres persentase per mata kuliah
 - Flag **Berbayar / Gratis** per mata kuliah (checkbox di form, tampil sebagai badge di card & detail)
-- **Tambah Anggota** (modal multi-baris, `+ Tambah baris`): nama pendek, nama lengkap, **angkatan & jabatan berupa dropdown** (pilih dari data yang ada, atau "＋ Tulis sendiri…" bila baru), kelompok — plus **+ Kelompok** (chip bisa difilter, ✎ ubah, 🗑 hapus)
-- **Tombol mengambang 💬 Panduan Mentoring** (kanan bawah) — panduan langkah mengajukan mentoring
+- **Tambah Kelompok** (modal multi-baris): nama + dropdown **Induk** + checkbox **Joinable** + **+ Tambah baris** — hierarki tampil `Induk › Anak`; non-joinable (🔒) tidak muncul di dropdown anggota
+- **Tambah Anggota** (modal multi-baris, `+ Tambah baris`): nama pendek, nama lengkap, **angkatan & jabatan berupa dropdown** (pilih dari data yang ada, atau "＋ Tulis sendiri…" bila baru), kelompok (hanya yang joinable)
+- **Tab Inventaris Aset**: tabel (nama, kategori, jumlah, satuan, URL jadi tautan, tanggal pengadaan, keterangan long text) + **pencarian "Cari nama aset…"** + **filter "Semua Kategori"**
+- **Tombol mengambang 💬 Panduan Mentoring** (kanan bawah) — panduan langkah mengajukan mentoring, ikut berganti bahasa
 - Sinkron ke Gist: klik **⚙** di nav → isi Gist ID + PAT (scope `gist`) → **Hubungkan** (file dibuat otomatis bila belum ada)
 - Status sinkron di nav: hijau "Sinkron Gist" / "Lokal saja" kalau belum tersambung
 

@@ -1,11 +1,11 @@
 # Panduan Setup — Log Pengajaran
 
-App **Log Pengajaran** (folder `logpengajar/`) menyimpan riwayat mengajar tim: universitas → semester → mata kuliah → pertemuan → topik (long text) + flag **berbayar/gratis**.
+App **Log Pengajaran** (folder `logpengajar/`) menyimpan riwayat mengajar tim: universitas → semester → mata kuliah → pertemuan (dengan **notulensi**: jam, tempat, peserta, agenda, catatan, keputusan) → topik (long text) + flag **berbayar/gratis**, plus **jadwal mentoring** dan **inventaris aset**. Tampilan tersedia dalam **2 bahasa: Indonesia & English (US)** — tombol **EN/ID** di nav.
 
 - **Frontend**: `logpengajar/index.html` (single file, tanpa build, tanpa dependency)
 - **Data**: GitHub Gist, file `ajar-data.json`
 - **Deploy**: GitHub Pages (repo ini)
-- **Akses**: kode tim pengajar `20070704`
+- **Akses**: kode tim pengajar `20070407`
 
 Ada **dua cara** menyambungkan ke Gist:
 
@@ -24,7 +24,7 @@ Ada **dua cara** menyambungkan ke Gist:
    - **Filename**: `ajar-data.json`
    - **Content**:
      ```json
-     {"univs":[],"sems":[],"courses":[],"meetings":[],"topics":[]}
+     {"univs":[],"courses":[],"meetings":[],"topics":[],"members":[],"groups":[],"schedules":[],"assets":[]}
      ```
 3. Klik **Create secret gist**
 4. Salin **Gist ID** dari URL browser:
@@ -55,7 +55,7 @@ Ada **dua cara** menyambungkan ke Gist:
 
 Tidak perlu deploy apa pun — semua dari dalam aplikasi:
 
-1. Buka `https://<username>.github.io/logpengajar/` → masuk dengan kode **`20070704`**
+1. Buka `https://<username>.github.io/logpengajar/` → masuk dengan kode **`20070407`**
 2. Klik tombol **⚙** di kanan atas
 3. Isi **Gist ID** + **Token GitHub (PAT)**
 4. Klik **Hubungkan** → aplikasi mengecek koneksi, lalu reload
@@ -115,22 +115,26 @@ Nilai sudah terpasang di kedua file. Ganti di **dua** file supaya sinkron.
 
 ## Langkah 5 — Mulai pakai
 
-Aplikasi punya **3 navigasi** (masing-masing punya URL sendiri, bisa dibagikan):
+Aplikasi punya **4 navigasi** (masing-masing punya URL sendiri, bisa dibagikan):
 
 | Tab | URL | Isi |
 |-----|-----|-----|
 | Universitas | `…/logpengajar/#/univ` | Label universitas + Tim Pengajar (kelompok & anggota) |
 | Mata Kuliah | `…/logpengajar/#/matkul` (detail: `#/matkul/<id>`) | Semester 1–8, daftar mata kuliah, jadwal & pertemuan per mata kuliah |
 | Jadwal | `…/logpengajar/#/jadwal` | Semua jadwal mentoring lintas mata kuliah |
+| Inventaris | `…/logpengajar/#/inventaris` | Daftar aset tim pengajar (tabel, pencarian & filter kategori) |
+
+**Bahasa**: tombol **EN/ID** di nav atas mengganti seluruh tampilan antarmuka ke English (US) atau Bahasa Indonesia. Preferensi tersimpan di browser. Data (nama universitas, topik, catatan, dst.) tidak diterjemahkan — hanya label UI.
 
 1. Masuk dengan kode tim pengajar → full akses tambah/edit/hapus
-2. Tab **Universitas**: **+ Tambah** untuk label universitas, lalu **+ Kelompok** & **+ Anggota** untuk tim pengajar — **Angkatan & Jabatan berupa dropdown** (pilih dari data yang ada; ada opsi "＋ Tulis sendiri…" bila nilai baru), **+ Tambah baris** bisa isi banyak anggota sekaligus
+2. Tab **Universitas**: **+ Tambah** untuk label universitas, lalu **+ Kelompok** & **+ Anggota** untuk tim pengajar. Form **Tambah Kelompok** mendukung **multi-baris** (nama + dropdown **Induk** + checkbox **Joinable** + tombol **+ Tambah baris**). Kelompok **joinable** muncul di dropdown anggota; yang non-joinable hanya untuk struktur (ditandai 🔒). **Angkatan & Jabatan berupa dropdown** (pilih dari data yang ada; ada opsi "＋ Tulis sendiri…" bila nilai baru), **+ Tambah baris** bisa isi banyak anggota sekaligus
 3. Tab **Mata Kuliah**: pilih universitas → pilih **Semester 1–8** (statis, tidak perlu dibuat) → **+ Tambah Mata Kuliah**
 4. Form mata kuliah: isi nama/kode/**deskripsi (long text)**/pengajar. Centang **Program berbayar** → muncul **Nominal Harga (Rp)** + **Kode Kelas** — hanya kelas berbayar yang punya harga & kode; tanpa centang = **Gratis** (kedua field itu disembunyikan)
 5. Klik card → detail (`#/matkul/<id>`): deskripsi, blok harga + kode kelas (berbayar saja), daftar **jadwal**, dan daftar **pertemuan**
-6. **+ Tambah Jadwal** (di tab Jadwal atau di detail mata kuliah): **Hari** (dropdown), **Tanggal**, **Jam** (waktu pelaksana), **Pelaksanaan** Online/Offline, **Tempat/Tautan**, **Mentor** (dropdown anggota tim pengajar), **Peserta** (long text)
-7. Di tiap pertemuan: `+ Topik` untuk menambah **deskripsi topik** (teks panjang, boleh banyak baris — `Enter` simpan, `Shift+Enter` baris baru), centang checkbox kalau **sudah dibahas**; **Deskripsi Pertemuan** juga berupa textarea panjang
-8. Tombol mengambang **💬 Panduan Mentoring** (kanan bawah) berisi langkah mengajukan mentoring untuk tim
+6. **+ Tambah Jadwal** (di tab Jadwal atau di detail mata kuliah): **Hari** (dropdown), **Tanggal**, **Jam Mulai** & **Jam Selesai** (time picker), **Pelaksanaan** Online/Offline, **Tempat/Tautan**, **Mentor** (dropdown anggota tim pengajar), **Peserta** (long text)
+7. **+ Tambah Pertemuan**: form ala notulensi rapat — **Nomor**, **Tanggal**, **Jam** (time picker), **Tempat**, **Peserta**, **Agenda** (long text), **Catatan/Isi Notulensi** (long text) & **Keputusan/Tindak Lanjut** (long text). Di tiap pertemuan: `+ Topik` untuk menambah **deskripsi topik** (teks panjang, boleh banyak baris — `Enter` simpan, `Shift+Enter` baris baru), centang checkbox kalau **sudah dibahas**; catatan & keputusan tampil sebagai blok di card pertemuan
+8. Tab **Inventaris**: **+ Tambah Aset** → nama, kategori, jumlah, satuan, URL, tanggal pengadaan, keterangan (long text). Tabel dengan **pencarian "Cari nama aset…"** & **filter kategori** (opsi unik dari data, plus "Semua Kategori"); URL jadi tautan yang bisa diklik
+9. Tombol mengambang **💬 Panduan Mentoring** (kanan bawah) berisi langkah mengajukan mentoring untuk tim — ikut berganti bahasa
 
 > Label universitas bersifat tetap: tambah sekali, hapus kalau memang dibatalkan (menghapus label ikut menghapus isinya — termasuk jadwal & pertemuannya). Semester 1–8 selalu tersedia untuk setiap universitas.
 
@@ -145,25 +149,34 @@ Aplikasi punya **3 navigasi** (masing-masing punya URL sendiri, bisa dibagikan):
                  "desc":"Ringkasan mata kuliah (long text)", "lecturer":"Budi",
                  "paid":true, "price":"150000", "classCode":"BD-2026", "ord":0, "updatedAt":0 }],
   "meetings": [{ "id":"m1", "courseId":"c1", "no":1, "date":"2026-09-05",
-                 "title":"Deskripsi pertemuan (long text, boleh multi-baris)", "updatedAt":0 }],
+                 "title":"Agenda pertemuan (long text, boleh multi-baris)",
+                 "time":"13:00", "place":"Ruang 301",
+                 "peserta":"Ahmad\nBella", "catatan":"Isi notulensi (long text)",
+                 "decisions":"Keputusan / tindak lanjut (long text)", "updatedAt":0 }],
   "topics":   [{ "id":"t1", "meetingId":"m1", "text":"Deskripsi topik (long text)",
                  "done":true, "ord":0, "updatedAt":0 }],
   "members":  [{ "id":"a1", "shortName":"Dion", "fullName":"Dionisius Nur P", "batch":"2023",
                  "role":"Koordinator", "groupId":"g1", "ord":0, "updatedAt":0 }],
-  "groups":   [{ "id":"g1", "name":"Pengajar", "ord":0, "updatedAt":0 }],
+  "groups":   [{ "id":"g1", "name":"Pengajar", "parentId":"", "joinable":true, "ord":0, "updatedAt":0 }],
   "schedules":[{ "id":"j1", "courseId":"c1", "day":"Sabtu", "date":"2026-11-07",
-                 "time":"13.00–15.00 WIB", "mode":"Online",
-                 "place":"https://zoom.us/j/…", "mentor":"Dion", "participants":"Ahmad\nBella",
-                 "ord":0, "updatedAt":0 }]
+                 "timeStart":"13:00", "timeEnd":"15:00", "time":"13:00–15:00",
+                 "mode":"Online", "place":"https://zoom.us/j/…", "mentor":"Dion",
+                 "participants":"Ahmad\nBella", "ord":0, "updatedAt":0 }],
+  "assets":   [{ "id":"s1", "name":"Akses Canva", "category":"Software", "qty":"2",
+                 "unit":"akun", "url":"https://canva.com", "boughtAt":"2026-01-15",
+                 "notes":"Untuk desain poster (long text)", "ord":0, "updatedAt":0 }]
 }
 ```
 
 - Semua array **flat** (relasi pakai `id`) → merge cukup satu aturan untuk semua tabel.
 - **Tidak ada array `sems`** — semester adalah angka `sem: 1..8` di setiap mata kuliah (statis). Data lama format `sems` + `semId` otomatis dimigrasikan saat aplikasi dibuka (`migrate()`).
 - `paid: true` = kelas **berbayar**; tidak ada / `false` = **gratis**. Hanya kelas berbayar yang memakai `price` (angka rupiah sebagai string, tanpa titik) dan `classCode` (kode kelas) — saat diubah ke gratis, kedua field itu dikosongkan otomatis.
-- `title` (pertemuan), `text` (topik), `desc` (mata kuliah) dan `participants` (jadwal) adalah **long text** — tidak dibatasi panjangnya.
-- `schedules`: `day` = Senin–Minggu, `date` (opsional; kosong = berkelanjutan), `time` (teks jam), `mode` = `Online`/`Offline`, `place` = tautan (online) atau ruangan (offline), `mentor` = nama pendek anggota, `participants` = daftar peserta.
-- `groupId: ""` = anggota tanpa kelompok. Menghapus kelompok mengosongkan `groupId` anggotanya (anggota tidak ikut terhapus).
+- `title` (agenda pertemuan), `catatan`, `decisions`, `peserta` (pertemuan), `text` (topik), `desc` (mata kuliah), `notes` (aset) dan `participants` (jadwal) adalah **long text** — tidak dibatasi panjangnya.
+- `schedules`: `day` = Senin–Minggu (disimpan Bahasa Indonesia, ditampilkan sesuai bahasa UI), `date` (opsional; kosong = berkelanjutan), `timeStart`/`timeEnd` = jam mulai & selesai (`"HH:MM"`, time picker), `time` = string turunan `"13:00–15:00"` (dipertahankan untuk kompatibilitas data lama), `mode` = `Online`/`Offline`, `place` = tautan (online) atau ruangan (offline), `mentor` = nama pendek anggota, `participants` = daftar peserta.
+- `groups`: `parentId` = induk (kosong = kelompok induk); `joinable: false` = hanya struktur/induk — tidak muncul di dropdown anggota dan ditandai 🔒. Nama tampil hierarkis `Induk › Anak`.
+- `groupId: ""` = anggota tanpa kelompok. Menghapus kelompok mengosongkan `groupId` anggotanya (anggota tidak ikut terhapus); menghapus induk juga mengosongkan `parentId` anak-anaknya.
+- `assets` (inventaris): `name` (wajib), `category`, `qty`, `unit`, `url`, `boughtAt` (tanggal pengadaan), `notes`.
+- **Bahasa**: hari (`day`) dan tanggal (`date`) disimpan dalam format Indonesia/ISO, ditampilkan sesuai bahasa aktif (hari diterjemahkan; tanggal memakai locale `id-ID`/`en-US`).
 
 ---
 
@@ -173,7 +186,7 @@ Baik Worker maupun Mode A memakai **read-merge-write** — tidak pernah menimpa 
 
 | Tipe | Strategi |
 |------|----------|
-| Semua array (`univs`, `courses`, `meetings`, `topics`, `members`, `groups`, `schedules`) | Merge by `id` — item dengan `updatedAt` lebih baru menang |
+| Semua array (`univs`, `courses`, `meetings`, `topics`, `members`, `groups`, `schedules`, `assets`) | Merge by `id` — item dengan `updatedAt` lebih baru menang |
 
 Dua orang edit data berbeda bersamaan → keduanya tetap tersimpan.
 
