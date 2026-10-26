@@ -387,7 +387,8 @@ table.inv-table .inv-empty{padding:22px 12px;text-align:center;color:var(--muted
 
 <!-- GATE -->
 <div class="gate" id="gate">
-  <div class="gate-card">
+  <div class="gate-card" style="position:relative">
+    <button type="button" id="gateLangBtn" class="btn" style="position:absolute;top:9px;right:9px;padding:4px 9px;font-size:.68rem;line-height:1">EN</button>
     <h2 data-i18n="gateTitle">Log Pengajaran</h2>
     <p data-i18n="gateSub">Masukkan kode akses tim pengajar</p>
     <div class="gate-pass">
@@ -714,6 +715,8 @@ function applyLang(){
   document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
   const lb = document.getElementById('langBtn');
   if(lb){ lb.textContent = lang === 'id' ? 'EN' : 'ID'; lb.title = t('langSwitch'); }
+  const gb = document.getElementById('gateLangBtn');
+  if(gb){ gb.textContent = lang === 'id' ? 'EN' : 'ID'; gb.title = t('langSwitch'); }
   paintSync();
 }
 function setLang(v){ lang = v === 'en' ? 'en' : 'id'; localStorage.setItem(LS_LANG, lang); render(); }
@@ -2251,8 +2254,10 @@ function login(code){
     inp.focus();
   };
 
-  /* Ganti bahasa: ID ⇄ EN */
-  document.getElementById('langBtn').onclick = ()=> setLang(lang === 'id' ? 'en' : 'id');
+  /* Ganti bahasa: ID ⇄ EN (juga tersedia di layar gerbang, tanpa login) */
+  const toggleLang = ()=> setLang(lang === 'id' ? 'en' : 'id');
+  document.getElementById('langBtn').onclick = toggleLang;
+  document.getElementById('gateLangBtn').onclick = toggleLang;
 
   applyLang();                      /* terapkan bahasa tersimpan (juga untuk layar gerbang) */
 

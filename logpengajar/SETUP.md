@@ -124,7 +124,7 @@ Aplikasi punya **4 navigasi** (masing-masing punya URL sendiri, bisa dibagikan):
 | Jadwal | `…/logpengajar/#/jadwal` | Semua jadwal mentoring lintas mata kuliah |
 | Inventaris | `…/logpengajar/#/inventaris` | Daftar aset tim pengajar (tabel, pencarian & filter kategori) |
 
-**Bahasa**: tombol **EN/ID** di nav atas mengganti seluruh tampilan antarmuka ke English (US) atau Bahasa Indonesia. Preferensi tersimpan di browser. Data (nama universitas, topik, catatan, dst.) tidak diterjemahkan — hanya label UI.
+**Bahasa**: tombol **EN/ID** di nav atas mengganti seluruh tampilan antarmuka ke English (US) atau Bahasa Indonesia. Preferensi tersimpan di browser (`localStorage` `ajar_lang`) dan **dipakai bersama dengan homepage** — tombol yang sama juga ada di homepage (terlihat sebelum login) dan di layar gerbang app ini (pojok kanan atas kartu, sebelum kode dimasukkan). Data (nama universitas, topik, catatan, dst.) tidak diterjemahkan — hanya label UI.
 
 1. Masuk dengan kode tim pengajar → full akses tambah/edit/hapus
 2. Tab **Universitas**: **+ Tambah** untuk label universitas, lalu **+ Kelompok** & **+ Anggota** untuk tim pengajar. Form **Tambah Kelompok** mendukung **multi-baris** (nama + dropdown **Induk** + checkbox **Joinable** + tombol **+ Tambah baris**). Kelompok **joinable** muncul di dropdown anggota; yang non-joinable hanya untuk struktur (ditandai 🔒). **Angkatan & Jabatan berupa dropdown** (pilih dari data yang ada; ada opsi "＋ Tulis sendiri…" bila nilai baru), **+ Tambah baris** bisa isi banyak anggota sekaligus

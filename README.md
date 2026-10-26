@@ -41,6 +41,8 @@ Homepage (`index.html`) adalah banner **Aliria Tech Community × Universitas Din
 
 Tombol **Masuk** membuka modal kode akses (punya tombol mata untuk tampil/sembunyikan kode). Kode yang benar memunculkan section **Ruang Tim** berisi link ke **Log Pengajaran**.
 
+Tombol **EN/ID** di nav mengganti bahasa tampilan homepage (terlihat sebelum login — tanpa perlu masuk); preferensi bahasa dipakai bersama dengan app Log Pengajaran (`localStorage` `ajar_lang`). Di dalam app, tombol yang sama juga tersedia di layar gerbang sebelum kode dimasukkan.
+
 | Nilai | Lokasi |
 |-------|--------|
 | `PASS_TEAM = '20070407'` | `index.html` (blok `CONFIG` di bawah) |

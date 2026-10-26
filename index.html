@@ -56,11 +56,13 @@
             <span class="heading-font text-sm font-extrabold text-[#0B192C] tracking-wide">ALIRIA TECH COMMUNITY</span>
         </a>
         <div class="flex items-center gap-2">
-            <a href="tentang.html" class="text-xs font-semibold text-slate-600 hover:text-[#0B192C] px-3 py-2 rounded-lg hover:bg-white/70 transition-colors">Tentang</a>
-            <button id="btnMasuk" class="text-xs font-bold tracking-tight text-white bg-[#0B192C] hover:bg-indigo-800 px-4 py-2 rounded-lg shadow-sm transition-colors">
+            <button id="langBtn" title="Switch to English (US)"
+                    class="text-xs font-bold tracking-tight text-slate-600 bg-white border border-slate-300 hover:border-[#0B192C] hover:text-[#0B192C] px-3 py-2 rounded-lg shadow-sm transition-colors">EN</button>
+            <a href="tentang.html" class="text-xs font-semibold text-slate-600 hover:text-[#0B192C] px-3 py-2 rounded-lg hover:bg-white/70 transition-colors" data-i18n="navAbout">Tentang</a>
+            <button id="btnMasuk" class="text-xs font-bold tracking-tight text-white bg-[#0B192C] hover:bg-indigo-800 px-4 py-2 rounded-lg shadow-sm transition-colors" data-i18n="navSignIn">
                 Masuk
             </button>
-            <button id="btnKeluar" class="hidden text-xs font-bold tracking-tight text-[#0B192C] bg-white border border-slate-300 hover:border-[#0B192C] px-4 py-2 rounded-lg shadow-sm transition-colors">
+            <button id="btnKeluar" class="hidden text-xs font-bold tracking-tight text-[#0B192C] bg-white border border-slate-300 hover:border-[#0B192C] px-4 py-2 rounded-lg shadow-sm transition-colors" data-i18n="navSignOut">
                 Keluar
             </button>
         </div>
@@ -97,17 +99,6 @@
                             class="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
                             onerror="this.src='https://placehold.co/600x450/1E293B/FFFFFF?text=Mentoring+Tech+Community'"
                         >
-                        <!-- Badge Overlay -->
-                        <div class="absolute bottom-3 left-3 right-3 bg-white/90 backdrop-blur-md p-2.5 rounded-xl border border-white/60 shadow-md flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <span class="flex h-3 w-3 relative">
-                                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                  <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-                                </span>
-                                <span class="text-xs font-bold text-gray-800">Program Mentoring Aktif</span>
-                            </div>
-                            <span class="text-[11px] font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg">4-5 Anggota / Sesi</span>
-                        </div>
                     </div>
                 </div>
 
@@ -130,7 +121,7 @@
                 </div>
 
                 <!-- Call To Action / Deskripsi Singkat -->
-                <p class="text-sm md:text-base text-gray-600 max-w-md font-medium leading-relaxed">
+                <p class="text-sm md:text-base text-gray-600 max-w-md font-medium leading-relaxed" data-i18n="heroDesc">
                     Wadah belajar kolaboratif pemrograman, teknologi informasi, dan pengembangan skill praktis bersama para mentor berpengalaman.
                 </p>
 
@@ -158,7 +149,7 @@
                         <div class="w-8 h-8 rounded-lg bg-white/15 flex items-center justify-center text-white text-base shadow-sm">
                             <i class="fa-solid fa-arrow-right-to-bracket"></i>
                         </div>
-                        <span class="text-sm md:text-base font-bold tracking-tight">Masuk ke Ruang Tim</span>
+                        <span class="text-sm md:text-base font-bold tracking-tight" data-i18n="btnEnterTeam">Masuk ke Ruang Tim</span>
                     </button>
 
                 </div>
@@ -171,16 +162,16 @@
     <!-- ══════════════ RUANG TIM (setelah masuk) ══════════════ -->
     <section id="menuSection" class="hidden w-full max-w-7xl mt-4">
         <div class="bg-white/80 backdrop-blur-md border border-white rounded-2xl shadow-lg p-5 md:p-6">
-            <div class="text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-2">Ruang Tim</div>
+            <div class="text-[10px] uppercase tracking-wider font-bold text-gray-500 mb-2" data-i18n="teamHead">Ruang Tim</div>
             <div class="flex flex-col md:flex-row md:items-center gap-4">
                 <div class="flex-1">
-                    <h2 class="heading-font text-xl md:text-2xl font-extrabold text-[#0B192C]">Log Pengajaran</h2>
-                    <p class="text-sm text-gray-600 mt-1 leading-relaxed">
+                    <h2 class="heading-font text-xl md:text-2xl font-extrabold text-[#0B192C]" data-i18n="logTitle">Log Pengajaran</h2>
+                    <p class="text-sm text-gray-600 mt-1 leading-relaxed" data-i18n="logDesc">
                         Riwayat mengajar tim: pilih universitas → semester → mata kuliah, lalu lihat topik yang dibahas di tiap pertemuan rutin.
                     </p>
                 </div>
                 <a href="logpengajar/index.html" class="shrink-0 inline-flex items-center justify-center gap-2 bg-[#0B192C] hover:bg-indigo-800 text-white text-sm font-bold tracking-tight px-5 py-3 rounded-xl shadow-md hover:shadow-lg transition-all">
-                    <i class="fa-solid fa-book-open"></i> Buka Log Pengajaran
+                    <i class="fa-solid fa-book-open"></i> <span data-i18n="btnOpenLog">Buka Log Pengajaran</span>
                 </a>
             </div>
         </div>
@@ -196,27 +187,27 @@
             <div class="flex items-center gap-3 mb-1">
                 <img src="assets/emblem-aliria.png" alt="" class="h-10 w-auto object-contain shrink-0">
                 <div>
-                    <h3 class="heading-font font-extrabold text-[#0B192C] leading-tight">Masuk ke Ruang Tim</h3>
-                    <p class="text-xs text-gray-500">Kode diberikan oleh koordinator tim pengajar.</p>
+                    <h3 class="heading-font font-extrabold text-[#0B192C] leading-tight" data-i18n="modalTitle">Masuk ke Ruang Tim</h3>
+                    <p class="text-xs text-gray-500" data-i18n="modalSub">Kode diberikan oleh koordinator tim pengajar.</p>
                 </div>
             </div>
 
             <form id="loginForm" class="mt-5">
                 <div class="relative">
-                    <input id="loginPass" type="password" placeholder="Kode akses" autocomplete="off"
+                    <input id="loginPass" type="password" placeholder="Kode akses" autocomplete="off" data-i18n-ph="phCode"
                            class="w-full bg-gray-50 border border-gray-200 focus:border-[#0B192C] focus:ring-2 focus:ring-indigo-100 outline-none text-sm text-center tracking-widest rounded-xl px-4 py-3 pr-12 transition">
-                    <button type="button" id="togglePass" title="Tampilkan / sembunyikan kode"
+                    <button type="button" id="togglePass" title="Tampilkan / sembunyikan kode" data-i18n-title="eyeShow"
                             class="absolute right-2 top-1/2 -translate-y-1/2 w-9 h-9 rounded-lg text-gray-400 hover:text-[#0B192C] hover:bg-gray-100 transition-colors">
                         <i class="fa-regular fa-eye"></i>
                     </button>
                 </div>
                 <div id="loginErr" class="text-xs text-red-600 font-semibold mt-2 min-h-[16px] text-center"></div>
-                <button type="submit" class="w-full mt-2 bg-[#0B192C] hover:bg-indigo-800 text-white text-sm font-bold tracking-tight py-3 rounded-xl shadow-md transition-colors">
+                <button type="submit" class="w-full mt-2 bg-[#0B192C] hover:bg-indigo-800 text-white text-sm font-bold tracking-tight py-3 rounded-xl shadow-md transition-colors" data-i18n="btnSignIn">
                     Masuk
                 </button>
             </form>
 
-            <button id="loginClose" class="w-full mt-2 text-xs font-semibold text-gray-500 hover:text-[#0B192C] py-2 transition-colors">Batal</button>
+            <button id="loginClose" class="w-full mt-2 text-xs font-semibold text-gray-500 hover:text-[#0B192C] py-2 transition-colors" data-i18n="btnCancel">Batal</button>
         </div>
     </div>
 
@@ -227,6 +218,58 @@
    ══════════════════════════════════════ */
 const PASS_TEAM = '20070407';
 const SESSION_KEY = 'aliria_in';
+
+/* ══════════════════════════════════════
+   BAHASA — Indonesia (default) & English (US)
+   preferensi dipakai bersama dengan app
+   Logpengajar (localStorage: ajar_lang)
+   ══════════════════════════════════════ */
+const LS_LANG = 'ajar_lang';
+let lang = localStorage.getItem(LS_LANG) === 'en' ? 'en' : 'id';
+
+const L = {
+  id: {
+    navAbout:'Tentang', navSignIn:'Masuk', navSignOut:'Keluar',
+    heroDesc:'Wadah belajar kolaboratif pemrograman, teknologi informasi, dan pengembangan skill praktis bersama para mentor berpengalaman.',
+    btnEnterTeam:'Masuk ke Ruang Tim',
+    teamHead:'Ruang Tim', logTitle:'Log Pengajaran',
+    logDesc:'Riwayat mengajar tim: pilih universitas → semester → mata kuliah, lalu lihat topik yang dibahas di tiap pertemuan rutin.',
+    btnOpenLog:'Buka Log Pengajaran',
+    modalTitle:'Masuk ke Ruang Tim',
+    modalSub:'Kode diberikan oleh koordinator tim pengajar.',
+    phCode:'Kode akses',
+    btnSignIn:'Masuk', btnCancel:'Batal',
+    errCode:'Kode tidak dikenali.',
+    eyeShow:'Tampilkan / sembunyikan kode', eyeShowOnly:'Tampilkan kode', eyeHide:'Sembunyikan kode',
+    langSwitch:'Switch to English (US)',
+  },
+  en: {
+    navAbout:'About', navSignIn:'Sign In', navSignOut:'Sign Out',
+    heroDesc:'A collaborative learning space for programming, information technology, and practical skills with experienced mentors.',
+    btnEnterTeam:'Enter Team Area',
+    teamHead:'Team Area', logTitle:'Teaching Log',
+    logDesc:"The team's teaching history: pick a university → semester → course, then see the topics covered in each regular meeting.",
+    btnOpenLog:'Open Teaching Log',
+    modalTitle:'Sign In to Team Area',
+    modalSub:'The code is provided by the teaching team coordinator.',
+    phCode:'Access code',
+    btnSignIn:'Sign In', btnCancel:'Cancel',
+    errCode:'Code not recognized.',
+    eyeShow:'Show / hide the code', eyeShowOnly:'Show the code', eyeHide:'Hide the code',
+    langSwitch:'Ganti ke Bahasa Indonesia',
+  },
+};
+const t = k => (L[lang][k] !== undefined ? L[lang][k] : (L.id[k] !== undefined ? L.id[k] : k));
+
+function applyLang(){
+  document.documentElement.lang = lang;
+  document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = t(el.dataset.i18n); });
+  document.querySelectorAll('[data-i18n-title]').forEach(el => { el.title = t(el.dataset.i18nTitle); });
+  document.querySelectorAll('[data-i18n-ph]').forEach(el => { el.placeholder = t(el.dataset.i18nPh); });
+  const lb = document.getElementById('langBtn');
+  if(lb){ lb.textContent = lang === 'id' ? 'EN' : 'ID'; lb.title = t('langSwitch'); }
+}
+function setLang(v){ lang = v === 'en' ? 'en' : 'id'; localStorage.setItem(LS_LANG, lang); applyLang(); }
 
 /* ══════════════════════════════════════
    LOGIN
@@ -272,7 +315,7 @@ toggleBtn.onclick = ()=>{
     const show = pass.type === 'password';
     pass.type = show ? 'text' : 'password';
     toggleBtn.innerHTML = show ? '<i class="fa-regular fa-eye-slash"></i>' : '<i class="fa-regular fa-eye"></i>';
-    toggleBtn.title = show ? 'Sembunyikan kode' : 'Tampilkan kode';
+    toggleBtn.title = show ? t('eyeHide') : t('eyeShowOnly');
     pass.focus();
 };
 
@@ -285,7 +328,7 @@ function doLogin(code){
         document.getElementById('menuSection').scrollIntoView({behavior:'smooth', block:'center'});
         return true;
     }
-    document.getElementById('loginErr').textContent = 'Kode tidak dikenali.';
+    document.getElementById('loginErr').textContent = t('errCode');
     return false;
 }
 
@@ -300,7 +343,11 @@ document.getElementById('btnKeluar').onclick = ()=>{
     hideMenu();
 };
 
-/* restore session */
+/* Ganti bahasa: ID ⇄ EN (terlihat tanpa harus login) */
+document.getElementById('langBtn').onclick = ()=> setLang(lang === 'id' ? 'en' : 'id');
+
+/* restore session + terapkan bahasa tersimpan */
+applyLang();
 if(isIn()) showMenu();
 else hideMenu();
 </script>
