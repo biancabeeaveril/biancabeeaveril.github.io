@@ -520,6 +520,7 @@ const L = {
     fCode:'Kode', phCode:'Contoh: IF201',
     fDesc:'Deskripsi', phDesc:'Isi singkat mata kuliah… (boleh panjang)',
     fLecturer:'Pengajar', phLecturer:'Nama pengajar',
+    optNoLecturer:'— Belum ditentukan —', noteLecturer:'Pilih nama anggota tim pengajar, atau pakai "＋ Tulis sendiri…" bila pengajar bukan anggota tim.',
     fPaid:'Program berbayar',
     notePaid:'Kalau dicentang, isilah Nominal Harga dan Kode Kelas (kode ini dikirim ke peserta setelah bayar).',
     fPrice:'Nominal Harga (Rp)', phPrice:'Contoh: 150000',
@@ -652,6 +653,7 @@ const L = {
     fCode:'Code', phCode:'e.g. IF201',
     fDesc:'Description', phDesc:'Short summary of the course… (long text allowed)',
     fLecturer:'Instructor', phLecturer:'Instructor name',
+    optNoLecturer:'— Not determined yet —', noteLecturer:'Pick a teaching team member, or use "＋ Type a new one…" if the instructor is not a team member.',
     fPaid:'Paid program',
     notePaid:'When checked, fill in the price and class code (the code is sent to participants after payment).',
     fPrice:'Price (Rp)', phPrice:'e.g. 150000',
@@ -1187,7 +1189,9 @@ function openForm(title, fields, onSave){
     const lb = document.createElement('span'); lb.className = 'flabel'; lb.textContent = f.label;
     row.appendChild(lb);
 
-    /* dropdown (pilihan dari daftar — dipakai untuk jadwal, angkatan, jabatan) */
+    /* dropdown (pilihan dari daftar — dipakai untuk jadwal, angkatan, jabatan, pengajar)
+       allowNew: true → tambah opsi "＋ Tulis sendiri…"; saat dipilih, dropdown
+       berubah jadi kolom teks (untuk nama yang bukan anggota tim) */
     if(f.type === 'select'){
       const sel = document.createElement('select');
       sel.className = 'fsel'; sel.name = f.key;
@@ -1199,6 +1203,20 @@ function openForm(title, fields, onSave){
         if(String(f.value ?? '') === String(val ?? '')) op.selected = true;
         sel.appendChild(op);
       });
+      if(f.allowNew){
+        const oN = document.createElement('option');
+        oN.value = '__baru__'; oN.textContent = t('optNew');
+        sel.appendChild(oN);
+        sel.onchange = ()=>{
+          if(sel.value !== '__baru__') return;
+          const inp = document.createElement('input');
+          inp.type = 'text'; inp.name = f.key; inp.autocomplete = 'off';
+          if(f.placeholder) inp.placeholder = f.placeholder;
+          if(f.required) inp.required = true;
+          row.replaceChild(inp, sel);
+          inp.focus();
+        };
+      }
       if(f.required) sel.required = true;
       row.appendChild(sel);
       if(f.note){ const n = document.createElement('div'); n.className = 'fnote'; n.textContent = f.note; row.appendChild(n); }
@@ -1457,11 +1475,19 @@ function renderSems(){
    Nominal harga & kode kelas hanya muncul saat "Program berbayar" dicentang. */
 function courseFormFields(c){
   c = c || {};
+  /* Pengajar berupa dropdown: pilih dari daftar anggota tim pengajar
+     (tidak perlu ketik manual), plus opsi "＋ Tulis sendiri…" bila pengajar
+     bukan anggota tim. Nama lama yang tak ada di daftar tetap dipertahankan. */
+  const memberNames = [...new Set(liveMembers().map(m=>m.shortName).filter(Boolean))];
+  if(c.lecturer && !memberNames.includes(c.lecturer)) memberNames.push(c.lecturer);
+  const lecturerOpts = [{value:'', label:t('optNoLecturer')}]
+    .concat(memberNames.map(n=>({value:n, label:n})));
   return [
     {key:'name',label:t('fCourseName'),value:c.name,placeholder:t('phCourse'),required:true},
     {key:'code',label:t('fCode'),value:c.code,placeholder:t('phCode')},
     {key:'desc',label:t('fDesc'),type:'textarea',rows:3,value:c.desc,placeholder:t('phDesc')},
-    {key:'lecturer',label:t('fLecturer'),value:c.lecturer,placeholder:t('phLecturer')},
+    {key:'lecturer',label:t('fLecturer'),type:'select',options:lecturerOpts,value:c.lecturer||'',
+     allowNew:true,placeholder:t('phLecturer'),note:t('noteLecturer')},
     {key:'paid',label:t('fPaid'),type:'checkbox',value:!!c.paid, note:t('notePaid')},
     {key:'price',label:t('fPrice'),type:'number',value:c.price,placeholder:t('phPrice'),showIf:'paid',
      note:'150000 → Rp 150.000.'},
@@ -1646,7 +1672,8 @@ function openScheduleForm(s, courseIdPrefill){
     {key:'timeEnd', label:t('fEnd'), type:'time', value: s.timeEnd || legEnd},
     {key:'mode', label:t('fModeSched'), type:'select', options:['Online','Offline'], value: s.mode || 'Online'},
     {key:'place', label:t('fSchedPlace'), value: s.place, placeholder:t('phSchedPlace')},
-    {key:'mentor', label:t('fMentor'), type:'select', options:memberOpts, value: s.mentor || '', note:t('noteMentor')},
+    {key:'mentor', label:t('fMentor'), type:'select', options:memberOpts, value: s.mentor || '',
+     allowNew:true, placeholder:t('phLecturer'), note:t('noteMentor')},
     {key:'participants', label:t('lblPeserta'), type:'textarea', rows:3, value: s.participants,
      placeholder:t('phPeserta')},
   ], v=>{ if(s.id) editSchedule(s.id, v); else addSchedule(v); });

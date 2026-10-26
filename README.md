@@ -72,7 +72,7 @@ Fitur yang dipakai tim pengajar:
 - **Tautan kembali "← Kembali"** di nav (bukan lagi "← Rak")
 - Hierarki **Universitas → Semester → Mata Kuliah → Pertemuan → Topik**
 - **Semester 1–8 statis** — bukan CRUD: tidak ada tombol tambah/hapus, langsung tersedia di tiap universitas
-- **Mata kuliah punya deskripsi** (long text); kelas **berbayar** punya **nominal harga** (Rp) + **kode kelas** yang hanya muncul untuk kelas berbayar — kelas gratis otomatis tanpa harga & kode
+- **Mata kuliah punya deskripsi** (long text); **pengajar berupa dropdown** (pilih nama anggota tim, atau "＋ Tulis sendiri…" bila bukan anggota); kelas **berbayar** punya **nominal harga** (Rp) + **kode kelas** yang hanya muncul untuk kelas berbayar — kelas gratis otomatis tanpa harga & kode
 - **Jadwal mentoring** per mata kuliah: **hari, tanggal, jam mulai & selesai (time picker), Online/Offline, tempat/tautan, mentor (dropdown anggota), peserta** — tampil di tab Jadwal & di detail mata kuliah
 - **Pertemuan ala notulensi rapat**: **tanggal, jam, tempat, peserta, agenda (long text), catatan/isi notulensi (long text), keputusan/tindak lanjut (long text)** — catatan & keputusan tampil sebagai blok di card pertemuan
 - **Deskripsi** (topik & agenda) berupa **long text** — textarea multi-baris tanpa batas panjang
