@@ -239,6 +239,8 @@ table.inv-table .inv-empty{padding:22px 12px;text-align:center;color:var(--muted
 .gate-eye{position:absolute;right:4px;top:50%;transform:translateY(-50%);width:32px;height:32px;border:none;background:none;color:var(--muted);cursor:pointer;border-radius:6px;display:flex;align-items:center;justify-content:center;transition:color .15s,background .15s}
 .gate-eye:hover{color:var(--accent);background:var(--card2)}
 .gate-err{font-size:.7rem;color:var(--red);margin-bottom:10px;min-height:14px}
+.gate-idle{font-size:.68rem;color:var(--amber,#d97706);background:rgba(217,119,6,.08);border:1px solid rgba(217,119,6,.25);border-radius:8px;padding:9px 11px;margin-bottom:10px;line-height:1.55;text-align:center}
+.gate-idle[hidden]{display:none}
 .gate-hint{font-size:.65rem;color:var(--muted);margin-top:12px;line-height:1.6}
 
 /* ── HP: tombol aksi selalu terlihat ── */
@@ -398,6 +400,7 @@ table.inv-table .inv-empty{padding:22px 12px;text-align:center;color:var(--muted
       </button>
     </div>
     <div class="gate-err" id="gateErr"></div>
+    <div class="gate-idle" id="gateIdleNote" hidden data-i18n="idleNote">Sesi berakhir — 30 menit tanpa aktivitas. Silakan masukkan kode akses tim pengajar kembali.</div>
     <button class="btn btn-primary" id="gateBtn" style="width:100%" data-i18n="gateBtn">Masuk</button>
     <div class="gate-hint" id="gateHint" data-i18n="gateHint">Kode diberikan oleh koordinator tim pengajar.</div>
   </div>
@@ -461,6 +464,7 @@ const L = {
     gateEye:'Tampilkan / sembunyikan kode', gateEyeHide:'Sembunyikan kode', gateBtn:'Masuk',
     gateHint:'Kode diberikan oleh koordinator tim pengajar.',
     gateErr:'Kode tidak dikenali. Coba lagi.',
+    idleNote:'Sesi berakhir — 30 menit tanpa aktivitas. Silakan masukkan kode akses tim pengajar kembali.',
     addChip:'+ Tambah', delTitle:'Hapus',
     emptyUniv:'Belum ada universitas. Klik "+ Tambah" untuk mulai.',
     pickUnivFirst:'Pilih universitas dulu di tab Universitas.',
@@ -593,6 +597,7 @@ const L = {
     gateTitle:'Log Pengajaran', gateSub:'Enter the teaching team access code',
     gateEye:'Show / hide the code', gateEyeHide:'Hide the code', gateBtn:'Enter',
     gateHint:'The code is provided by the teaching team coordinator.',
+    idleNote:'Session ended — 30 minutes with no activity. Please enter the teaching team access code again.',
     gateErr:'Code not recognized. Please try again.',
     addChip:'+ Add', delTitle:'Delete',
     emptyUniv:'No universities yet. Click "+ Add" to start.',
@@ -2230,14 +2235,64 @@ function login(code){
     sessionStorage.setItem('ajar_in', '1');
     sessionStorage.setItem('aliria_in', '1');
     document.getElementById('gate').style.display = 'none';
+    document.getElementById('gateIdleNote').hidden = true;
     document.getElementById('logoutBtn').style.display = '';
     document.getElementById('fabBtn').style.display = '';
+    touchIdle();
     render();
     return true;
   }
   document.getElementById('gateErr').textContent = t('gateErr');
   return false;
 }
+
+/* ══════════════════════════════════════════════════
+   KUNCI OTOMATIS — 30 MENIT TANPA AKTIVITAS
+   Sesi (ajar_in / aliria_in) diakhiri & gerbang
+   (layar kode akses) muncul kembali.
+   Stempel `ajar_last_active` dipakai bersama dengan
+   homepage — aktivitas di halaman mana pun menunda
+   hitungan, dan logout di satu halaman mengunci keduanya.
+   ══════════════════════════════════════════════════ */
+const IDLE_MS = 30 * 60 * 1000;          // 30 menit
+const LS_IDLE = 'ajar_last_active';      // stempel aktivitas terakhir (sessionStorage)
+const isSignedIn = ()=> sessionStorage.getItem('ajar_in') === '1';
+
+function touchIdle(){ try{ sessionStorage.setItem(LS_IDLE, String(Date.now())); }catch(e){} }
+function idleFor(){ const v = +sessionStorage.getItem(LS_IDLE); return v > 0 ? Date.now() - v : 0; }
+
+function lockForIdle(){
+  if(!isSignedIn()) return;
+  sessionStorage.removeItem('ajar_in');
+  sessionStorage.removeItem('aliria_in');
+  sessionStorage.removeItem(LS_IDLE);
+  document.getElementById('fabBtn').style.display = 'none';
+  document.getElementById('logoutBtn').style.display = 'none';
+  document.getElementById('gateErr').textContent = '';
+  document.getElementById('gateIdleNote').hidden = false;
+  document.getElementById('gate').style.display = 'flex';
+  const inp = document.getElementById('gateInput');
+  inp.value = ''; inp.type = 'password';
+  setTimeout(()=>inp.focus(), 100);
+}
+function checkIdle(){ if(isSignedIn() && idleFor() >= IDLE_MS) lockForIdle(); }
+
+/* perbarui stempel aktivitas (di-throttle: maks 1x tiap 30 detik) */
+let idleTouchAt = 0;
+function onActivity(){
+  if(!isSignedIn()) return;
+  const now = Date.now();
+  if(now - idleTouchAt < 30000) return;
+  idleTouchAt = now;
+  touchIdle();
+}
+['mousemove','mousedown','keydown','touchstart','scroll','wheel'].forEach(ev =>
+  window.addEventListener(ev, onActivity, { passive: true }));
+
+/* cek berkala + saat tab kembali terlihat / fokus */
+setInterval(checkIdle, 30000);
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden) checkIdle(); });
+window.addEventListener('focus', checkIdle);
 
 /* ══════════════════════════════════════
    BOOT
@@ -2289,6 +2344,10 @@ function login(code){
   applyLang();                      /* terapkan bahasa tersimpan (juga untuk layar gerbang) */
 
   if(sessionStorage.getItem('ajar_in') === '1'){
+    if(!sessionStorage.getItem(LS_IDLE)) touchIdle();
+    checkIdle();               /* sesi sudah lebih 30 menit diam → langsung kunci */
+  }
+  if(isSignedIn()){
     gate.style.display = 'none';
     document.getElementById('logoutBtn').style.display = '';
     document.getElementById('fabBtn').style.display = '';
@@ -2301,6 +2360,7 @@ function login(code){
   document.getElementById('logoutBtn').onclick = ()=>{
     sessionStorage.removeItem('ajar_in');
     sessionStorage.removeItem('aliria_in');
+    sessionStorage.removeItem(LS_IDLE);
     location.reload();
   };
   document.getElementById('fabBtn').onclick = openPanduan;
