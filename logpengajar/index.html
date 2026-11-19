@@ -301,7 +301,7 @@ table.inv-table td.uname{font-weight:700}
     <div id="univListView">
       <div class="header">
         <h1 data-i18n="univTitle">Universitas</h1>
-        <p data-i18n="univDesc">Kelola daftar universitas mitra mentoring, lalu lengkapi data tim pengajar di bawah.</p>
+        <p data-i18n="univDesc">Kelola daftar universitas mitra mentoring. Klik ikon 👁 untuk melihat mata kuliah, jadwal, dan tim pengajar.</p>
       </div>
       <div class="section-head" style="border-top:none;padding-top:0">
         <h2 id="univHead" data-i18n="filterUniv">Universitas</h2>
@@ -311,16 +311,6 @@ table.inv-table td.uname{font-weight:700}
       <div id="univTable" class="inv-wrap"></div>
       <div id="univPager" class="pager-bar"></div>
 
-      <!-- TIM PENGAJAR (anggota) -->
-      <div id="memberSection">
-        <div class="section-head">
-          <h2 id="memberHead" data-i18n="teamHead">Tim Pengajar</h2>
-          <button class="btn" id="addGroupBtn" data-i18n="btnGroup">+ Kelompok</button>
-          <button class="btn btn-primary" id="addMemberBtn" data-i18n="btnMember">+ Anggota</button>
-        </div>
-        <div id="groupChips" class="chips" style="margin-bottom:9px"></div>
-        <div id="memberList" class="members"></div>
-      </div>
     </div>
 
     <!-- DETAIL UNIVERSITAS: mata kuliah + jadwal -->
@@ -334,12 +324,14 @@ table.inv-table td.uname{font-weight:700}
         </div>
       </div>
 
+      <div class="subtabs" id="subTabs" style="display:flex;gap:4px;border-bottom:1px solid var(--bd);margin-bottom:16px;overflow-x:auto">
+        <button type="button" class="tab" data-sub="courses" data-i18n="tabMatkul" style="background:none;border-top:0;border-left:0;border-right:0;cursor:pointer;font-family:inherit">Mata Kuliah</button>
+        <button type="button" class="tab" data-sub="sched" data-i18n="tabJadwal" style="background:none;border-top:0;border-left:0;border-right:0;cursor:pointer;font-family:inherit">Jadwal</button>
+        <button type="button" class="tab" data-sub="team" data-i18n="teamHead" style="background:none;border-top:0;border-left:0;border-right:0;cursor:pointer;font-family:inherit">Tim Pengajar</button>
+      </div>
+
       <div id="courseSection">
-        <div class="filter-block">
-          <div class="filter-label" data-i18n="filterSem">Semester</div>
-          <div class="chips" id="semChips"></div>
-        </div>
-        <div class="section-head">
+        <div class="section-head" style="border-top:none;padding-top:0">
           <h2 id="courseHead" data-i18n="courseListHead">Mata Kuliah</h2>
           <button class="btn btn-primary" id="addCourseBtn" data-i18n="btnAddCourse">+ Tambah Mata Kuliah</button>
         </div>
@@ -347,11 +339,22 @@ table.inv-table td.uname{font-weight:700}
       </div>
 
       <div id="schedSection">
-        <div class="section-head">
+        <div class="section-head" style="border-top:none;padding-top:0">
           <h2 id="schedHead" data-i18n="schedListHead">Jadwal</h2>
           <button class="btn btn-primary" id="addSchedBtn" data-i18n="btnAddSched">+ Tambah Jadwal</button>
         </div>
         <div class="grid" id="schedList"></div>
+      </div>
+
+      <!-- TIM PENGAJAR (anggota) -->
+      <div id="memberSection">
+        <div class="section-head" style="border-top:none;padding-top:0">
+          <h2 id="memberHead" data-i18n="teamHead">Tim Pengajar</h2>
+          <button class="btn" id="addGroupBtn" data-i18n="btnGroup">+ Kelompok</button>
+          <button class="btn btn-primary" id="addMemberBtn" data-i18n="btnMember">+ Anggota</button>
+        </div>
+        <div id="groupChips" class="chips" style="margin-bottom:9px"></div>
+        <div id="memberList" class="members"></div>
       </div>
     </div>
 
@@ -459,7 +462,7 @@ const L = {
     pgShowing:'Menampilkan {a}-{b} dari {n} data', pgPrev:'Sebelumnya', pgNext:'Selanjutnya',
     tabUniv:'Universitas', tabMatkul:'Mata Kuliah', tabJadwal:'Jadwal', tabInv:'Inventaris',
     univTitle:'Universitas',
-    univDesc:'Kelola daftar universitas mitra mentoring, lalu lengkapi data tim pengajar di bawah.',
+    univDesc:'Kelola daftar universitas mitra mentoring. Klik ikon 👁 untuk melihat mata kuliah, jadwal, dan tim pengajar.',
     filterUniv:'Universitas', filterSem:'Semester',
     teamHead:'Tim Pengajar', btnGroup:'+ Kelompok', btnMember:'+ Anggota',
     matkulTitle:'Mata Kuliah',
@@ -598,7 +601,7 @@ const L = {
     pgShowing:'Showing {a}-{b} of {n} entries', pgPrev:'Previous', pgNext:'Next',
     tabUniv:'Universities', tabMatkul:'Courses', tabJadwal:'Schedule', tabInv:'Inventory',
     univTitle:'Universities',
-    univDesc:'Manage the list of mentoring partner universities, then fill in the teaching team data below.',
+    univDesc:'Manage the list of mentoring partner universities. Click the 👁 icon to see courses, schedules and the teaching team.',
     filterUniv:'University', filterSem:'Semester',
     teamHead:'Teaching Team', btnGroup:'+ Group', btnMember:'+ Member',
     matkulTitle:'Courses',
@@ -764,6 +767,7 @@ let univQuery = '';
 let univPage = 1;                        /* halaman tabel universitas */
 const UNIV_PER_PAGE = 5;
 let selUniv = null;
+let detTab  = 'courses';                 /* sub-tab detail universitas: courses | sched | team */
 let selSem  = null;                      /* nomor semester 1–8; null = semua */
 let selGroup = null;                     /* filter kelompok anggota */
 let openCourse = null;      /* courseId */
@@ -1431,7 +1435,7 @@ function route(){
       if(c && !c.deleted && c.univId === id) openCourse = id2;
     }
   }
-  if(selUniv !== prevUniv) selSem = null;
+  if(selUniv !== prevUniv){ selSem = null; detTab = 'courses'; }
 }
 function go(hash){
   if(location.hash !== hash) location.hash = hash;   /* bisa dibagikan / di-bookmark */
@@ -1459,7 +1463,13 @@ function render(){
   if(selUniv){
     document.getElementById('uTitle').textContent = (getUniv(selUniv)||{}).name || '';
     if(openCourse) renderDetail(openCourse);
-    else { renderSems(); renderCourses(); renderSchedules(); }
+    else {
+      renderCourses(); renderSchedules();
+      on('courseSection', detTab === 'courses');
+      on('schedSection',  detTab === 'sched');
+      on('memberSection', detTab === 'team');
+      document.querySelectorAll('#subTabs .tab').forEach(b=>b.classList.toggle('active', b.dataset.sub === detTab));
+    }
   }
 }
 
@@ -2424,6 +2434,7 @@ window.addEventListener('focus', checkIdle);
   document.getElementById('fabBtn').onclick = openPanduan;
   document.getElementById('backBtn').onclick = ()=>go('#/univ/' + selUniv);
   document.getElementById('univSearch').oninput = e=>{ univQuery = e.target.value; univPage = 1; renderUnivs(); };
+  document.querySelectorAll('#subTabs .tab').forEach(b=>b.onclick = ()=>{ detTab = b.dataset.sub; render(); });
   document.getElementById('backUnivBtn').onclick = ()=>go('#/univ');
   document.getElementById('editUnivBtn').onclick = ()=>{
     const u = getUniv(selUniv); if(!u) return;
