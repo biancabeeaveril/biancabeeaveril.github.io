@@ -224,7 +224,10 @@ table.inv-table tr:last-child td{border-bottom:none}
 table.inv-table tr:hover td{background:var(--card2)}
 table.inv-table a{color:var(--accent);text-decoration:underline}
 table.inv-table .num{color:var(--muted);width:34px}
-table.inv-table .acts{white-space:nowrap;width:64px}
+table.inv-table .acts{white-space:nowrap;width:120px}
+table.inv-table .acts .act-wrap{display:flex;gap:10px;justify-content:flex-end}
+.search-box{width:100%;max-width:320px;padding:8px 12px;border:1px solid var(--bd);border-radius:8px;background:var(--card2);color:var(--text);font:inherit;font-size:.78rem;margin-bottom:10px}
+.search-box:focus{outline:none;border-color:var(--accent)}
 table.inv-table .inv-empty{padding:22px 12px;text-align:center;color:var(--muted)}
 @media(max-width:640px){.inv-search{width:100%}}
 
@@ -304,6 +307,7 @@ table.inv-table td.uname{font-weight:700}
         <h2 id="univHead" data-i18n="filterUniv">Universitas</h2>
         <button class="btn btn-primary" id="addUnivBtn" data-i18n="btnAddUniv">+ Tambah Universitas</button>
       </div>
+      <input type="search" id="univSearch" class="search-box" data-i18n-ph="phSearchUniv" placeholder="Cari universitas…">
       <div id="univTable" class="inv-wrap"></div>
       <div id="univPager" class="pager-bar"></div>
 
@@ -480,6 +484,7 @@ const L = {
     gateErr:'Kode tidak dikenali. Coba lagi.',
     idleNote:'Sesi berakhir — 30 menit tanpa aktivitas. Silakan masukkan kode akses tim pengajar kembali.',
     addChip:'+ Tambah', delTitle:'Hapus',
+    phSearchUniv:'Cari universitas…', emptyNoMatch:'Tidak ada universitas yang cocok.', titleViewUniv:'Lihat detail',
     emptyUniv:'Belum ada universitas. Klik "+ Tambah" untuk mulai.',
     pickUnivFirst:'Pilih universitas dulu di tab Universitas.',
     btnGoUniv:'Buka tab Universitas',
@@ -618,6 +623,7 @@ const L = {
     idleNote:'Session ended — 30 minutes with no activity. Please enter the teaching team access code again.',
     gateErr:'Code not recognized. Please try again.',
     addChip:'+ Add', delTitle:'Delete',
+    phSearchUniv:'Search universities…', emptyNoMatch:'No matching universities.', titleViewUniv:'View details',
     emptyUniv:'No universities yet. Click "+ Add" to start.',
     pickUnivFirst:'Select a university first in the Universities tab.',
     btnGoUniv:'Open Universities tab',
@@ -754,6 +760,7 @@ const SEM_COUNT = 8;                     /* Semester 1–8, statis (tanpa CRUD) 
 const DAYS = ['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'];
 let db = emptyDb();
 let curTab = 'univ';                     /* univ | inv (sesuai URL #/…) */
+let univQuery = '';
 let univPage = 1;                        /* halaman tabel universitas */
 const UNIV_PER_PAGE = 5;
 let selUniv = null;
@@ -1469,7 +1476,10 @@ function renderUnivs(){
   const box = document.getElementById('univTable');
   const pager = document.getElementById('univPager');
   if(!box) return;
-  const list = liveUnivs();
+  const qEl = document.getElementById('univSearch');
+  if(qEl) qEl.placeholder = t('phSearchUniv');
+  const q = (univQuery||'').trim().toLowerCase();
+  const list = liveUnivs().filter(u=>!q || (u.name||'').toLowerCase().includes(q));
   const pages = Math.max(1, Math.ceil(list.length / UNIV_PER_PAGE));
   if(univPage > pages) univPage = pages;
   if(univPage < 1) univPage = 1;
@@ -1482,23 +1492,22 @@ function renderUnivs(){
   table.innerHTML = `<thead><tr><th>#</th><th>${esc(t('colUniv'))}</th><th>${esc(t('colCourses'))}</th><th>${esc(t('colScheds'))}</th><th></th></tr></thead>`;
   const tb = document.createElement('tbody');
   if(!rows.length){
-    tb.innerHTML = `<tr><td colspan="5" class="inv-empty">${esc(t('emptyUniv'))}</td></tr>`;
+    tb.innerHTML = `<tr><td colspan="5" class="inv-empty">${esc(t(q ? 'emptyNoMatch' : 'emptyUniv'))}</td></tr>`;
   }
   rows.forEach((u,i)=>{
     const crs = coursesOf(u.id);
     const ids = new Set(crs.map(c=>c.id));
     const nSched = liveScheds().filter(s=>ids.has(s.courseId)).length;
     const tr = document.createElement('tr');
-    tr.className = 'row-link';
-    tr.innerHTML = `<td class="num">${from+i+1}</td><td class="uname">🏛 ${esc(u.name)}</td><td>${crs.length}</td><td>${nSched}</td><td class="acts"></td>`;
-    const acts = tr.querySelector('.acts');
-    const stop = fn => e => { e.stopPropagation(); fn(); };
-    const ed = miniBtn('✎','', ()=>{});  ed.onclick = stop(()=> openForm(t('titleEditUniv'),
+    tr.innerHTML = `<td class="num">${from+i+1}</td><td class="uname">🏛 ${esc(u.name)}</td><td>${crs.length}</td><td>${nSched}</td><td class="acts"><div class="act-wrap"></div></td>`;
+    const acts = tr.querySelector('.act-wrap');
+    const view = miniBtn('👁','', ()=>{ go('#/univ/' + u.id); window.scrollTo({top:0,behavior:'smooth'}); });
+    view.title = t('titleViewUniv');
+    const ed = miniBtn('✎','', ()=> openForm(t('titleEditUniv'),
       [{key:'name',label:t('fUnivName'),value:u.name,placeholder:t('phUniv'),required:true}],
       v=>editUniv(u.id, v.name)));
-    const del = miniBtn('🗑','danger', ()=>{}); del.onclick = stop(()=>delUniv(u.id));
-    acts.appendChild(ed); acts.appendChild(del);
-    tr.onclick = ()=>{ go('#/univ/' + u.id); window.scrollTo({top:0,behavior:'smooth'}); };
+    const del = miniBtn('🗑','danger', ()=>delUniv(u.id));
+    acts.appendChild(view); acts.appendChild(ed); acts.appendChild(del);
     tb.appendChild(tr);
   });
   table.appendChild(tb);
@@ -2414,6 +2423,7 @@ window.addEventListener('focus', checkIdle);
   };
   document.getElementById('fabBtn').onclick = openPanduan;
   document.getElementById('backBtn').onclick = ()=>go('#/univ/' + selUniv);
+  document.getElementById('univSearch').oninput = e=>{ univQuery = e.target.value; univPage = 1; renderUnivs(); };
   document.getElementById('backUnivBtn').onclick = ()=>go('#/univ');
   document.getElementById('editUnivBtn').onclick = ()=>{
     const u = getUniv(selUniv); if(!u) return;
