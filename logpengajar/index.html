@@ -2380,6 +2380,11 @@ window.addEventListener('focus', checkIdle);
   db = migrate((remote && local) ? mergeDb(remote, local) : (remote || local || emptyDb()));
   localStorage.setItem(LS_KEY, JSON.stringify(db));
   setSync(!!remote);
+  /* data yang dibuat sebelum sinkron aktif (hanya ada di browser ini) → kirim sekali ke Gist */
+  if(synced() && Object.values(db).some(a=>Array.isArray(a) && a.length)){
+    setSync(false);
+    push();
+  }
 
   /* gate */
   const gate = document.getElementById('gate');
